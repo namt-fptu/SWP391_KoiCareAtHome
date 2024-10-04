@@ -1,0 +1,14 @@
+D:\Fall2024\SWP391Project\SWP391.KoiCareSystemAtHome.Fa24\SWP391.KoiCareSystemAtHome.Repository\bin\Debug\net8.0\SWP391.KoiCareSystemAtHome.Repository.deps.json
+D:\Fall2024\SWP391Project\SWP391.KoiCareSystemAtHome.Fa24\SWP391.KoiCareSystemAtHome.Repository\bin\Debug\net8.0\SWP391.KoiCareSystemAtHome.Repository.runtimeconfig.json
+D:\Fall2024\SWP391Project\SWP391.KoiCareSystemAtHome.Fa24\SWP391.KoiCareSystemAtHome.Repository\bin\Debug\net8.0\SWP391.KoiCareSystemAtHome.Repository.dll
+D:\Fall2024\SWP391Project\SWP391.KoiCareSystemAtHome.Fa24\SWP391.KoiCareSystemAtHome.Repository\bin\Debug\net8.0\SWP391.KoiCareSystemAtHome.Repository.pdb
+D:\Fall2024\SWP391Project\SWP391.KoiCareSystemAtHome.Fa24\SWP391.KoiCareSystemAtHome.Repository\obj\Debug\net8.0\SWP391.KoiCareSystemAtHome.Repository.csproj.AssemblyReference.cache
+D:\Fall2024\SWP391Project\SWP391.KoiCareSystemAtHome.Fa24\SWP391.KoiCareSystemAtHome.Repository\obj\Debug\net8.0\SWP391.KoiCareSystemAtHome.Repository.GeneratedMSBuildEditorConfig.editorconfig
+D:\Fall2024\SWP391Project\SWP391.KoiCareSystemAtHome.Fa24\SWP391.KoiCareSystemAtHome.Repository\obj\Debug\net8.0\SWP391.KoiCareSystemAtHome.Repository.AssemblyInfoInputs.cache
+D:\Fall2024\SWP391Project\SWP391.KoiCareSystemAtHome.Fa24\SWP391.KoiCareSystemAtHome.Repository\obj\Debug\net8.0\SWP391.KoiCareSystemAtHome.Repository.AssemblyInfo.cs
+D:\Fall2024\SWP391Project\SWP391.KoiCareSystemAtHome.Fa24\SWP391.KoiCareSystemAtHome.Repository\obj\Debug\net8.0\SWP391.KoiCareSystemAtHome.Repository.csproj.CoreCompileInputs.cache
+D:\Fall2024\SWP391Project\SWP391.KoiCareSystemAtHome.Fa24\SWP391.KoiCareSystemAtHome.Repository\obj\Debug\net8.0\SWP391.KoiCareSystemAtHome.Repository.dll
+D:\Fall2024\SWP391Project\SWP391.KoiCareSystemAtHome.Fa24\SWP391.KoiCareSystemAtHome.Repository\obj\Debug\net8.0\refint\SWP391.KoiCareSystemAtHome.Repository.dll
+D:\Fall2024\SWP391Project\SWP391.KoiCareSystemAtHome.Fa24\SWP391.KoiCareSystemAtHome.Repository\obj\Debug\net8.0\SWP391.KoiCareSystemAtHome.Repository.pdb
+D:\Fall2024\SWP391Project\SWP391.KoiCareSystemAtHome.Fa24\SWP391.KoiCareSystemAtHome.Repository\obj\Debug\net8.0\SWP391.KoiCareSystemAtHome.Repository.genruntimeconfig.cache
+D:\Fall2024\SWP391Project\SWP391.KoiCareSystemAtHome.Fa24\SWP391.KoiCareSystemAtHome.Repository\obj\Debug\net8.0\ref\SWP391.KoiCareSystemAtHome.Repository.dll
