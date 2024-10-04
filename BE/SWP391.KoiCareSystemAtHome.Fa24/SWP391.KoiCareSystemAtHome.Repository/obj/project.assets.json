@@ -4403,6 +4403,7 @@
   "projectFileDependencyGroups": {
     "net8.0": [
       "Microsoft.EntityFrameworkCore >= 8.0.8",
+      "Microsoft.EntityFrameworkCore.Analyzers >= 8.0.8",
       "Microsoft.EntityFrameworkCore.Design >= 8.0.8",
       "Microsoft.EntityFrameworkCore.SqlServer >= 8.0.8",
       "Microsoft.EntityFrameworkCore.Tools >= 8.0.8",
@@ -4456,6 +4457,10 @@
         "targetAlias": "net8.0",
         "dependencies": {
           "Microsoft.EntityFrameworkCore": {
+            "target": "Package",
+            "version": "[8.0.8, )"
+          },
+          "Microsoft.EntityFrameworkCore.Analyzers": {
             "target": "Package",
             "version": "[8.0.8, )"
           },
