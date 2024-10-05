@@ -1,0 +1,40 @@
+{
+    "UserData": [
+      {
+        "id": 1,
+        "month": "January",
+        "weight": 5,
+        "weightMin": 2,
+        "weightMax": 6
+      },
+      {
+        "id": 2,
+        "month": "February",
+        "weight": 7,
+        "weightMin": 5,
+        "weightMax": 9
+      },
+      {
+        "id": 3,
+        "month": "March",
+        "weight": 9,
+        "weightMin": 7,
+        "weightMax": 10
+      },
+      {
+        "id": 4,
+        "month": "April",
+        "weight": 11,
+        "weightMin": 10,
+        "weightMax": 15
+      },
+      {
+        "id": 5,
+        "month": "May",
+        "weight": 15,
+        "weightMin": 13,
+        "weightMax": 18
+      }
+    ]
+  }
+  
