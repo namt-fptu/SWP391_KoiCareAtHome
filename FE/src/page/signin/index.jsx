@@ -1,11 +1,40 @@
 import { Form, Input } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import signinimg from "../../assets/signin.png";
-//import { GoogleOAuthProvider } from "@react-oauth/google";
+import { useEffect, useState } from "react";
 
 const Signin = () => {
+  const [users, setUsers] = useState([]);
+  const navigate = useNavigate(); // Initialize useNavigate
+
+  // Fetch user data from the public directory
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch('/data.json'); // Adjust the path as needed
+        const data = await response.json();
+        setUsers(data);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
   const handleSignin = (values) => {
-    console.log(values);
+    const { email, password } = values;
+
+    // Check if the email and password match any user in the fetched data
+    const user = users.find((user) => user.email === email && user.password === password);
+
+    if (user) {
+      console.log("Login successful", user);
+      navigate("/overview"); // Redirect to the Overview page
+    } else {
+      console.log("Invalid email or password");
+      // Handle invalid login case (e.g., show error message)
+    }
   };
 
   return (
@@ -19,9 +48,7 @@ const Signin = () => {
           <div className="form-wrapper">
             <Form
               className="form"
-              labelCol={{
-                span: 24,
-              }}
+              labelCol={{ span: 24 }}
               onFinish={handleSignin}
             >
               <h1 className="text-3xl font-semibold mb-6">Sign In</h1>
@@ -34,38 +61,18 @@ const Signin = () => {
               <Form.Item
                 label="Email"
                 name="email"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please enter your Email !!",
-                  },
-                ]}
+                rules={[{ required: true, message: "Please enter your Email !!" }]}
               >
                 <Input type="text" placeholder="John@example.com" />
               </Form.Item>
               <Form.Item
                 label="Password"
                 name="password"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please enter your Password !!",
-                  },
-                ]}
+                rules={[{ required: true, message: "Please enter your Password !!" }]}
               >
                 <Input type="password" placeholder="••••••••••••" />
-                {/* <Space direction="vertical">
-                  <Input.Password
-                    placeholder="•••••••••••"
-                    iconRender={(visible) =>
-                      visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                    }
-                    className="w-full"
-                  />
-                </Space> */}
               </Form.Item>
               <Form.Item>
-                {/* Stay signed in */}
                 <div className="flex items-center mb-6">
                   <input
                     type="checkbox"
@@ -86,17 +93,12 @@ const Signin = () => {
                 </button>
               </Form.Item>
               <Form.Item>
-                {/* Divider */}
                 <div className="flex items-center my-6">
                   <hr className="w-full border-gray-300" />
                   <span className="px-2 text-gray-400">OR</span>
                   <hr className="w-full border-gray-300" />
                 </div>
               </Form.Item>
-              {/* <Form.Item>
-                <GoogleOAuthProvider clientId="<your_client_id>"></GoogleOAuthProvider>
-                ;
-              </Form.Item> */}
             </Form>
           </div>
         </div>
