@@ -1,36 +1,33 @@
 {
   "format": 1,
   "restore": {
-    "E:\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.API\\SWP391.KoiCareSystemAtHome.API.csproj": {}
+    "D:\\SWP391\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.API\\SWP391.KoiCareSystemAtHome.API.csproj": {}
   },
   "projects": {
-    "E:\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.API\\SWP391.KoiCareSystemAtHome.API.csproj": {
+    "D:\\SWP391\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.API\\SWP391.KoiCareSystemAtHome.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.API\\SWP391.KoiCareSystemAtHome.API.csproj",
+        "projectUniqueName": "D:\\SWP391\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.API\\SWP391.KoiCareSystemAtHome.API.csproj",
         "projectName": "SWP391.KoiCareSystemAtHome.API",
-        "projectPath": "E:\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.API\\SWP391.KoiCareSystemAtHome.API.csproj",
-        "packagesPath": "C:\\Users\\nguye\\.nuget\\packages\\",
-        "outputPath": "E:\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.API\\obj\\",
+        "projectPath": "D:\\SWP391\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.API\\SWP391.KoiCareSystemAtHome.API.csproj",
+        "packagesPath": "C:\\Users\\LAPTOP\\.nuget\\packages\\",
+        "outputPath": "D:\\SWP391\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.API\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\nguye\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\LAPTOP\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "E:\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Service\\SWP391.KoiCareSystemAtHome.Service.csproj": {
-                "projectPath": "E:\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Service\\SWP391.KoiCareSystemAtHome.Service.csproj"
+              "D:\\SWP391\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Service\\SWP391.KoiCareSystemAtHome.Service.csproj": {
+                "projectPath": "D:\\SWP391\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Service\\SWP391.KoiCareSystemAtHome.Service.csproj"
               }
             }
           }
@@ -78,29 +75,26 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.402/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "E:\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Repository\\SWP391.KoiCareSystemAtHome.Repository.csproj": {
+    "D:\\SWP391\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Repository\\SWP391.KoiCareSystemAtHome.Repository.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Repository\\SWP391.KoiCareSystemAtHome.Repository.csproj",
+        "projectUniqueName": "D:\\SWP391\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Repository\\SWP391.KoiCareSystemAtHome.Repository.csproj",
         "projectName": "SWP391.KoiCareSystemAtHome.Repository",
-        "projectPath": "E:\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Repository\\SWP391.KoiCareSystemAtHome.Repository.csproj",
-        "packagesPath": "C:\\Users\\nguye\\.nuget\\packages\\",
-        "outputPath": "E:\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Repository\\obj\\",
+        "projectPath": "D:\\SWP391\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Repository\\SWP391.KoiCareSystemAtHome.Repository.csproj",
+        "packagesPath": "C:\\Users\\LAPTOP\\.nuget\\packages\\",
+        "outputPath": "D:\\SWP391\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Repository\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\nguye\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\LAPTOP\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -169,37 +163,34 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.402/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "E:\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Service\\SWP391.KoiCareSystemAtHome.Service.csproj": {
+    "D:\\SWP391\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Service\\SWP391.KoiCareSystemAtHome.Service.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Service\\SWP391.KoiCareSystemAtHome.Service.csproj",
+        "projectUniqueName": "D:\\SWP391\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Service\\SWP391.KoiCareSystemAtHome.Service.csproj",
         "projectName": "SWP391.KoiCareSystemAtHome.Service",
-        "projectPath": "E:\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Service\\SWP391.KoiCareSystemAtHome.Service.csproj",
-        "packagesPath": "C:\\Users\\nguye\\.nuget\\packages\\",
-        "outputPath": "E:\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Service\\obj\\",
+        "projectPath": "D:\\SWP391\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Service\\SWP391.KoiCareSystemAtHome.Service.csproj",
+        "packagesPath": "C:\\Users\\LAPTOP\\.nuget\\packages\\",
+        "outputPath": "D:\\SWP391\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Service\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\nguye\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\LAPTOP\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "E:\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Repository\\SWP391.KoiCareSystemAtHome.Repository.csproj": {
-                "projectPath": "E:\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Repository\\SWP391.KoiCareSystemAtHome.Repository.csproj"
+              "D:\\SWP391\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Repository\\SWP391.KoiCareSystemAtHome.Repository.csproj": {
+                "projectPath": "D:\\SWP391\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Repository\\SWP391.KoiCareSystemAtHome.Repository.csproj"
               }
             }
           }
@@ -234,7 +225,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.402/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
