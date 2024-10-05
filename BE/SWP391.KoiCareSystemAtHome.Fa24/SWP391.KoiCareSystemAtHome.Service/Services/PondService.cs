@@ -39,5 +39,17 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
 
             return pondModels;
         }
+
+        //public async Task<PondModel> GetPondByIdAsync(int pondId, int ownerId)
+        //{
+        //    var ponds = await _unitOfWork.Ponds.GetAsync();
+        //    var pondsOfOwner = ponds.Where(p => p.PondOwnerId == ownerId);
+
+        //    if (!pondsOfOwner.Any())
+        //        return null;
+
+
+
+        //}
     }
 }

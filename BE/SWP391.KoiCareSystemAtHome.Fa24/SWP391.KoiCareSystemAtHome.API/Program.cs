@@ -51,6 +51,9 @@ namespace SWP391.KoiCareSystemAtHome.API
             builder.Services.AddScoped<WaterReportService>();
             builder.Services.AddScoped<KoiFishService>();
             builder.Services.AddScoped<KoiGrowthReportService>();
+            builder.Services.AddScoped<KoiVarietyService>();
+            builder.Services.AddScoped<KoiGrowthStandardService>();
+            builder.Services.AddScoped<WaterParameterStandardService>();
 
             var app = builder.Build();
 
