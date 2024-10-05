@@ -1,12 +1,12 @@
 import React from "react";
 
-function MyKoiFish() {
+const MyKoiFish = () => {
   return (
-    <div className="p-4">
-      <h1>My Koi Fish</h1>
-      <p>Details about your Koi fish.</p>
+    <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
+      <h1 className="text-3xl font-bold mb-8 text-white p-8">MyKoiFish</h1>
+      <p className="text-white p-8">Thông tin chi tiết về  cá Koi của bạn.</p>
     </div>
   );
-}
+};
 
 export default MyKoiFish;

@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react';
 
-function SaltCalculator() {
+const SaltCalculator = () => {
   return (
-    <div className="p-4">
-      <h1>Salt Calculator</h1>
-      <p>Calculate the amount of salt to add to your pond.</p>
+    <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
+      <h1 className="text-3xl font-bold mb-8 text-white p-8">Salt Calculator</h1>
+      <p className="text-white p-8">Tính toán lượng muối cần thiết cho hồ cá.</p>
     </div>
   );
-}
+};
 
 export default SaltCalculator;

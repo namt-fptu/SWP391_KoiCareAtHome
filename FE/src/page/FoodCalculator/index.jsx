@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react';
 
-function FoodCalculator() {
+const FoodCalculator = () => {
   return (
-    <div className="p-4">
-      <h1>Food Calculator</h1>
-      <p>Calculate the amount of food to feed your Koi.</p>
-    </div>
+    <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
+    <h1 className="text-3xl font-bold mb-8 text-white p-8">Food Calculator</h1>
+    <p className="text-white p-8">Tính toán lượng thức ăn cho cá Koi của bạn.</p>
+  </div>
   );
-}
+};
 
 export default FoodCalculator;
