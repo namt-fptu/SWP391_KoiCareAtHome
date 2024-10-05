@@ -17,7 +17,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<KoiVarietyModel>> GetKoiAllVarietyAsync()
+        public async Task<IEnumerable<KoiVarietyModel>> GetAllKoiVarietyAsync()
         {
             var koiVarietys = await _unitOfWork.KoiVarietys.GetAsync();
 

@@ -28,6 +28,10 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         public async Task<ActionResult<IEnumerable<AccountResponseModel>>> GetAccounts()
         {
             var accounts = await _accountService.GetAcountAsync();
+
+            if (accounts == null || !accounts.Any()) 
+                return NotFound();
+
             var respone = accounts.Select(account => new AccountResponseModel
             {
                 Id = account.Id,

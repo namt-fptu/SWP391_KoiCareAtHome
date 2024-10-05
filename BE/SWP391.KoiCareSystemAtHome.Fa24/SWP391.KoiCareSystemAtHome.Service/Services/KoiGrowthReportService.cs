@@ -22,7 +22,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             var koiGrowthReports = await _unitOfWork.KoiGrowthReports.GetAsync();
             var reportOfKois = koiGrowthReports.Where(r => r.KoiId == id);
 
-            if (reportOfKois.Any())
+            if (reportOfKois == null || !reportOfKois.Any())
                 return Enumerable.Empty<KoiGrowthReportModel>();
 
             var koiGrowthReportModel = reportOfKois.Select(r => new KoiGrowthReportModel

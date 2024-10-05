@@ -203,6 +203,98 @@
     ]
   },
   {
+    "ContainingType": "SWP391.KoiCareSystemAtHome.API.Controllers.koiGrowthStandardController",
+    "Method": "GetkoiGrowthStandard",
+    "RelativePath": "api/koiGrowthStandard/koiStandard",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[SWP391.KoiCareSystemAtHome.Service.BusinessModels.KoiGrowthStandardModel, SWP391.KoiCareSystemAtHome.Service, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SWP391.KoiCareSystemAtHome.API.Controllers.koiGrowthStandardController",
+    "Method": "GetKoiGrowthStandardByVariety",
+    "RelativePath": "api/koiGrowthStandard/koiStandard/{variety}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "variety",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "SWP391.KoiCareSystemAtHome.Service.BusinessModels.KoiGrowthStandardModel",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SWP391.KoiCareSystemAtHome.API.Controllers.KoiVarietyController",
+    "Method": "GetKoiVariety",
+    "RelativePath": "api/KoiVariety/variety",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[SWP391.KoiCareSystemAtHome.API.ResponseModel.KoiVarietyResponseModel, SWP391.KoiCareSystemAtHome.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SWP391.KoiCareSystemAtHome.API.Controllers.KoiVarietyController",
+    "Method": "GetKoiVariety",
+    "RelativePath": "api/KoiVariety/variety/{variety}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "variety",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "SWP391.KoiCareSystemAtHome.API.ResponseModel.KoiVarietyResponseModel",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "SWP391.KoiCareSystemAtHome.API.Controllers.PondController",
     "Method": "GetPondById",
     "RelativePath": "api/Pond/pond",
@@ -245,6 +337,52 @@
     "ReturnTypes": [
       {
         "Type": "System.Collections.Generic.IEnumerable\u00601[[SWP391.KoiCareSystemAtHome.API.ResponseModel.PondResponseModel, SWP391.KoiCareSystemAtHome.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SWP391.KoiCareSystemAtHome.API.Controllers.WaterParameterStandardController",
+    "Method": "GetAllWaterParameterStandard",
+    "RelativePath": "api/WaterParameterStandard/waterStandard",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[SWP391.KoiCareSystemAtHome.API.ResponseModel.WaterParameterStandardResoponseModel, SWP391.KoiCareSystemAtHome.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SWP391.KoiCareSystemAtHome.API.Controllers.WaterParameterStandardController",
+    "Method": "GetWaterParameterStandardByVariety",
+    "RelativePath": "api/WaterParameterStandard/waterStandard/{variety}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "variety",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "SWP391.KoiCareSystemAtHome.API.ResponseModel.WaterParameterStandardResoponseModel",
         "MediaTypes": [
           "text/plain",
           "application/json",
