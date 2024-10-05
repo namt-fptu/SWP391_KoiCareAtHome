@@ -3133,34 +3133,19 @@
     ]
   },
   "packageFolders": {
-<<<<<<< HEAD
-    "C:\\Users\\LAPTOP\\.nuget\\packages\\": {}
-=======
-    "C:\\Users\\Admin\\.nuget\\packages\\": {}
->>>>>>> d6bef7fab30009bfd8997f19f6bce6c71b5388eb
+    "C:\\Users\\anhvy\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-<<<<<<< HEAD
-      "projectUniqueName": "D:\\SWP391\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Service\\SWP391.KoiCareSystemAtHome.Service.csproj",
+      "projectUniqueName": "C:\\Users\\anhvy\\Downloads\\SWP391\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Service\\SWP391.KoiCareSystemAtHome.Service.csproj",
       "projectName": "SWP391.KoiCareSystemAtHome.Service",
-      "projectPath": "D:\\SWP391\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Service\\SWP391.KoiCareSystemAtHome.Service.csproj",
-      "packagesPath": "C:\\Users\\LAPTOP\\.nuget\\packages\\",
-      "outputPath": "D:\\SWP391\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Service\\obj\\",
+      "projectPath": "C:\\Users\\anhvy\\Downloads\\SWP391\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Service\\SWP391.KoiCareSystemAtHome.Service.csproj",
+      "packagesPath": "C:\\Users\\anhvy\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\anhvy\\Downloads\\SWP391\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Service\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\LAPTOP\\AppData\\Roaming\\NuGet\\NuGet.Config"
-=======
-      "projectUniqueName": "E:\\Filetailieu\\FALL24\\SWP391\\SWP391_KoiCareAtHome\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Service\\SWP391.KoiCareSystemAtHome.Service.csproj",
-      "projectName": "SWP391.KoiCareSystemAtHome.Service",
-      "projectPath": "E:\\Filetailieu\\FALL24\\SWP391\\SWP391_KoiCareAtHome\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Service\\SWP391.KoiCareSystemAtHome.Service.csproj",
-      "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "E:\\Filetailieu\\FALL24\\SWP391\\SWP391_KoiCareAtHome\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Service\\obj\\",
-      "projectStyle": "PackageReference",
-      "configFilePaths": [
-        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config"
->>>>>>> d6bef7fab30009bfd8997f19f6bce6c71b5388eb
+        "C:\\Users\\anhvy\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -3172,13 +3157,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-<<<<<<< HEAD
-            "D:\\SWP391\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Repository\\SWP391.KoiCareSystemAtHome.Repository.csproj": {
-              "projectPath": "D:\\SWP391\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Repository\\SWP391.KoiCareSystemAtHome.Repository.csproj"
-=======
-            "E:\\Filetailieu\\FALL24\\SWP391\\SWP391_KoiCareAtHome\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Repository\\SWP391.KoiCareSystemAtHome.Repository.csproj": {
-              "projectPath": "E:\\Filetailieu\\FALL24\\SWP391\\SWP391_KoiCareAtHome\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Repository\\SWP391.KoiCareSystemAtHome.Repository.csproj"
->>>>>>> d6bef7fab30009bfd8997f19f6bce6c71b5388eb
+            "C:\\Users\\anhvy\\Downloads\\SWP391\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Repository\\SWP391.KoiCareSystemAtHome.Repository.csproj": {
+              "projectPath": "C:\\Users\\anhvy\\Downloads\\SWP391\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Repository\\SWP391.KoiCareSystemAtHome.Repository.csproj"
             }
           }
         }
