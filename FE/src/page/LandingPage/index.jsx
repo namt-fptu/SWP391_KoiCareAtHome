@@ -82,7 +82,10 @@ const Home = () => {
         <span className="mb-6 text-lg">Most Popular Posts</span>
       </div>
 
-      <div className="aboutus mt-8 px-8 flex flex-col items-center justify-center">
+      <div
+        id="aboutus"
+        className="mt-8 px-8 flex flex-col items-center justify-center"
+      >
         <h1 className="text-5xl font-bold mb-10">About Us</h1>
         <p className="mb-6 indent-8">
           Welcome to <strong>KoiF</strong>, your trusted partner for Koi fish

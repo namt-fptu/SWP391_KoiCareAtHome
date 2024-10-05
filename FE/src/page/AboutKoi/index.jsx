@@ -1,77 +1,65 @@
-import React, { useEffect, useState } from 'react';
-
-export default function List() {
-  const [people, setPeople] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchPeople = async () => {
-      try {
-        const response = await fetch('koiF.json'); // Thay đổi đường dẫn đến tệp JSON của bạn
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setPeople(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPeople();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
-        <article className="bg-black p-5">
-          <h1 className="text-white text-3xl font-bold mb-8">KoiF Manager</h1>
-          <p className="text-white">Loading...</p>
-        </article>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
-        <article className="bg-black p-5">
-          <h1 className="text-white text-3xl font-bold mb-8">KoiF Manager</h1>
-          <p className="text-red-500">{error}</p>
-        </article>
-      </div>
-    );
-  }
-
-  if (!people || people.length === 0) {
-    return (
-      <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
-        <article className="bg-black p-5">
-          <h1 className="text-white text-3xl font-bold mb-8">KoiF Manager</h1>
-          <p className="text-white">No data available.</p>
-        </article>
-      </div>
-    );
-  }
-
-  const listItems = people.map((person) => (
-    <li key={person.id} className="list-none mx-5">
-      <p className="text-white">
-        <b>{person.name}:</b>
-        {' ' + person.coder + ' '}
-      </p>
-    </li>
-  ));
-
+import React from 'react';
+import nam from "./../../assets/1.jpg";
+import tien from "./../../assets/2.jpg";
+import anh from "./../../assets/3.jpg";
+import nguyen from "./../../assets/4.jpg";
+import tri from "./../../assets/5.jpg";
+const TeamSection = () => {
   return (
-    <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
-      <article className="bg-black p-5">
-        <h1 className="text-white text-3xl font-bold mb-8">KoiF Manager</h1>
-        <ul className="flex flex-wrap justify-center p-0">{listItems}</ul>
-      </article>
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-r bg-gray-900 to-blue-300">
+      <div className="bg-white w-full max-w-lg rounded-xl p-8 shadow-xl">
+        <h2 className="text-center text-xl font-semibold">My Team</h2>
+        <hr className="w-24 my-3 mx-auto" />
+        <div className="flex justify-center">
+          <div className="team-member mx-2 text-center">
+            <img
+              src={nam}
+              alt="Nam"
+              className="w-24 h-24 rounded-full mx-auto mb-2"
+            />
+            <h4 className="text-md font-medium">Nam</h4>
+            <p className="text-sm text-gray-600">Front-End</p>
+          </div>
+          <div className="team-member mx-2 text-center">
+            <img
+              src={tien}
+              alt="Tien"
+              className="w-24 h-24 rounded-full mx-auto mb-2"
+            />
+            <h4 className="text-md font-medium">Tien</h4>
+            <p className="text-sm text-gray-600">Back-End</p>
+          </div>
+          <div className="team-member mx-2 text-center">
+            <img
+              src={anh}
+              alt="Vy Anh"
+              className="w-24 h-24 rounded-full mx-auto mb-2"
+            />
+            <h4 className="text-md font-medium">Vy Anh</h4>
+            <p className="text-sm text-gray-600">Front-End</p>
+          </div>
+          <div className="team-member mx-2 text-center">
+            <img
+              src={nguyen}
+              alt="Nguyen"
+              className="w-24 h-24 rounded-full mx-auto mb-2"
+            />
+            <h4 className="text-md font-medium">Nguyen</h4>
+            <p className="text-sm text-gray-600">Front-End</p>
+          </div>
+          <div className="team-member mx-2 text-center">
+            <img
+              src={tri}
+              alt="Tri"
+              className="w-24 h-24 rounded-full mx-auto mb-2"
+            />
+            <h4 className="text-md font-medium">Tri</h4>
+            <p className="text-sm text-gray-600">Back-End</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
-}
+};
+
+export default TeamSection;

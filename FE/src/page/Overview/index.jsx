@@ -33,6 +33,11 @@ const Overview = () => {
             Salt Calculator
           </button>
         </Link>
+        <Link to="/Blog">
+          <button className="bg-blue-600 rounded-md text-white p-4 hover:bg-blue-700 w-full">
+            Blog
+          </button>
+        </Link>
         <Link to="/Statistics">
           <button className="bg-blue-600 rounded-md text-white p-4 hover:bg-blue-700 w-full">
             Statistics
@@ -43,6 +48,7 @@ const Overview = () => {
             About Koi
           </button>
         </Link>
+        
       </div>
     </div>
   );
