@@ -131,6 +131,17 @@ const SideBar = () => {
             </li>
           </Link>
 
+            {/* About Koi */}
+          <Link to="Blog">
+            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
+              <img src={aboutKoiIcon} alt="About Koi" />
+              <span className={`${!open && "hidden"} origin-left duration-200`}>
+                Blog !!!
+              </span>
+            </li>
+          </Link>
+
+
           {/* Statistics */}
           <Link to="Statistics">
             <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-9">
@@ -150,6 +161,9 @@ const SideBar = () => {
               </span>
             </li>
           </Link>
+
+            
+
 
           {/* Log Out */}
           <Link to="#">
