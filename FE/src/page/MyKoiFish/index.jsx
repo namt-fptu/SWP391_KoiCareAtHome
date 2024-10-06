@@ -78,7 +78,7 @@ const MyKoiFish = () => {
         <p className="text-white p-8">Thông tin chi tiết về cá Koi của bạn.</p>
         <div>
           {/* Nút để mở popup */}
-          <div>
+          <div class="flex flex-col items-center">
             <Button className="" type="primary" onClick={showModal}>
               Input
             </Button>
