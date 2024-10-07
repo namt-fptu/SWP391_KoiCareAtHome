@@ -3702,11 +3702,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.API\\SWP391.KoiCareSystemAtHome.API.csproj",
+      "projectUniqueName": "E:\\repo\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.API\\SWP391.KoiCareSystemAtHome.API.csproj",
       "projectName": "SWP391.KoiCareSystemAtHome.API",
-      "projectPath": "E:\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.API\\SWP391.KoiCareSystemAtHome.API.csproj",
+      "projectPath": "E:\\repo\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.API\\SWP391.KoiCareSystemAtHome.API.csproj",
       "packagesPath": "C:\\Users\\nguye\\.nuget\\packages\\",
-      "outputPath": "E:\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.API\\obj\\",
+      "outputPath": "E:\\repo\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.API\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\nguye\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -3724,8 +3724,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "E:\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Service\\SWP391.KoiCareSystemAtHome.Service.csproj": {
-              "projectPath": "E:\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Service\\SWP391.KoiCareSystemAtHome.Service.csproj"
+            "E:\\repo\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Service\\SWP391.KoiCareSystemAtHome.Service.csproj": {
+              "projectPath": "E:\\repo\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Service\\SWP391.KoiCareSystemAtHome.Service.csproj"
             }
           }
         }

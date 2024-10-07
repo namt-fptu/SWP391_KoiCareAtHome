@@ -41,15 +41,11 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return koiFishModels;
         }
 
-        public async Task<KoiFishModel> GetKoiFishByIdAsync(int pondId, int fishId)
+        public async Task<KoiFishModel> GetKoiFishByIdAsync(int fishId)
         {
             var koiFishs = await _unitOfWork.KoiFishs.GetAsync();
-            var fishOfPond = koiFishs.Where(f => f.PondId == pondId);
 
-            if (fishOfPond == null || !fishOfPond.Any())
-                return null;
-
-            var koiFish = fishOfPond.FirstOrDefault(f => f.Id == fishId);
+            var koiFish = koiFishs.FirstOrDefault(f => f.Id == fishId);
 
             if (koiFish == null)
                 return null;

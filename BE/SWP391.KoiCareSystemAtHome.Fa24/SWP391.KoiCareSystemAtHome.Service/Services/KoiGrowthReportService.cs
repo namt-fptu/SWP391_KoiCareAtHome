@@ -38,15 +38,11 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return koiGrowthReportModels;
         }
 
-        public async Task<KoiGrowthReportModel> GetKoiGrowthReportByIdAsync(int koiId, int reportId)
+        public async Task<KoiGrowthReportModel> GetKoiGrowthReportByIdAsync(int reportId)
         {
             var koiGrowthReports = await _unitOfWork.KoiGrowthReports.GetAsync();
-            var reportOfKois = koiGrowthReports.Where(r => r.KoiId == koiId);
 
-            if (reportOfKois == null || !reportOfKois.Any())
-                return null;
-
-            var koiGrowReport = reportOfKois.FirstOrDefault(r => r.Id == reportId);
+            var koiGrowReport = koiGrowthReports.FirstOrDefault(r => r.Id == reportId);
 
             if (koiGrowReport == null)
                 return null;

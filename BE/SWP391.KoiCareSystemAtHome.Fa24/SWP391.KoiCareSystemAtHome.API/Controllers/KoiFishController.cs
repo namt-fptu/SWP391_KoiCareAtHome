@@ -41,11 +41,11 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpPost("koiFish")]
-        public async Task<ActionResult<KoiFishResponseModel>> GetKoiFishById(GetKoiFishRequestModel request)
+        [HttpGet("koiFishId/{koiFishId}")]
+        public async Task<ActionResult<KoiFishResponseModel>> GetKoiFishById(int koiFishId)
         {
 
-            var koiFish = await _koiFishService.GetKoiFishByIdAsync(request.PondId, request.KoiFishId);
+            var koiFish = await _koiFishService.GetKoiFishByIdAsync(koiFishId);
 
             if (koiFish == null)
                 return NotFound();
@@ -85,7 +85,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
 
                 int koiFishId = await _koiFishService.CreateKoiFishAsync(koiFishModdel);
 
-                var koiFish = await _koiFishService.GetKoiFishByIdAsync(request.PondId, koiFishId);
+                var koiFish = await _koiFishService.GetKoiFishByIdAsync(koiFishId);
 
                 if (koiFish == null)
                     return NotFound();

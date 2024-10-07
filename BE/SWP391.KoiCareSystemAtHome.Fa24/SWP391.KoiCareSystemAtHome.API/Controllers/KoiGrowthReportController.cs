@@ -18,7 +18,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             _koiGrowthReportService = koiGrowthReportService;
         }
 
-        [HttpGet("koiGrowReport/{koiId}")]
+        [HttpGet("koiGrowthReport/{koiId}")]
         public async Task<ActionResult<IEnumerable<KoiFishResponseModel>>> GetKoiGrowthReportByKoiId(int koiId)
         {
             var reports = await _koiGrowthReportService.GetKoiGrowthReportByKoiIdAsync(koiId);
@@ -38,10 +38,10 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpPost("koiGrowReport")]
-        public async Task<ActionResult<KoiGrowthReportResponseModel>> GetKoiGrowReportById(GetKoiGrowthReportRequestModel request)
+        [HttpGet("koiGrowthReportId/{reportId}")]
+        public async Task<ActionResult<KoiGrowthReportResponseModel>> GetKoiGrowReportById(int reportId)
         {
-            var report = await _koiGrowthReportService.GetKoiGrowthReportByIdAsync(request.KoiId, request.KoiGrowthReportId);
+            var report = await _koiGrowthReportService.GetKoiGrowthReportByIdAsync(reportId);
 
             if (report == null)
                 return NotFound();
@@ -74,7 +74,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
 
                 int koiReportId = await _koiGrowthReportService.CreateKoiGrowthReportAsync(model);
 
-                var report = await _koiGrowthReportService.GetKoiGrowthReportByIdAsync(request.KoiId, koiReportId);
+                var report = await _koiGrowthReportService.GetKoiGrowthReportByIdAsync(koiReportId);
 
                 if (report == null)
                     return NotFound();

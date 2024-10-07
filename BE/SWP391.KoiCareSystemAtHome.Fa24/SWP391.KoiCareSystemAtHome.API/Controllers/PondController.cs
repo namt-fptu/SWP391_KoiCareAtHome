@@ -44,11 +44,11 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpPost("pond")]
-        public async Task<ActionResult<PondResponseModel>> GetPondById(GetPondRequestModel request)
+        [HttpGet("pond/{pondId}")]
+        public async Task<ActionResult<PondResponseModel>> GetPondById(int pondId)
         {
 
-            var pond = await _pondService.GetPondByIdAsync(request.PondId, request.PondOwnerId);
+            var pond = await _pondService.GetPondByIdAsync(pondId);
 
             if (pond == null)
                 return NotFound();
@@ -73,14 +73,6 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         {
             if (request == null)
                 return BadRequest("Pond data is required.");
-            if (request.PondOwnerId <= 0)
-                return BadRequest("ID must be greater than zero.");
-            if (string.IsNullOrEmpty(request.Name))
-                return BadRequest("Name is required.");
-            if (request.Depth <= 0)
-                return BadRequest("Depth must be greater than zero.");
-            if (request.Volume <= 0)
-                return BadRequest("Volume must be greater than zero.");
 
             try
             {
@@ -98,7 +90,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
 
                 int pondId = await _pondService.CreatePondAsync(model);
 
-                var pond = await _pondService.GetPondByIdAsync(pondId, request.PondOwnerId);
+                var pond = await _pondService.GetPondByIdAsync(pondId);
 
                 if (pond == null)
                     return NotFound();
@@ -128,5 +120,12 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while creating the pond.");
             }
         }
+
+        //[HttpPut]
+        //public async Task<ActionResult> UpdatePond(PondModel pondModelmodel, GetPondRequestModel getPondRequestModel)
+        //{
+
+        //}
+
     }
 }

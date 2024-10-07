@@ -116,32 +116,6 @@
   },
   {
     "ContainingType": "SWP391.KoiCareSystemAtHome.API.Controllers.KoiFishController",
-    "Method": "GetKoiFishById",
-    "RelativePath": "api/KoiFish/koiFish",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "SWP391.KoiCareSystemAtHome.API.RequestModel.GetKoiFishRequestModel",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "SWP391.KoiCareSystemAtHome.API.ResponseModel.KoiFishResponseModel",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "SWP391.KoiCareSystemAtHome.API.Controllers.KoiFishController",
     "Method": "GetKoiFishByPondId",
     "RelativePath": "api/KoiFish/koiFish/{pondId}",
     "HttpMethod": "GET",
@@ -157,6 +131,32 @@
     "ReturnTypes": [
       {
         "Type": "System.Collections.Generic.IEnumerable\u00601[[SWP391.KoiCareSystemAtHome.API.ResponseModel.KoiFishResponseModel, SWP391.KoiCareSystemAtHome.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SWP391.KoiCareSystemAtHome.API.Controllers.KoiFishController",
+    "Method": "GetKoiFishById",
+    "RelativePath": "api/KoiFish/koiFishId/{koiFishId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "koiFishId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "SWP391.KoiCareSystemAtHome.API.ResponseModel.KoiFishResponseModel",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -184,34 +184,8 @@
   },
   {
     "ContainingType": "SWP391.KoiCareSystemAtHome.API.Controllers.KoiGrowthReportController",
-    "Method": "GetKoiGrowReportById",
-    "RelativePath": "api/KoiGrowthReport/koiGrowReport",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "SWP391.KoiCareSystemAtHome.API.RequestModel.GetKoiGrowthReportRequestModel",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "SWP391.KoiCareSystemAtHome.API.ResponseModel.KoiGrowthReportResponseModel",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "SWP391.KoiCareSystemAtHome.API.Controllers.KoiGrowthReportController",
     "Method": "GetKoiGrowthReportByKoiId",
-    "RelativePath": "api/KoiGrowthReport/koiGrowReport/{koiId}",
+    "RelativePath": "api/KoiGrowthReport/koiGrowthReport/{koiId}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -225,6 +199,32 @@
     "ReturnTypes": [
       {
         "Type": "System.Collections.Generic.IEnumerable\u00601[[SWP391.KoiCareSystemAtHome.API.ResponseModel.KoiFishResponseModel, SWP391.KoiCareSystemAtHome.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SWP391.KoiCareSystemAtHome.API.Controllers.KoiGrowthReportController",
+    "Method": "GetKoiGrowReportById",
+    "RelativePath": "api/KoiGrowthReport/koiGrowthReportId/{reportId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "reportId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "SWP391.KoiCareSystemAtHome.API.ResponseModel.KoiGrowthReportResponseModel",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -377,14 +377,14 @@
   {
     "ContainingType": "SWP391.KoiCareSystemAtHome.API.Controllers.PondController",
     "Method": "GetPondById",
-    "RelativePath": "api/Pond/pond",
-    "HttpMethod": "POST",
+    "RelativePath": "api/Pond/pond/{pondId}",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "request",
-        "Type": "SWP391.KoiCareSystemAtHome.API.RequestModel.GetPondRequestModel",
+        "Name": "pondId",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],
@@ -506,32 +506,6 @@
   },
   {
     "ContainingType": "SWP391.KoiCareSystemAtHome.API.Controllers.WaterReportController",
-    "Method": "GetWaterReportById",
-    "RelativePath": "api/WaterReport/waterReport",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "SWP391.KoiCareSystemAtHome.API.RequestModel.GetWaterReportRequestModel",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "SWP391.KoiCareSystemAtHome.API.ResponseModel.WaterReportResponseModel",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "SWP391.KoiCareSystemAtHome.API.Controllers.WaterReportController",
     "Method": "GetWaterReportByPondId",
     "RelativePath": "api/WaterReport/waterReport/{pondId}",
     "HttpMethod": "GET",
@@ -547,6 +521,32 @@
     "ReturnTypes": [
       {
         "Type": "System.Collections.Generic.IEnumerable\u00601[[SWP391.KoiCareSystemAtHome.API.ResponseModel.WaterReportResponseModel, SWP391.KoiCareSystemAtHome.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SWP391.KoiCareSystemAtHome.API.Controllers.WaterReportController",
+    "Method": "GetWaterReportById",
+    "RelativePath": "api/WaterReport/waterReportId/{reportId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "reportId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "SWP391.KoiCareSystemAtHome.API.ResponseModel.WaterReportResponseModel",
         "MediaTypes": [
           "text/plain",
           "application/json",

@@ -47,11 +47,11 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpPost("waterReport")]
-        public async Task<ActionResult<WaterReportResponseModel>> GetWaterReportById(GetWaterReportRequestModel request)
+        [HttpGet("waterReportId/{reportId}")]
+        public async Task<ActionResult<WaterReportResponseModel>> GetWaterReportById(int reportId)
         {
 
-            var waterReport = await _waterReportService.GetWarterReportByIdAsync(request.PondId, request.WaterReportId);
+            var waterReport = await _waterReportService.GetWarterReportByIdAsync(reportId);
 
             if (waterReport == null)
                 return NotFound();
@@ -100,7 +100,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
 
                 int waterReportId = await _waterReportService.CreateWaterReportAsync(model);    //bug in get id
 
-                var waterReport = await _waterReportService.GetWarterReportByIdAsync(request.PondId, waterReportId);
+                var waterReport = await _waterReportService.GetWarterReportByIdAsync(waterReportId);
 
                 if (waterReport == null)
                     return NotFound();

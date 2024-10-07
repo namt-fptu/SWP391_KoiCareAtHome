@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Repository\\SWP391.KoiCareSystemAtHome.Repository.csproj": {}
+    "E:\\repo\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Repository\\SWP391.KoiCareSystemAtHome.Repository.csproj": {}
   },
   "projects": {
-    "E:\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Repository\\SWP391.KoiCareSystemAtHome.Repository.csproj": {
+    "E:\\repo\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Repository\\SWP391.KoiCareSystemAtHome.Repository.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Repository\\SWP391.KoiCareSystemAtHome.Repository.csproj",
+        "projectUniqueName": "E:\\repo\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Repository\\SWP391.KoiCareSystemAtHome.Repository.csproj",
         "projectName": "SWP391.KoiCareSystemAtHome.Repository",
-        "projectPath": "E:\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Repository\\SWP391.KoiCareSystemAtHome.Repository.csproj",
+        "projectPath": "E:\\repo\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Repository\\SWP391.KoiCareSystemAtHome.Repository.csproj",
         "packagesPath": "C:\\Users\\nguye\\.nuget\\packages\\",
-        "outputPath": "E:\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Repository\\obj\\",
+        "outputPath": "E:\\repo\\SWP391_KoiCareAtHome\\BE\\SWP391.KoiCareSystemAtHome.Fa24\\SWP391.KoiCareSystemAtHome.Repository\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\nguye\\AppData\\Roaming\\NuGet\\NuGet.Config",

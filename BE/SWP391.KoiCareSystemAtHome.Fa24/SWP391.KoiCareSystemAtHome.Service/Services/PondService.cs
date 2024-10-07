@@ -41,15 +41,11 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return pondModels;
         }
 
-        public async Task<PondModel> GetPondByIdAsync(int pondId, int ownerId)
+        public async Task<PondModel> GetPondByIdAsync(int pondId)
         {
             var ponds = await _unitOfWork.Ponds.GetAsync();
-            var pondsOfOwner = ponds.Where(p => p.PondOwnerId == ownerId);
 
-            if (pondsOfOwner == null || !pondsOfOwner.Any())
-                return null;
-
-            var pond = pondsOfOwner.FirstOrDefault(p => p.Id == pondId);
+            var pond = ponds.FirstOrDefault(p => p.Id == pondId);
 
             if (pond == null)
                 return null;
@@ -86,6 +82,32 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             await _unitOfWork.SaveAsync();
 
             return pondEntity.Id;
+        }
+
+        public async Task<bool> UpdatePondAsync(int pondOwnerId, int pondId, PondModel pondModel)
+        {
+            var ponds = await _unitOfWork.Ponds.GetAsync();
+            var pondsOfOwner = ponds.Where(p => p.PondOwnerId == pondOwnerId);
+
+            if (pondsOfOwner == null || !pondsOfOwner.Any())
+                return false;
+
+            var pond = pondsOfOwner.FirstOrDefault(p => p.Id == pondId);
+
+            if (pond == null)
+                return false;
+
+            pond.Name = pondModel.Name;
+            pond.Depth = pondModel.Depth;
+            pond.Volume = pondModel.Volume;
+            pond.DraimCount = pondModel.DraimCount;
+            pond.SkimmerCount = pondModel.SkimmerCount;
+            pond.PumpingCapacity = pondModel.PumpingCapacity;
+
+            _unitOfWork.Ponds.UpdateAsync(pond);
+            await _unitOfWork.SaveAsync();
+
+            return true;
         }
 
     }
