@@ -64,7 +64,7 @@ const MyPond = () => {
         </p>
         <div>
           {/* Nút để mở popup */}
-          <div class="flex flex-col items-center">
+          <div className="flex flex-col items-center">
             <Button className="" type="primary" onClick={showModal}>
               Input
             </Button>
@@ -204,21 +204,23 @@ const MyPond = () => {
                           <strong>Name:</strong> {pond.name || "-"}
                         </p>
                         <p>
-                          <strong>Age:</strong> {pond.volume || "-"}
+                          <strong>Volume:</strong> {pond.volume || "-"}
                         </p>
                         <p>
-                          <strong>Variety:</strong> {pond.depth || "-"}
+                          <strong>Depth:</strong> {pond.depth || "-"}
                         </p>
                       </div>
 
                       <p>
-                        <strong>Length:</strong> {pond.drainCount || "-"}
+                        <strong>Drain Count:</strong> {pond.drainCount || "-"}
                       </p>
                       <p>
-                        <strong>Weight:</strong> {pond.skimmerCount || "-"}
+                        <strong>Skimmer Count:</strong>{" "}
+                        {pond.skimmerCount || "-"}
                       </p>
                       <p>
-                        <strong>Weight:</strong> {pond.pumpingCapacity || "-"}
+                        <strong>Pumping Capacity:</strong>{" "}
+                        {pond.pumpingCapacity || "-"}
                       </p>
                     </div>
                   </Card>
