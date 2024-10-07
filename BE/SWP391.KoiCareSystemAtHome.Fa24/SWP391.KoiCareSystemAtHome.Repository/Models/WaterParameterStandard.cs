@@ -9,6 +9,8 @@ public partial class WaterParameterStandard
 
     public string KoiVariety { get; set; } = null!;
 
+    public int Stage { get; set; }
+
     public decimal MaxTemp { get; set; }
 
     public decimal MinTemp { get; set; }

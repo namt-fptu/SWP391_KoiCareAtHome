@@ -1,4 +1,5 @@
 ﻿using SWP391.KoiCareSystemAtHome.Repository;
+using SWP391.KoiCareSystemAtHome.Repository.Models;
 using SWP391.KoiCareSystemAtHome.Service.BusinessModels;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             if (reportOfKois == null || !reportOfKois.Any())
                 return Enumerable.Empty<KoiGrowthReportModel>();
 
-            var koiGrowthReportModel = reportOfKois.Select(r => new KoiGrowthReportModel
+            var koiGrowthReportModels = reportOfKois.Select(r => new KoiGrowthReportModel
             {
                 Id = r.Id,
                 KoiId = r.KoiId,
@@ -34,7 +35,49 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                 Wetight = r.Length
             });
 
+            return koiGrowthReportModels;
+        }
+
+        public async Task<KoiGrowthReportModel> GetKoiGrowthReportByIdAsync(int koiId, int reportId)
+        {
+            var koiGrowthReports = await _unitOfWork.KoiGrowthReports.GetAsync();
+            var reportOfKois = koiGrowthReports.Where(r => r.KoiId == koiId);
+
+            if (reportOfKois == null || !reportOfKois.Any())
+                return null;
+
+            var koiGrowReport = reportOfKois.FirstOrDefault(r => r.Id == reportId);
+
+            if (koiGrowReport == null)
+                return null;
+
+            var koiGrowthReportModel = new KoiGrowthReportModel
+            {
+                Id = koiGrowReport.Id,
+                KoiId = koiGrowReport.KoiId,
+                Date = koiGrowReport.Date,
+                Length = koiGrowReport.Length,
+                Wetight = koiGrowReport.Length
+            };
+
             return koiGrowthReportModel;
         }
+
+        public async Task<int> CreateKoiGrowthReportAsync(KoiGrowthReportModel koiGrowthReportModel)
+        {
+            var entity = new KoiGrowthReport
+            {
+                KoiId = koiGrowthReportModel.KoiId,
+                Date = koiGrowthReportModel.Date,
+                Length = koiGrowthReportModel.Length,
+                Wetight = koiGrowthReportModel.Length
+            };
+
+            await _unitOfWork.KoiGrowthReports.InsertAsync(entity);
+            await _unitOfWork.SaveAsync();
+
+            return entity.Id;
+        }
+
     }
 }

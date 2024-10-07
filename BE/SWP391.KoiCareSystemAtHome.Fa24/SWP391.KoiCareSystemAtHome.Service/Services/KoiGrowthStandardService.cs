@@ -1,4 +1,5 @@
 ﻿using SWP391.KoiCareSystemAtHome.Repository;
+using SWP391.KoiCareSystemAtHome.Repository.Models;
 using SWP391.KoiCareSystemAtHome.Service.BusinessModels;
 using System;
 using System.Collections.Generic;
@@ -38,14 +39,14 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return koiGrowthStandardModels;
         }
 
-        public async Task<KoiGrowthStandardModel> KoiGrowthStandardModelAsync(string variety)
+        public async Task<KoiGrowthStandardModel> KoiGrowthStandardModelAsync(int id)
         {
             var koiGrowthStandards = await _unitOfWork.KoiGrowthStandards.GetAsync();
 
             if (koiGrowthStandards == null || !koiGrowthStandards.Any())
                 return null;
 
-            var koiGrowthStandard = koiGrowthStandards.Where(g => g.KoiVariety.ToLower().Equals(variety.ToLower())).FirstOrDefault();
+            var koiGrowthStandard = koiGrowthStandards.FirstOrDefault(g => g.Id == id);
 
             if (koiGrowthStandard == null)
                 return null;
@@ -62,6 +63,24 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             };
 
             return koiGrowthStandardModel;
+        }
+
+        public async Task<int> CreateKoiGrowthStandardAsync(KoiGrowthStandardModel koiGrowthStandardModel)
+        {
+            var entity = new KoiGrowthStandard
+            {
+                KoiVariety = koiGrowthStandardModel.KoiVariety,
+                Stage = koiGrowthStandardModel.Stage,
+                StandardLength = koiGrowthStandardModel.StandardLength,
+                StandardWeigth = koiGrowthStandardModel.StandardWeigth,
+                MaxFeed = koiGrowthStandardModel.MaxFeed,
+                MinFeed = koiGrowthStandardModel.MinFeed
+            };
+
+            await _unitOfWork.KoiGrowthStandards.InsertAsync(entity);
+            await _unitOfWork.SaveAsync();
+
+            return entity.Id;
         }
     }
 }

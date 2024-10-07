@@ -1,4 +1,5 @@
 ﻿using SWP391.KoiCareSystemAtHome.Repository;
+using SWP391.KoiCareSystemAtHome.Repository.Models;
 using SWP391.KoiCareSystemAtHome.Service.BusinessModels;
 using System;
 using System.Collections.Generic;
@@ -17,12 +18,12 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<KoiFishModel>> GetKoiFishByPondIdAsync(int id)
+        public async Task<IEnumerable<KoiFishModel>> GetKoiFishByPondIdAsync(int pondId)
         {
             var koiFishs = await _unitOfWork.KoiFishs.GetAsync();
-            var fishOfPond = koiFishs.Where(f => f.PondId == id);
+            var fishOfPond = koiFishs.Where(f => f.PondId == pondId);
 
-            if (fishOfPond.Any()) 
+            if (fishOfPond == null || !fishOfPond.Any()) 
                 return Enumerable.Empty<KoiFishModel>();
 
             var koiFishModels = fishOfPond.Select(fish => new KoiFishModel
@@ -39,5 +40,52 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
 
             return koiFishModels;
         }
+
+        public async Task<KoiFishModel> GetKoiFishByIdAsync(int pondId, int fishId)
+        {
+            var koiFishs = await _unitOfWork.KoiFishs.GetAsync();
+            var fishOfPond = koiFishs.Where(f => f.PondId == pondId);
+
+            if (fishOfPond == null || !fishOfPond.Any())
+                return null;
+
+            var koiFish = fishOfPond.FirstOrDefault(f => f.Id == fishId);
+
+            if (koiFish == null)
+                return null;
+
+            var koiFishModel = new KoiFishModel
+            {
+                Id = koiFish.Id,
+                PondId = koiFish.PondId,
+                KoiVariety = koiFish.KoiVariety,
+                KoiName = koiFish.KoiName,
+                Dob = koiFish.Dob,
+                Sex = koiFish.Sex,
+                Price = koiFish.Price,
+                ImageUrl = koiFish.ImageUrl
+            };
+            return koiFishModel;
+        }
+
+        public async Task<int> CreateKoiFishAsync(KoiFishModel koiFishModel)
+        {
+            var entity = new KoiFish
+            {
+                PondId = koiFishModel.PondId,
+                KoiVariety = koiFishModel.KoiVariety,
+                KoiName = koiFishModel.KoiName,
+                Dob = koiFishModel.Dob,
+                Sex = koiFishModel.Sex,
+                Price = koiFishModel.Price,
+                ImageUrl = koiFishModel.ImageUrl
+            };
+
+            await _unitOfWork.KoiFishs.InsertAsync(entity);
+            await _unitOfWork.SaveAsync();
+
+            return entity.Id;
+        }
+
     }
 }

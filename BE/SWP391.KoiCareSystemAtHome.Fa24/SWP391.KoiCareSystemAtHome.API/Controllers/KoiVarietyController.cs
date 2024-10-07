@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SWP391.KoiCareSystemAtHome.API.RequestModel;
 using SWP391.KoiCareSystemAtHome.API.ResponseModel;
+using SWP391.KoiCareSystemAtHome.Service.BusinessModels;
 using SWP391.KoiCareSystemAtHome.Service.Services;
 
 namespace SWP391.KoiCareSystemAtHome.API.Controllers
@@ -50,6 +52,43 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             };
 
             return Ok(response);
+        }
+
+        [HttpPost("createKoiVariety")]
+        public async Task<ActionResult> CreateKoiVariety(KoiVarietyRequestModel request)
+        {
+            if (request == null)
+                return BadRequest("Koi variety data is required.");
+
+            try
+            {
+                KoiVarietyModel model = new()
+                {
+                    Variety = request.Variety,
+                    Rarity = request.Rarity,
+                    Color = request.Color,
+                };
+
+                string variety = await _koiVarietyService.CreateKoiVarietyAsync(model);
+
+                var koiVariety = await _koiVarietyService.GetKoiVarietyAsync(variety);
+
+                if (koiVariety == null)
+                    return NotFound();
+
+                var response = new KoiVarietyResponseModel
+                {
+                    Variety = koiVariety.Variety,
+                    Color = koiVariety.Color,
+                    Rarity = koiVariety.Rarity,
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while creating the water report.");
+            }
         }
     }
 }

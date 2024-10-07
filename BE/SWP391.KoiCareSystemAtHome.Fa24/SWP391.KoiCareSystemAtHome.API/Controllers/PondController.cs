@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.IdentityModel.Tokens;
 using SWP391.KoiCareSystemAtHome.API.RequestModel;
 using SWP391.KoiCareSystemAtHome.API.ResponseModel;
+using SWP391.KoiCareSystemAtHome.Repository.Models;
+using SWP391.KoiCareSystemAtHome.Service.BusinessModels;
 using SWP391.KoiCareSystemAtHome.Service.Services;
 
 namespace SWP391.KoiCareSystemAtHome.API.Controllers
@@ -41,20 +45,13 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         }
 
         [HttpPost("pond")]
-        public async Task<ActionResult<PondResponseModel>> GetPondById(PondRequestModel request)
+        public async Task<ActionResult<PondResponseModel>> GetPondById(GetPondRequestModel request)
         {
-            var ponds = await _pondService.GetPondByOwnerIdAsync(request.PondOwnerId);
 
-            if (ponds == null || !ponds.Any())
-            {
-                return NotFound();
-            }
+            var pond = await _pondService.GetPondByIdAsync(request.PondId, request.PondOwnerId);
 
-            var pond = ponds.Where(p => p.Id == request.PondId).FirstOrDefault();
             if (pond == null)
-            {
                 return NotFound();
-            }
 
             var Response = new PondResponseModel
             {
@@ -69,6 +66,67 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             };
 
             return Ok(Response);
+        }
+
+        [HttpPost("createPond")]
+        public async Task<ActionResult> CreatePond(PondRequestModel request)
+        {
+            if (request == null)
+                return BadRequest("Pond data is required.");
+            if (request.PondOwnerId <= 0)
+                return BadRequest("ID must be greater than zero.");
+            if (string.IsNullOrEmpty(request.Name))
+                return BadRequest("Name is required.");
+            if (request.Depth <= 0)
+                return BadRequest("Depth must be greater than zero.");
+            if (request.Volume <= 0)
+                return BadRequest("Volume must be greater than zero.");
+
+            try
+            {
+                PondModel model = new()
+                {
+                    PondOwnerId = request.PondOwnerId,
+                    Name = request.Name,
+                    Depth = request.Depth,
+                    Volume = request.Volume,
+                    DraimCount = request.DraimCount,
+                    SkimmerCount = request.SkimmerCount,
+                    PumpingCapacity = request.PumpingCapacity
+
+                };
+
+                int pondId = await _pondService.CreatePondAsync(model);
+
+                var pond = await _pondService.GetPondByIdAsync(pondId, request.PondOwnerId);
+
+                if (pond == null)
+                    return NotFound();
+
+                var Response = new PondResponseModel
+                {
+                    Id = pond.Id,
+                    PondOwnerId = pond.PondOwnerId,
+                    Name = pond.Name,
+                    Depth = pond.Depth,
+                    Volume = pond.Volume,
+                    DrainCount = pond.DraimCount,
+                    SkimmerCount = pond.SkimmerCount,
+                    PumpingCapacity = pond.PumpingCapacity
+                };
+
+                return Ok(Response);
+
+            }
+            catch (SqlException ex) when (ex.Number == 2627 || ex.Number == 2601) // Unique constraint violation
+            {
+                return Conflict("An pond with the same name already exists.");
+            }
+            catch (Exception ex)
+            {
+                // Log the exception details for debugging
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while creating the pond.");
+            }
         }
     }
 }
