@@ -34,7 +34,7 @@ const WaterParameter = () => {
       <p className="text-white p-8">Kiểm tra và theo dõi các thông số nước của hồ cá.</p>
       <div>
         {/* Nút để mở popup */}
-        <div>
+        <div class="flex flex-col items-center">
           <Button className="" type="primary" onClick={showModal}>
             Input
           </Button>
