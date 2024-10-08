@@ -5,6 +5,7 @@ using SWP391.KoiCareSystemAtHome.API.ResponseModel;
 using SWP391.KoiCareSystemAtHome.Service.Services;
 using SWP391.KoiCareSystemAtHome.Service.BusinessModels;
 using SWP391.KoiCareSystemAtHome.Repository.Models;
+using Microsoft.Data.SqlClient;
 
 namespace SWP391.KoiCareSystemAtHome.API.Controllers
 {
@@ -24,7 +25,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         {
             var waterReports = await _waterReportService.GetWarterReportByPondIdAsync(pondId);
 
-            if (waterReports == null || !waterReports.Any()) 
+            if (waterReports == null || !waterReports.Any())
                 return NotFound();
 
             var response = waterReports.Select(waterReport => new WaterReportResponseModel
@@ -46,16 +47,13 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpPost("waterReport")]
-        public async Task<ActionResult<WaterReportResponseModel>> GetWaterReportById(WaterReportRequestModel request)
+        [HttpGet("waterReportId/{reportId}")]
+        public async Task<ActionResult<WaterReportResponseModel>> GetWaterReportById(int reportId)
         {
-            var waterReports = await _waterReportService.GetWarterReportByPondIdAsync(request.PondId);
 
-            if (waterReports == null || !waterReports.Any())
-                return NotFound();
+            var waterReport = await _waterReportService.GetWarterReportByIdAsync(reportId);
 
-            var waterReport = waterReports.Where(w => w.Id == request.WaterReportId).FirstOrDefault();
-            if (waterReport == null) 
+            if (waterReport == null)
                 return NotFound();
 
             var response = new WaterReportResponseModel
@@ -76,5 +74,60 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
 
             return Ok(response);
         }
+
+        [HttpPost("createWaterReport")]
+        public async Task<ActionResult> CreateWaterReport(WaterReportRequestModel request)
+        {
+            if (request == null)
+                return BadRequest("Water Report data is required");
+
+            try
+            {
+                WaterReportModel model = new()
+                {
+                    PondId = request.PondId,
+                    Temperature = request.Temperature,
+                    PhVaule = request.PhVaule,
+                    Hardness = request.Hardness,
+                    Oxigen = request.Oxigen,
+                    Cabondioxide = request.Cabondioxide,
+                    Salt = request.Salt,
+                    Date = request.Date,
+                    Nitrates = request.Nitrates,
+                    Nitrite = request.Nitrite,
+                    Amonium = request.Amonium
+                };
+
+                int waterReportId = await _waterReportService.CreateWaterReportAsync(model);    //bug in get id
+
+                var waterReport = await _waterReportService.GetWarterReportByIdAsync(waterReportId);
+
+                if (waterReport == null)
+                    return NotFound();
+
+                var response = new WaterReportResponseModel
+                {
+                    Id = waterReport.Id,
+                    PondId = waterReport.PondId,
+                    Temperature = waterReport.Temperature,
+                    PhVaule = waterReport.PhVaule,
+                    Hardness = waterReport.Hardness,
+                    Oxigen = waterReport.Oxigen,
+                    Cabondioxide = waterReport.Cabondioxide,
+                    Salt = waterReport.Salt,
+                    Date = waterReport.Date,
+                    Nitrates = waterReport.Nitrates,
+                    Nitrite = waterReport.Nitrite,
+                    Amonium = waterReport.Amonium,
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while creating the water report.");
+            }
+        }
+
     }
 }

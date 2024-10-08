@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SWP391.KoiCareSystemAtHome.API.RequestModel;
 using SWP391.KoiCareSystemAtHome.API.ResponseModel;
+using SWP391.KoiCareSystemAtHome.Service.BusinessModels;
 using SWP391.KoiCareSystemAtHome.Service.Services;
 
 namespace SWP391.KoiCareSystemAtHome.API.Controllers
@@ -17,7 +18,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             _koiGrowthReportService = koiGrowthReportService;
         }
 
-        [HttpGet("koiGrowReport/{koiId}")]
+        [HttpGet("koiGrowthReport/{koiId}")]
         public async Task<ActionResult<IEnumerable<KoiFishResponseModel>>> GetKoiGrowthReportByKoiId(int koiId)
         {
             var reports = await _koiGrowthReportService.GetKoiGrowthReportByKoiIdAsync(koiId);
@@ -37,16 +38,12 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpPost("koiGrowReport")]
-        public async Task<ActionResult<KoiGrowthReportResponseModel>> GetKoiGrowReportById(KoiGrowthReportRequestModel request)
+        [HttpGet("koiGrowthReportId/{reportId}")]
+        public async Task<ActionResult<KoiGrowthReportResponseModel>> GetKoiGrowReportById(int reportId)
         {
-            var reports = await _koiGrowthReportService.GetKoiGrowthReportByKoiIdAsync(request.KoiId);
+            var report = await _koiGrowthReportService.GetKoiGrowthReportByIdAsync(reportId);
 
-            if (reports == null || !reports.Any())
-                return NotFound();
-
-            var report = reports.Where(r => r.Id == request.KoiGrowthReportId).FirstOrDefault();
-            if (report == null) 
+            if (report == null)
                 return NotFound();
 
             var response = new KoiGrowthReportResponseModel
@@ -58,6 +55,44 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 Wetight = report.Wetight,
             };
             return Ok(response);
+        }
+
+        [HttpPost("createKoiReport")]
+        public async Task<ActionResult> CreateKoiGrowthReport(KoiGrowthReportRequestModel request)
+        {
+            if (request == null)
+                return BadRequest("Koi growth report data is required.");
+            try
+            {
+                KoiGrowthReportModel model = new()
+                {
+                    KoiId = request.KoiId,
+                    Date = request.Date,
+                    Length = request.Length,
+                    Wetight = request.Length
+                };
+
+                int koiReportId = await _koiGrowthReportService.CreateKoiGrowthReportAsync(model);
+
+                var report = await _koiGrowthReportService.GetKoiGrowthReportByIdAsync(koiReportId);
+
+                if (report == null)
+                    return NotFound();
+
+                var response = new KoiGrowthReportResponseModel
+                {
+                    Id = report.Id,
+                    KoiId = report.KoiId,
+                    Date = report.Date,
+                    Length = report.Length,
+                    Wetight = report.Wetight,
+                };
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while creating the koi growth report.");
+            }
         }
     }
 }

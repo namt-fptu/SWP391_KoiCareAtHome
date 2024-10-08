@@ -1,4 +1,5 @@
 ﻿using SWP391.KoiCareSystemAtHome.Repository;
+using SWP391.KoiCareSystemAtHome.Repository.Models;
 using SWP391.KoiCareSystemAtHome.Service.BusinessModels;
 using System;
 using System.Collections.Generic;
@@ -41,7 +42,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             if (!koiVarietys.Any())
                 return null;
 
-            var koiVariety = koiVarietys.Where(k => k.Variety.ToLower().Equals(variety.ToLower())).FirstOrDefault();
+            var koiVariety = koiVarietys.FirstOrDefault(k => k.Variety.Equals(variety, StringComparison.OrdinalIgnoreCase));
 
             if (koiVariety == null)
                 return null;
@@ -53,6 +54,21 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                 Rarity = koiVariety.Rarity
             };
             return koiVarietyModel;
+        }
+
+        public async Task<string> CreateKoiVarietyAsync(KoiVarietyModel koiVarietyModel)
+        {
+            var entity = new Koivariety
+            {
+                Variety = koiVarietyModel.Variety,
+                Rarity = koiVarietyModel.Rarity,
+                Color = koiVarietyModel.Color,
+            };
+
+            await _unitOfWork.KoiVarietys.InsertAsync(entity);
+            await _unitOfWork.SaveAsync();
+
+            return entity.Variety;
         }
 
     }

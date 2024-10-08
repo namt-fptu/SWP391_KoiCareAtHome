@@ -1,9 +1,7 @@
-﻿namespace SWP391.KoiCareSystemAtHome.API.ResponseModel
+﻿namespace SWP391.KoiCareSystemAtHome.API.RequestModel
 {
-    public class WaterParameterStandardResoponseModel
+    public class WaterParameterStandardRequestModel
     {
-        public int Id { get; set; }
-
         public string KoiVariety { get; set; } = null!;
 
         public int Stage { get; set; }

@@ -25,8 +25,5 @@ namespace SWP391.KoiCareSystemAtHome.Service.BusinessModels
 
         public float? PumpingCapacity { get; set; }
 
-        public List<KoiFish> KoiFishs { get; set; } = new List<KoiFish>();
-
-        public List<WaterReport> WaterParameters { get; set; } = new List<WaterReport> { };
     }
 }
