@@ -29,6 +29,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             {
                 Id = p.Id,
                 KoiVariety = p.KoiVariety,
+                Stage = p.Stage,
                 MaxTemp = p.MaxTemp,
                 MinTemp = p.MinTemp,
                 MaxPh = p.MaxPh,
@@ -52,14 +53,14 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return waterParameterStandardModels;
         }
 
-        public async Task<WaterParameterStandardModel> GetWaterParameterStandardByVarietyAsync(string variety)
+        public async Task<WaterParameterStandardModel> GetWaterParameterStandardByVarietyAsync(int id)
         {
             var waterParameterStandards = await _unitOfWork.WaterParameterStandards.GetAsync();
 
             if (waterParameterStandards == null || !waterParameterStandards.Any())
                 return null;
 
-            var waterParameterStandard = waterParameterStandards.FirstOrDefault(p => p.KoiVariety.Equals(variety, StringComparison.OrdinalIgnoreCase));
+            var waterParameterStandard = waterParameterStandards.FirstOrDefault(p => p.Id == id);
 
             if (waterParameterStandard == null)
                 return null;
@@ -68,6 +69,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             {
                 Id = waterParameterStandard.Id,
                 KoiVariety = waterParameterStandard.KoiVariety,
+                Stage = waterParameterStandard.Stage,
                 MaxTemp = waterParameterStandard.MaxTemp,
                 MinTemp = waterParameterStandard.MinTemp,
                 MaxPh = waterParameterStandard.MaxPh,
@@ -90,5 +92,39 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
 
             return waterParameterStandardModel;
         }
+
+        public async Task<int> CreateWaterParameterStandardAsync(WaterParameterStandardModel waterParameterStandardModel)
+        {
+            var entity = new WaterParameterStandard
+            {
+                Id = waterParameterStandardModel.Id,
+                KoiVariety = waterParameterStandardModel.KoiVariety,
+                Stage = waterParameterStandardModel.Stage,
+                MaxTemp = waterParameterStandardModel.MaxTemp,
+                MinTemp = waterParameterStandardModel.MinTemp,
+                MaxPh = waterParameterStandardModel.MaxPh,
+                MinPh = waterParameterStandardModel.MinPh,
+                MaxHardness = waterParameterStandardModel.MaxHardness,
+                MinHardness = waterParameterStandardModel.MinHardness,
+                MaxOxigen = waterParameterStandardModel.MaxOxigen,
+                MinOxigen = waterParameterStandardModel.MinOxigen,
+                MaxCabondioxide = waterParameterStandardModel.MaxCabondioxide,
+                MinCabondioxide = waterParameterStandardModel.MinCabondioxide,
+                MaxSalt = waterParameterStandardModel.MaxSalt,
+                MinSalt = waterParameterStandardModel.MinSalt,
+                MaxNitrates = waterParameterStandardModel.MaxNitrates,
+                MinNitrates = waterParameterStandardModel.MinNitrates,
+                MaxAmonium = waterParameterStandardModel.MaxAmonium,
+                MinAmonium = waterParameterStandardModel.MinAmonium,
+                MaxNitrite = waterParameterStandardModel.MaxNitrite,
+                MinNitrite = waterParameterStandardModel.MinNitrite
+            };
+
+            await _unitOfWork.WaterParameterStandards.InsertAsync(entity);
+            await _unitOfWork.SaveAsync();
+
+            return entity.Id;
+        }
+
     }
 }

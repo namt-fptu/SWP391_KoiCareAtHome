@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.IdentityModel.Tokens;
 using SWP391.KoiCareSystemAtHome.API.RequestModel;
 using SWP391.KoiCareSystemAtHome.API.ResponseModel;
+using SWP391.KoiCareSystemAtHome.Repository.Models;
+using SWP391.KoiCareSystemAtHome.Service.BusinessModels;
 using SWP391.KoiCareSystemAtHome.Service.Services;
 
 namespace SWP391.KoiCareSystemAtHome.API.Controllers
@@ -40,21 +44,14 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpPost("pond")]
-        public async Task<ActionResult<PondResponseModel>> GetPondById(PondRequestModel request)
+        [HttpGet("pond/{pondId}")]
+        public async Task<ActionResult<PondResponseModel>> GetPondById(int pondId)
         {
-            var ponds = await _pondService.GetPondByOwnerIdAsync(request.PondOwnerId);
 
-            if (ponds == null || !ponds.Any())
-            {
-                return NotFound();
-            }
+            var pond = await _pondService.GetPondByIdAsync(pondId);
 
-            var pond = ponds.Where(p => p.Id == request.PondId).FirstOrDefault();
             if (pond == null)
-            {
                 return NotFound();
-            }
 
             var Response = new PondResponseModel
             {
@@ -70,5 +67,110 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
 
             return Ok(Response);
         }
+
+        [HttpPost("createPond")]
+        public async Task<ActionResult> CreatePond(PondRequestModel request)
+        {
+            if (request == null)
+                return BadRequest("Pond data is required.");
+
+            try
+            {
+                PondModel model = new()
+                {
+                    PondOwnerId = request.PondOwnerId,
+                    Name = request.Name,
+                    Depth = request.Depth,
+                    Volume = request.Volume,
+                    DraimCount = request.DraimCount,
+                    SkimmerCount = request.SkimmerCount,
+                    PumpingCapacity = request.PumpingCapacity
+
+                };
+
+                int pondId = await _pondService.CreatePondAsync(model);
+
+                var pond = await _pondService.GetPondByIdAsync(pondId);
+
+                if (pond == null)
+                    return NotFound();
+
+                var Response = new PondResponseModel
+                {
+                    Id = pond.Id,
+                    PondOwnerId = pond.PondOwnerId,
+                    Name = pond.Name,
+                    Depth = pond.Depth,
+                    Volume = pond.Volume,
+                    DrainCount = pond.DraimCount,
+                    SkimmerCount = pond.SkimmerCount,
+                    PumpingCapacity = pond.PumpingCapacity
+                };
+
+                return Ok(Response);
+
+            }
+            catch (SqlException ex) when (ex.Number == 2627 || ex.Number == 2601) // Unique constraint violation
+            {
+                return Conflict("An pond with the same name already exists.");
+            }
+            catch (Exception ex)
+            {
+                // Log the exception details for debugging
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while creating the pond.");
+            }
+        }
+
+        [HttpPut("updatePond/{pondId}")]
+        public async Task<ActionResult> UpdatePond(int pondId, PondRequestModel pondRequestModel)
+        {
+            PondModel pondModel = await _pondService.GetPondByIdAsync(pondId);
+
+            if(pondModel == null)
+                return NotFound();
+
+            try
+            {
+                if (!pondRequestModel.Name.IsNullOrEmpty())
+                    pondModel.Name = pondRequestModel.Name;
+                if (pondRequestModel.Depth > 0)
+                    pondModel.Depth = pondRequestModel.Depth;
+                if (pondRequestModel.Volume > 0)
+                    pondModel.Volume = pondRequestModel.Volume;
+                pondModel.DraimCount = pondRequestModel.DraimCount;
+                pondModel.SkimmerCount = pondRequestModel.SkimmerCount;
+                pondModel.PumpingCapacity = pondRequestModel.PumpingCapacity;
+
+                bool success = await _pondService.UpdatePondAsync(pondId, pondModel);
+
+                if (!success)
+                    return NotFound();
+
+                var pond = await _pondService.GetPondByIdAsync(pondId);
+
+                if (pond == null)
+                    return NotFound();
+
+                var Response = new PondResponseModel
+                {
+                    Id = pond.Id,
+                    PondOwnerId = pond.PondOwnerId,
+                    Name = pond.Name,
+                    Depth = pond.Depth,
+                    Volume = pond.Volume,
+                    DrainCount = pond.DraimCount,
+                    SkimmerCount = pond.SkimmerCount,
+                    PumpingCapacity = pond.PumpingCapacity
+                };
+
+                return Ok(Response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the pond.");
+            }
+
+        }
+
     }
 }

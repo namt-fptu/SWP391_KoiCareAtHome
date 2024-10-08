@@ -2,8 +2,12 @@
 {
     public class KoiGrowthReportRequestModel
     {
-        public int KoiGrowthReportId { get; set; }
-
         public int KoiId { get; set; }
+
+        public DateTime Date { get; set; }
+
+        public decimal Length { get; set; }
+
+        public decimal Wetight { get; set; }
     }
 }
