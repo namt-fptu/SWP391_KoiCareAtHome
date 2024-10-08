@@ -186,9 +186,9 @@ const MyPond = () => {
                     }
                     style={{ width: 400, marginBottom: "20px" }}
                   >
-                    {ponds.imageUrl && (
+                    {pond.imageUrl && (
                       <img
-                        src={ponds.imageUrl}
+                        src={pond.imageUrl}
                         alt="Pond"
                         style={{ width: "100%", height: "auto" }}
                       />

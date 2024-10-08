@@ -11,11 +11,11 @@ const Signin = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('/data.json'); // Adjust the path as needed
+        const response = await fetch("/data.json"); // Adjust the path as needed
         const data = await response.json();
         setUsers(data);
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error("Error fetching user data:", error);
       }
     };
 
@@ -26,11 +26,13 @@ const Signin = () => {
     const { email, password } = values;
 
     // Check if the email and password match any user in the fetched data
-    const user = users.find((user) => user.email === email && user.password === password);
+    const user = users.find(
+      (user) => user.email === email && user.password === password
+    );
 
     if (user) {
       console.log("Login successful", user);
-      navigate("/overview"); // Redirect to the Overview page
+      navigate("/Overview"); // Redirect to the Overview page
     } else {
       console.log("Invalid email or password");
       // Handle invalid login case (e.g., show error message)
@@ -61,14 +63,18 @@ const Signin = () => {
               <Form.Item
                 label="Email"
                 name="email"
-                rules={[{ required: true, message: "Please enter your Email !!" }]}
+                rules={[
+                  { required: true, message: "Please enter your Email !!" },
+                ]}
               >
                 <Input type="text" placeholder="John@example.com" />
               </Form.Item>
               <Form.Item
                 label="Password"
                 name="password"
-                rules={[{ required: true, message: "Please enter your Password !!" }]}
+                rules={[
+                  { required: true, message: "Please enter your Password !!" },
+                ]}
               >
                 <Input type="password" placeholder="••••••••••••" />
               </Form.Item>

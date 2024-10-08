@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+// eslint-disable-next-line no-unused-vars
+import React, { useState } from "react";
 
 const SaltCalculator = () => {
   const [pondVolume, setPondVolume] = useState(0);
@@ -36,7 +37,9 @@ const SaltCalculator = () => {
 
         {/* Current Concentration */}
         <div className="mb-8">
-          <h3 className="text-lg">Current concentration: {currentConcentration}%</h3>
+          <h3 className="text-lg">
+            Current concentration: {currentConcentration}%
+          </h3>
           <input
             type="range"
             min="0"
@@ -50,7 +53,9 @@ const SaltCalculator = () => {
 
         {/* Desired Concentration */}
         <div className="mb-8">
-          <h3 className="text-lg">Desired concentration: {desiredConcentration}%</h3>
+          <h3 className="text-lg">
+            Desired concentration: {desiredConcentration}%
+          </h3>
           <input
             type="range"
             min="0"

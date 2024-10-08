@@ -1,4 +1,5 @@
-import React from 'react';
+// eslint-disable-next-line no-unused-vars
+import React from "react";
 import nam from "./../../assets/1.jpg";
 import tien from "./../../assets/2.jpg";
 import anh from "./../../assets/3.jpg";

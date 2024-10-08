@@ -7,11 +7,11 @@ function Header() {
   const navigate = useNavigate();
   return (
     <div className="contents-wrapper max-w-screen-2xl text-base mx-auto px-8 bg-slate-950">
-      <header className="py-6 mx-10">
+      <header className="sticky top-0 py-6 mx-10 bg-slate-950 z-50">
         <nav className="flex flex-row justify-between items-center">
           <div className="logo basis-1/6 flex items-center text-center">
             <RouterLink to={"/"}>
-              <img src={Logo} alt="" width={60} />
+              <img src={Logo} alt="Logo" width={60} />
             </RouterLink>
             <span className="ml-2 text-lg text-white">KoiF</span>
           </div>
