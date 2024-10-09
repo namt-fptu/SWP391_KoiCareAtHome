@@ -25,7 +25,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         {
             var koiFishs = await _koiFishService.GetKoiFishByPondIdAsync(pondId);
 
-            if (koiFishs == null || !koiFishs.Any()) 
+            if (koiFishs == null || !koiFishs.Any())
                 return NotFound();
 
             var response = koiFishs.Select(k => new KoiFishResponseModel
@@ -116,23 +116,20 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         {
             KoiFishModel koiFishModel = await _koiFishService.GetKoiFishByIdAsync(fishId);
 
-            if(koiFishModel == null) 
+            if (koiFishModel == null)
                 return NotFound();
 
             try
             {
-                if(!koiFishRequestModel.KoiName.IsNullOrEmpty())
-                    koiFishModel.KoiName = koiFishRequestModel.KoiName;
-                if(!koiFishRequestModel.Sex.IsNullOrEmpty())
-                    koiFishModel.Sex = koiFishRequestModel.Sex;
-                if(!koiFishRequestModel.ImageUrl.IsNullOrEmpty())
-                    koiFishModel.ImageUrl = koiFishRequestModel.ImageUrl;
+                koiFishModel.KoiName = koiFishRequestModel.KoiName;
+                koiFishModel.Sex = koiFishRequestModel.Sex;
+                koiFishModel.ImageUrl = koiFishRequestModel.ImageUrl;
                 koiFishModel.Dob = koiFishRequestModel.Dob;
                 koiFishModel.Price = koiFishRequestModel.Price;
 
                 bool success = await _koiFishService.UpdateKoiFishAsync(fishId, koiFishModel);
 
-                if(!success) 
+                if (!success)
                     return NotFound();
 
                 var koiFish = await _koiFishService.GetKoiFishByIdAsync(fishId);
@@ -158,6 +155,16 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while creating the pond.");
             }
+        }
+
+        [HttpDelete("deleteKoiFish/{koiId}")]
+        public async Task<ActionResult> DeleteKoiFish(int koiId)
+        {
+            bool success = await _koiFishService.DeleteKoiFishAsync(koiId);
+            if (!success)
+                return NotFound();
+
+            return NoContent();
         }
 
     }
