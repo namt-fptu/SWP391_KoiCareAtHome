@@ -5,17 +5,22 @@ import { useEffect, useState } from "react";
 
 const Signin = () => {
   const [users, setUsers] = useState([]);
+  const [errorMessage, setErrorMessage] = useState(null); // For error messages
   const navigate = useNavigate(); // Initialize useNavigate
 
-  // Fetch user data from the public directory
+  // Fetch user data from the API
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('/data.json'); // Adjust the path as needed
+        const response = await fetch('http://localhost:5088/api/Account/accounts'); 
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
         const data = await response.json();
         setUsers(data);
       } catch (error) {
         console.error('Error fetching user data:', error);
+        setErrorMessage("Failed to load user data. Please try again later.");
       }
     };
 
@@ -25,15 +30,14 @@ const Signin = () => {
   const handleSignin = (values) => {
     const { email, password } = values;
 
-    // Check if the email and password match any user in the fetched data
+    
     const user = users.find((user) => user.email === email && user.password === password);
 
     if (user) {
       console.log("Login successful", user);
-      navigate("/overview"); // Redirect to the Overview page
+      navigate("/overview"); 
     } else {
-      console.log("Invalid email or password");
-      // Handle invalid login case (e.g., show error message)
+      setErrorMessage("Invalid email or password");
     }
   };
 
@@ -41,7 +45,7 @@ const Signin = () => {
     <>
       <div className="signin flex h-screen">
         <div className="signin__image hidden md:block w-1/2">
-          <img src={signinimg} alt="" className="object-cover w-full h-full" />
+          <img src={signinimg} alt="Sign In illustration" className="object-cover w-full h-full" />
         </div>
 
         <div className="signin__form flex flex-col justify-center w-full md:w-1/2 bg-gray-50 p-8 md:p-16">
@@ -58,19 +62,26 @@ const Signin = () => {
                   <div className="text-blue-500 ml-auto">Create an account</div>
                 </Link>
               </p>
+
+              {errorMessage && (
+                <div className="mb-4 text-red-500">
+                  {errorMessage}
+                </div>
+              )}
+
               <Form.Item
                 label="Email"
                 name="email"
-                rules={[{ required: true, message: "Please enter your Email !!" }]}
+                rules={[{ required: true, message: "Please enter your Email!" }]}
               >
-                <Input type="text" placeholder="John@example.com" />
+                <Input type="email" placeholder="John@example.com" aria-label="Email" />
               </Form.Item>
               <Form.Item
                 label="Password"
                 name="password"
-                rules={[{ required: true, message: "Please enter your Password !!" }]}
+                rules={[{ required: true, message: "Please enter your Password!" }]}
               >
-                <Input type="password" placeholder="••••••••••••" />
+                <Input type="password" placeholder="••••••••••••" aria-label="Password" />
               </Form.Item>
               <Form.Item>
                 <div className="flex items-center mb-6">
@@ -82,9 +93,9 @@ const Signin = () => {
                   <label htmlFor="stay-signed-in" className="text-gray-700">
                     Stay signed in
                   </label>
-                  <a href="#" className="ml-auto text-blue-500">
+                  <Link to="/forgot-password" className="ml-auto text-blue-500">
                     Forgot password?
-                  </a>
+                  </Link>
                 </div>
               </Form.Item>
               <Form.Item>
