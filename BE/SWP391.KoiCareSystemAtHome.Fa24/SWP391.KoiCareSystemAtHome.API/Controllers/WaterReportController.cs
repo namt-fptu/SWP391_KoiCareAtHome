@@ -129,5 +129,16 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
         }
 
+        [HttpDelete("deleteWaterReport/{pondId}")]
+        public async Task<ActionResult> DeleteWaterReport(int pondId)
+        {
+            bool success = await _waterReportService.DeleteWaterReportAsync(pondId);
+            if (!success)
+                return NotFound();
+
+            return NoContent();
+        }
+
+
     }
 }

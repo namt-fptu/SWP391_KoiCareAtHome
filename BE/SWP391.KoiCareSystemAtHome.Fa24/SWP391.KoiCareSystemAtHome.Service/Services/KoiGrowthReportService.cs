@@ -75,5 +75,23 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return entity.Id;
         }
 
+        public async Task<bool> DeleteKoiGrowthReportAsync(int koiId)
+        {
+            var koiGrowthReports = await _unitOfWork.KoiGrowthReports.GetAsync();
+
+            var fillteredReports = koiGrowthReports.Where(g => g.KoiId == koiId).ToList();
+
+            if (!fillteredReports.Any())
+                return false;
+
+            foreach (var entity in fillteredReports)
+            {
+                _unitOfWork.KoiGrowthReports.DeleteAsync(entity);
+            }
+
+            await _unitOfWork.SaveAsync();
+            return true;
+        }
+
     }
 }

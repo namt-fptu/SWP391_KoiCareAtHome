@@ -31,16 +31,26 @@ namespace SWP391.KoiCareSystemAtHome.API
                     builder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin()));
 
             //Add Swagger authentication
-            builder.Services.AddSwaggerGen(option =>
+            //builder.Services.AddSwaggerGen(option =>
+            //{
+            //    option.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+            //    {
+            //        In = ParameterLocation.Header,
+            //        Name = "Authorization",
+            //        Type = SecuritySchemeType.ApiKey,
+            //    });
+            //    option.OperationFilter<SecurityRequirementsOperationFilter>();
+            //});
+            builder.Services.AddCors(options =>
             {
-                option.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-                {
-                    In = ParameterLocation.Header,
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.ApiKey,
-                });
-                option.OperationFilter<SecurityRequirementsOperationFilter>();
-            });
+                options.AddPolicy("AllowLocalhost",
+                    policy =>
+                    {
+                        policy.WithOrigins("*")
+                              .AllowAnyHeader()
+                              .AllowAnyMethod();
+                    });
+            }); ;
 
             //add Scope
             builder.Services.AddScoped<UnitOfWork>();
@@ -64,7 +74,7 @@ namespace SWP391.KoiCareSystemAtHome.API
                 app.UseSwaggerUI();
             }
 
-            app.UseCors("CROS");
+            app.UseCors("AllowLocalhost");
 
             app.UseHttpsRedirection();
 

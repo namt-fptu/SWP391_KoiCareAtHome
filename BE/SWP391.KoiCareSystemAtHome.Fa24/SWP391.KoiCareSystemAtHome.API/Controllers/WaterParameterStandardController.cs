@@ -157,8 +157,88 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while creating the pond.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while creating the water standard.");
             }
+        }
+
+        [HttpPut("updateWaterStandard/{waterParameterStandardId}")]
+        public async Task<ActionResult> UpdateWaterParameterStandard(int  waterParameterStandardId, WaterParameterStandardRequestModel waterParameterStandardRequestModel)
+        {
+            var waterParameterStandard = await _waterParameterStandardService.GetWaterParameterStandardByVarietyAsync(waterParameterStandardId);
+            if (waterParameterStandard == null)
+                return NotFound();
+
+            try
+            {
+                waterParameterStandard.MaxTemp = waterParameterStandardRequestModel.MaxTemp;
+                waterParameterStandard.MinTemp = waterParameterStandardRequestModel.MinTemp;
+                waterParameterStandard.MaxPh = waterParameterStandardRequestModel.MaxPh;
+                waterParameterStandard.MinPh = waterParameterStandardRequestModel.MinPh;
+                waterParameterStandard.MaxHardness = waterParameterStandardRequestModel.MaxHardness;
+                waterParameterStandard.MinHardness = waterParameterStandardRequestModel.MinHardness;
+                waterParameterStandard.MaxOxigen = waterParameterStandardRequestModel.MaxOxigen;
+                waterParameterStandard.MinOxigen = waterParameterStandardRequestModel.MinOxigen;
+                waterParameterStandard.MaxCabondioxide = waterParameterStandardRequestModel.MaxCabondioxide;
+                waterParameterStandard.MinCabondioxide = waterParameterStandardRequestModel.MinCabondioxide;
+                waterParameterStandard.MaxSalt = waterParameterStandardRequestModel.MaxSalt;
+                waterParameterStandard.MinSalt = waterParameterStandardRequestModel.MinSalt;
+                waterParameterStandard.MaxNitrates = waterParameterStandardRequestModel.MaxNitrates;
+                waterParameterStandard.MinNitrates = waterParameterStandardRequestModel.MinNitrates;
+                waterParameterStandard.MaxNitrite = waterParameterStandardRequestModel.MaxNitrite;
+                waterParameterStandard.MinNitrates = waterParameterStandardRequestModel.MinNitrite;
+                waterParameterStandard.MaxAmonium = waterParameterStandardRequestModel.MaxAmonium;
+                waterParameterStandard.MinAmonium = waterParameterStandardRequestModel.MinAmonium;
+
+                bool success = await _waterParameterStandardService.UpdateWaterStandard(waterParameterStandardId, waterParameterStandard);
+                if (!success)
+                    return NotFound();
+                var waterStandard = await _waterParameterStandardService.GetWaterParameterStandardByVarietyAsync(waterParameterStandardId);
+
+                if (waterStandard == null)
+                    return NotFound();
+
+                var response = new WaterParameterStandardResoponseModel
+                {
+                    Id = waterStandard.Id,
+                    KoiVariety = waterStandard.KoiVariety,
+                    Stage = waterStandard.Stage,
+                    MaxTemp = waterStandard.MaxTemp,
+                    MinTemp = waterStandard.MinTemp,
+                    MaxPh = waterStandard.MaxPh,
+                    MinPh = waterStandard.MinPh,
+                    MaxHardness = waterStandard.MaxHardness,
+                    MinHardness = waterStandard.MinHardness,
+                    MaxOxigen = waterStandard.MaxOxigen,
+                    MinOxigen = waterStandard.MinOxigen,
+                    MaxCabondioxide = waterStandard.MaxCabondioxide,
+                    MinCabondioxide = waterStandard.MinCabondioxide,
+                    MaxSalt = waterStandard.MaxSalt,
+                    MinSalt = waterStandard.MinSalt,
+                    MaxNitrates = waterStandard.MaxNitrates,
+                    MinNitrates = waterStandard.MinNitrates,
+                    MaxAmonium = waterStandard.MaxAmonium,
+                    MinAmonium = waterStandard.MinAmonium,
+                    MaxNitrite = waterStandard.MaxNitrite,
+                    MinNitrite = waterStandard.MinNitrite
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the water standard.");
+            }
+        }
+
+        [HttpDelete("deleteWaterParameterStandard/{id}")]
+        public async Task<ActionResult> DeleteWaterParameterStandard(int id)
+        {
+            bool success = await _waterParameterStandardService.DeleteWaterParameterStandardAsync(id);
+
+            if (!success) 
+                return NotFound();
+
+            return NoContent();
         }
 
     }

@@ -87,8 +87,47 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while creating the water report.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while creating the koi variety.");
             }
         }
+
+        [HttpPut("updateKoiVariety/{variety}")]
+        public async Task<ActionResult> UpdateKoiVariety(string variety, KoiVarietyRequestModel request)
+        {
+            var koiVariety = await _koiVarietyService.GetKoiVarietyAsync(variety);
+
+            if (koiVariety == null)
+                return NotFound();
+
+            try
+            {
+                koiVariety.Rarity = request.Rarity;
+                koiVariety.Color = request.Color;
+
+                bool success = await _koiVarietyService.UpdateKoiVarietyAsync(variety, koiVariety);
+
+                if (!success)
+                    return NotFound();
+
+                var koiVarietyToShow = await _koiVarietyService.GetKoiVarietyAsync(variety);
+
+                if (koiVarietyToShow == null)
+                    return NotFound();
+
+                var response = new KoiVarietyResponseModel
+                {
+                    Variety = koiVarietyToShow.Variety,
+                    Color = koiVarietyToShow.Color,
+                    Rarity = koiVarietyToShow.Rarity,
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the koi variety.");
+            }
+        }
+
     }
 }

@@ -37,12 +37,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
 
         public async Task<KoiVarietyModel> GetKoiVarietyAsync(string variety)
         {
-            var koiVarietys = await _unitOfWork.KoiVarietys.GetAsync();
-
-            if (!koiVarietys.Any())
-                return null;
-
-            var koiVariety = koiVarietys.FirstOrDefault(k => k.Variety.Equals(variety, StringComparison.OrdinalIgnoreCase));
+            var koiVariety = await _unitOfWork.KoiVarietys.GetByIdAsync(variety);
 
             if (koiVariety == null)
                 return null;
@@ -69,6 +64,22 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             await _unitOfWork.SaveAsync();
 
             return entity.Variety;
+        }
+
+        public async Task<bool> UpdateKoiVarietyAsync(string variety, KoiVarietyModel koiVarietyModel)
+        {
+            var koiVariety = await _unitOfWork.KoiVarietys.GetByIdAsync(variety);
+
+            if (koiVariety == null) 
+                return false;
+
+            koiVariety.Rarity = koiVarietyModel.Rarity;
+            koiVariety.Color = koiVarietyModel.Color;
+
+            _unitOfWork.KoiVarietys.UpdateAsync(koiVariety);
+            await _unitOfWork.SaveAsync();
+
+            return true;
         }
 
     }

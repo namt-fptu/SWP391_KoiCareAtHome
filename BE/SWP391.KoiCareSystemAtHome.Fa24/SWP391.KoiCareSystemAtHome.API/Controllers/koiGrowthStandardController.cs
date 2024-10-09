@@ -44,7 +44,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         [HttpGet("koiStandard/{koiStandardId}")]
         public async Task<ActionResult<KoiGrowthStandardModel>> GetKoiGrowthStandardByVariety(int koiStandardId)
         {
-            var koiGrowthStandard = await _koiGrowthStandardService.KoiGrowthStandardModelAsync(koiStandardId);
+            var koiGrowthStandard = await _koiGrowthStandardService.GetKoiGrowthStandardModelAsync(koiStandardId);
 
             if (koiGrowthStandard == null)
                 return NotFound();
@@ -82,7 +82,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
 
                 int koiStandardId = await _koiGrowthStandardService.CreateKoiGrowthStandardAsync(model);
 
-                var koiGrowthStandard = await _koiGrowthStandardService.KoiGrowthStandardModelAsync(koiStandardId);
+                var koiGrowthStandard = await _koiGrowthStandardService.GetKoiGrowthStandardModelAsync(koiStandardId);
 
                 if (koiGrowthStandard == null)
                     return NotFound();
@@ -105,6 +105,62 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while creating the water report.");
             }
+        }
+
+        [HttpPut("updateKoiStandard/{koiStandardId}")]
+        public async Task<ActionResult> UpdateKoiGrowthStandars(int koiStandardId, KoiGrowthStandardRequestModel koiGrowthStandardRequestModel)
+        {
+            KoiGrowthStandardModel koiGrowthStandardModel = await _koiGrowthStandardService.GetKoiGrowthStandardModelAsync(koiStandardId);
+
+            if (koiGrowthStandardModel == null)
+                return NotFound();
+
+            try
+            {
+                koiGrowthStandardModel.Stage = koiGrowthStandardRequestModel.Stage;
+                koiGrowthStandardModel.StandardLength = koiGrowthStandardRequestModel.StandardLength;
+                koiGrowthStandardModel.StandardWeigth = koiGrowthStandardRequestModel.StandardWeigth;
+                koiGrowthStandardModel.MaxFeed = koiGrowthStandardRequestModel.MaxFeed;
+                koiGrowthStandardModel.MinFeed = koiGrowthStandardRequestModel.MinFeed;
+
+                bool success = await _koiGrowthStandardService.UpdateKoiGrowthStandardAsync(koiStandardId, koiGrowthStandardModel);
+
+                if (!success)
+                    return NotFound();
+
+                var koiGrowthStandard = await _koiGrowthStandardService.GetKoiGrowthStandardModelAsync(koiStandardId);
+
+                if (koiGrowthStandard == null)
+                    return NotFound();
+
+                var response = new koiGrowthStandardResponseModel
+                {
+                    Id = koiGrowthStandard.Id,
+                    KoiVariety = koiGrowthStandard.KoiVariety,
+                    Stage = koiGrowthStandard.Stage,
+                    StandardLength = koiGrowthStandard.StandardLength,
+                    StandardWeigth = koiGrowthStandard.StandardWeigth,
+                    MaxFeed = koiGrowthStandard.MaxFeed,
+                    MinFeed = koiGrowthStandard.MinFeed
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the water report.");
+            }
+        }
+
+        [HttpDelete("deleteKoiGrowthStandard/{id}")]
+        public async Task<ActionResult> DeleteKoiGrowthStandard(int id)
+        {
+            bool success = await _koiGrowthStandardService.DeleteKoiGrowthStandardAsync(id);
+
+            if (!success)
+                return NotFound();
+
+            return NoContent();
         }
 
     }

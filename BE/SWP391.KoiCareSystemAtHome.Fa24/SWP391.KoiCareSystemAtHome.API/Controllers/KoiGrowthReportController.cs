@@ -94,5 +94,16 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while creating the koi growth report.");
             }
         }
+
+        [HttpDelete("deleteGrowthreport/{koiId}")]
+        public async Task<ActionResult> DeleteKoiGrowthreport(int koiId)
+        {
+            bool success = await _koiGrowthReportService.DeleteKoiGrowthReportAsync(koiId);
+            if (!success)
+                return NotFound();
+
+            return NoContent();
+        }
+
     }
 }

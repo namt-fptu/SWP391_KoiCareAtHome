@@ -8,6 +8,10 @@ using SWP391.KoiCareSystemAtHome.Service.BusinessModels;
 using System.Diagnostics;
 using SWP391.KoiCareSystemAtHome.Repository.Models;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace SWP391.KoiCareSystemAtHome.API.Controllers
 {
@@ -18,6 +22,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         private readonly AccountService _accountService;
         private readonly PondOwnerService _pondOwnerService;
         private readonly ShopService _shopService;
+        private readonly IConfiguration _configuration;
 
         public AccountController(AccountService accountService, PondOwnerService pondOwnerService, ShopService shopService)
         {
@@ -25,6 +30,42 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             _pondOwnerService = pondOwnerService;
             _shopService = shopService;
         }
+
+        //[HttpPost("login")]
+        //public async Task<ActionResult> Login([FromBody]AuthenticateModel authenticate)
+        //{
+        //    var account = await _accountService.Authenticate(authenticate);
+        //    if (account == null) 
+        //        return NotFound();
+
+        //    AccountResponseModel responseModel = new()
+        //    {
+        //        Email = account.Email,
+        //        Id = account.Id,
+        //        Phone = account.Phone,
+        //        Role = account.Role,
+        //    };
+
+        //    List<Claim> claims = new List<Claim>
+        //    {
+        //        new Claim(ClaimTypes.Email, responseModel.Email),
+        //        new Claim(ClaimTypes.Role, responseModel.Role),
+        //    };
+
+        //    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));
+
+        //    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+
+        //    var token = new JwtSecurityToken(
+        //            claims: claims,
+        //            expires: DateTime.Now.AddMinutes(1),
+        //            signingCredentials: creds
+        //        );
+
+        //    var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+        //    return Ok(jwt);
+        //}
 
         [HttpGet("accounts")]
         public async Task<ActionResult<IEnumerable<AccountResponseModel>>> GetAccounts()

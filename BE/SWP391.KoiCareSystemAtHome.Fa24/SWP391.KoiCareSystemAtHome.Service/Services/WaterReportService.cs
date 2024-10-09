@@ -94,5 +94,24 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
 
             return waterReportEntity.PondId;
         }
+
+        public async Task<bool> DeleteWaterReportAsync(int pondId)
+        {
+            var waterReports = await _unitOfWork.WaterReports.GetAsync();
+
+            var fillteredReports = waterReports.Where(w => w.PondId == pondId).ToList();
+
+            if (!fillteredReports.Any()) 
+                return false;
+
+            foreach (var entity in fillteredReports)
+            {
+                _unitOfWork.WaterReports.DeleteAsync(entity);
+            }
+
+            await _unitOfWork.SaveAsync();
+            return true;
+        }
+
     }
 }

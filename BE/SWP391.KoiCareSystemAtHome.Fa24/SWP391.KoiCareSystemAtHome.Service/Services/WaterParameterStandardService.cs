@@ -126,5 +126,52 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return entity.Id;
         }
 
+        public async Task<bool> UpdateWaterStandard(int id, WaterParameterStandardModel waterParameterStandardModel)
+        {
+            var waterParameterStandards = await _unitOfWork.WaterParameterStandards.GetAsync();
+
+            var waterParameterStandard = waterParameterStandards.FirstOrDefault(p => p.Id == id);
+
+            if (waterParameterStandard == null)
+                return false;
+
+            waterParameterStandard.MaxTemp = waterParameterStandardModel.MaxTemp;
+            waterParameterStandard.MinTemp = waterParameterStandardModel.MinTemp;
+            waterParameterStandard.MaxPh = waterParameterStandardModel.MaxPh;
+            waterParameterStandard.MinPh = waterParameterStandardModel.MinPh;
+            waterParameterStandard.MaxHardness = waterParameterStandardModel.MaxHardness;
+            waterParameterStandard.MinHardness = waterParameterStandardModel.MinHardness;
+            waterParameterStandard.MaxOxigen = waterParameterStandardModel.MaxOxigen;
+            waterParameterStandard.MinOxigen = waterParameterStandardModel.MinOxigen;
+            waterParameterStandard.MaxCabondioxide = waterParameterStandardModel.MaxCabondioxide;
+            waterParameterStandard.MinCabondioxide = waterParameterStandardModel.MinCabondioxide;
+            waterParameterStandard.MaxSalt = waterParameterStandardModel.MaxSalt;
+            waterParameterStandard.MinSalt = waterParameterStandardModel.MinSalt;
+            waterParameterStandard.MaxNitrates = waterParameterStandardModel.MaxNitrates;
+            waterParameterStandard.MinNitrates = waterParameterStandardModel.MinNitrates;
+            waterParameterStandard.MaxNitrite = waterParameterStandardModel.MaxNitrite;
+            waterParameterStandard.MinNitrates = waterParameterStandardModel.MinNitrite;
+            waterParameterStandard.MaxAmonium = waterParameterStandardModel.MaxAmonium;
+            waterParameterStandard.MinAmonium = waterParameterStandardModel.MinAmonium;
+
+            _unitOfWork.WaterParameterStandards.UpdateAsync(waterParameterStandard);
+            await _unitOfWork.SaveAsync();
+
+            return true;
+        }
+
+        public async Task<bool> DeleteWaterParameterStandardAsync (int id)
+        {
+            var waterParameterStandard = await _unitOfWork.WaterParameterStandards.GetByIdAsync(id);
+
+            if (waterParameterStandard == null) 
+                return false;
+
+            _unitOfWork.WaterParameterStandards.DeleteAsync(waterParameterStandard);
+            await _unitOfWork.SaveAsync();
+
+            return true;
+        }
+
     }
 }
