@@ -11,32 +11,32 @@ const Signin = () => {
     const { email, password, staySignedIn } = values;
 
     try {
-      const response = await fetch('http://localhost:5088/api/Account/login', {
-        method: 'POST',
+      const response = await fetch("http://localhost:5088/api/Account/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
       });
 
       if (!response.ok) {
-        throw new Error('Login failed');
+        throw new Error("Login failed");
       }
 
       const data = await response.json();
-      console.log('Login successful', data);
+      console.log("Login successful", data);
 
       // Store token based on "Stay signed in" checkbox
       if (staySignedIn) {
-        localStorage.setItem('authToken', data.token); // Token stored in localStorage
+        localStorage.setItem("authToken", data.token); // Token stored in localStorage
       } else {
-        sessionStorage.setItem('authToken', data.token); // Token stored in sessionStorage
+        sessionStorage.setItem("authToken", data.token); // Token stored in sessionStorage
       }
 
-      navigate("/overview");  // Navigate to the overview page
+      navigate("/overview"); // Navigate to the overview page
     } catch (error) {
-      console.error('Error during login:', error);
-      setErrorMessage('Invalid email or password');
+      console.error("Error during login:", error);
+      setErrorMessage("Invalid email or password");
     }
   };
 
@@ -44,7 +44,11 @@ const Signin = () => {
     <>
       <div className="signin flex h-screen">
         <div className="signin__image hidden md:block w-1/2">
-          <img src={signinimg} alt="Sign In illustration" className="object-cover w-full h-full" />
+          <img
+            src={signinimg}
+            alt="Sign In illustration"
+            className="object-cover w-full h-full"
+          />
         </div>
 
         <div className="signin__form flex flex-col justify-center w-full md:w-1/2 bg-gray-50 p-8 md:p-16">
@@ -63,24 +67,34 @@ const Signin = () => {
               </p>
 
               {errorMessage && (
-                <div className="mb-4 text-red-500">
-                  {errorMessage}
-                </div>
+                <div className="mb-4 text-red-500">{errorMessage}</div>
               )}
 
               <Form.Item
                 label="Email"
                 name="email"
-                rules={[{ required: true, message: "Please enter your Email!" }]}
+                rules={[
+                  { required: true, message: "Please enter your Email !!" },
+                ]}
               >
-                <Input type="email" placeholder="John@example.com" aria-label="Email" />
+                <Input
+                  type="email"
+                  placeholder="John@example.com"
+                  aria-label="Email"
+                />
               </Form.Item>
               <Form.Item
                 label="Password"
                 name="password"
-                rules={[{ required: true, message: "Please enter your Password!" }]}
+                rules={[
+                  { required: true, message: "Please enter your Password !!" },
+                ]}
               >
-                <Input type="password" placeholder="••••••••••••" aria-label="Password" />
+                <Input
+                  type="password"
+                  placeholder="••••••••••••"
+                  aria-label="Password"
+                />
               </Form.Item>
               <Form.Item>
                 <div className="flex items-center mb-6">

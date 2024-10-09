@@ -40,7 +40,7 @@ const SideBar = () => {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-auto">
       <div
         className={`sidebar ${
           open ? "w-72" : "w-20"
@@ -54,14 +54,16 @@ const SideBar = () => {
           onClick={() => setOpen(!open)}
         />
         <div className="flex gap-x-4 items-center">
-          <img
-            src={logoimg}
-            alt=""
-            width={60}
-            className={`cursor-pointer duration-500 ${
-              open && "rotate-[360deg]"
-            }`}
-          />
+          <Link to={"/"}>
+            <img
+              src={logoimg}
+              alt=""
+              width={60}
+              className={`cursor-pointer duration-500 ${
+                open && "rotate-[360deg]"
+              }`}
+            />
+          </Link>
           <h1
             className={`text-white origin-left font-medium text-xl duration-200 ${
               !open && "scale-0"

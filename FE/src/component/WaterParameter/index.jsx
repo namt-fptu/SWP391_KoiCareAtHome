@@ -1,6 +1,6 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState } from "react";
 import { Button, Modal, Form, Input, Card, Row, Col } from "antd";
-
 
 const WaterParameter = () => {
   const [waterParameters, setWaterParameters] = useState([]);
@@ -30,11 +30,15 @@ const WaterParameter = () => {
 
   return (
     <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
-      <h1 className="text-3xl font-bold mb-8 text-white p-8">Water Parameters</h1>
-      <p className="text-white p-8">Kiểm tra và theo dõi các thông số nước của hồ cá.</p>
+      <h1 className="text-3xl font-bold mb-8 text-white p-8">
+        Water Parameters
+      </h1>
+      <p className="text-white p-8">
+        Kiểm tra và theo dõi các thông số nước của hồ cá.
+      </p>
       <div>
         {/* Nút để mở popup */}
-        <div class="flex flex-col items-center">
+        <div className="flex flex-col items-center">
           <Button className="" type="primary" onClick={showModal}>
             Input
           </Button>
@@ -211,43 +215,53 @@ const WaterParameter = () => {
                     <strong>Salt:</strong> {waterParameter.salt || "-"}
                   </p>
                   <p>
-                    <strong>Nitrite (NO₂):</strong> {waterParameter.nitrite || "-"}
+                    <strong>Nitrite (NO₂):</strong>{" "}
+                    {waterParameter.nitrite || "-"}
                   </p>
                   <p>
-                    <strong>Nitrate (NO₃):</strong> {waterParameter.nitrate || "-"}
+                    <strong>Nitrate (NO₃):</strong>{" "}
+                    {waterParameter.nitrate || "-"}
                   </p>
                   <p>
-                    <strong>Phosphate (PO₄):</strong> {waterParameter.phosphate || "-"}
+                    <strong>Phosphate (PO₄):</strong>{" "}
+                    {waterParameter.phosphate || "-"}
                   </p>
                   <p>
-                    <strong>Ammonium (NH₄):</strong> {waterParameter.ammonium || "-"}
+                    <strong>Ammonium (NH₄):</strong>{" "}
+                    {waterParameter.ammonium || "-"}
                   </p>
                   <p>
-                    <strong>Hardness (GH):</strong> {waterParameter.hardness || "-"}
+                    <strong>Hardness (GH):</strong>{" "}
+                    {waterParameter.hardness || "-"}
                   </p>
                   <p>
-                    <strong>Outdoor Temp:</strong> {waterParameter.outdoorTemp || "-"}
+                    <strong>Outdoor Temp:</strong>{" "}
+                    {waterParameter.outdoorTemp || "-"}
                   </p>
                   <p>
                     <strong>Oxygen (O₂):</strong> {waterParameter.oxygen || "-"}
                   </p>
                   <p>
-                    <strong>Temperature:</strong> {waterParameter.temperature || "-"}
+                    <strong>Temperature:</strong>{" "}
+                    {waterParameter.temperature || "-"}
                   </p>
                   <p>
                     <strong>pH Value:</strong> {waterParameter.ph || "-"}
                   </p>
                   <p>
-                    <strong>Carbon Hardness (KH):</strong> {waterParameter.kh || "-"}
+                    <strong>Carbon Hardness (KH):</strong>{" "}
+                    {waterParameter.kh || "-"}
                   </p>
                   <p>
                     <strong>CO₂:</strong> {waterParameter.co2 || "-"}
                   </p>
                   <p>
-                    <strong>Total Chlorines:</strong> {waterParameter.totalchlorines || "-"}
+                    <strong>Total Chlorines:</strong>{" "}
+                    {waterParameter.totalchlorines || "-"}
                   </p>
                   <p>
-                    <strong>Amount Fed:</strong> {waterParameter.amountFed || "-"}
+                    <strong>Amount Fed:</strong>{" "}
+                    {waterParameter.amountFed || "-"}
                   </p>
                 </Card>
               </Col>
