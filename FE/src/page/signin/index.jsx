@@ -1,43 +1,42 @@
 import { Form, Input } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import signinimg from "../../assets/signin.png";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const Signin = () => {
-  const [users, setUsers] = useState([]);
   const [errorMessage, setErrorMessage] = useState(null); // For error messages
   const navigate = useNavigate(); // Initialize useNavigate
 
-  // Fetch user data from the API
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch('http://localhost:5088/api/Account/accounts'); 
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setUsers(data);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-        setErrorMessage("Failed to load user data. Please try again later.");
+  const handleSignin = async (values) => {
+    const { email, password, staySignedIn } = values;
+
+    try {
+      const response = await fetch('http://localhost:5088/api/Account/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Login failed');
       }
-    };
 
-    fetchUsers();
-  }, []);
+      const data = await response.json();
+      console.log('Login successful', data);
 
-  const handleSignin = (values) => {
-    const { email, password } = values;
+      // Store token based on "Stay signed in" checkbox
+      if (staySignedIn) {
+        localStorage.setItem('authToken', data.token); // Token stored in localStorage
+      } else {
+        sessionStorage.setItem('authToken', data.token); // Token stored in sessionStorage
+      }
 
-    
-    const user = users.find((user) => user.email === email && user.password === password);
-
-    if (user) {
-      console.log("Login successful", user);
-      navigate("/overview"); 
-    } else {
-      setErrorMessage("Invalid email or password");
+      navigate("/overview");  // Navigate to the overview page
+    } catch (error) {
+      console.error('Error during login:', error);
+      setErrorMessage('Invalid email or password');
     }
   };
 
