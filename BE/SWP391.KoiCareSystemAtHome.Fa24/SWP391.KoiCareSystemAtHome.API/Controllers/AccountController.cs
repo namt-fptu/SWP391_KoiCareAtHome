@@ -24,48 +24,53 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         private readonly ShopService _shopService;
         private readonly IConfiguration _configuration;
 
-        public AccountController(AccountService accountService, PondOwnerService pondOwnerService, ShopService shopService)
+        public AccountController(AccountService accountService, PondOwnerService pondOwnerService, ShopService shopService, IConfiguration configuration)
         {
             _accountService = accountService;
             _pondOwnerService = pondOwnerService;
             _shopService = shopService;
+            _configuration = configuration;
         }
 
-        //[HttpPost("login")]
-        //public async Task<ActionResult> Login([FromBody]AuthenticateModel authenticate)
-        //{
-        //    var account = await _accountService.Authenticate(authenticate);
-        //    if (account == null) 
-        //        return NotFound();
+        [HttpPost("login")]
+        public async Task<ActionResult> Login([FromBody] AuthenticateModel authenticate)
+        {
+            if (authenticate == null)
+                return BadRequest("Invalid client request.");
 
-        //    AccountResponseModel responseModel = new()
-        //    {
-        //        Email = account.Email,
-        //        Id = account.Id,
-        //        Phone = account.Phone,
-        //        Role = account.Role,
-        //    };
+            var account = await _accountService.Authenticate(authenticate);
+            if (account == null)
+                return NotFound();
 
-        //    List<Claim> claims = new List<Claim>
-        //    {
-        //        new Claim(ClaimTypes.Email, responseModel.Email),
-        //        new Claim(ClaimTypes.Role, responseModel.Role),
-        //    };
+            AccountResponseModel responseModel = new()
+            {
+                Email = account.Email,
+                Id = account.Id,
+                Phone = account.Phone,
+                Role = account.Role,
+            };
 
-        //    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Email, responseModel.Email),
+                new Claim(ClaimTypes.Role, responseModel.Role),
+                new Claim(ClaimTypes.NameIdentifier, responseModel.Id.ToString()),
+            };
 
-        //    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));
 
-        //    var token = new JwtSecurityToken(
-        //            claims: claims,
-        //            expires: DateTime.Now.AddMinutes(1),
-        //            signingCredentials: creds
-        //        );
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
 
-        //    var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+            var token = new JwtSecurityToken(
+                    claims: claims,
+                    expires: DateTime.Now.AddMinutes(15),
+                    signingCredentials: creds
+                );
 
-        //    return Ok(jwt);
-        //}
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return Ok(jwt);
+        }
 
         [HttpGet("accounts")]
         public async Task<ActionResult<IEnumerable<AccountResponseModel>>> GetAccounts()

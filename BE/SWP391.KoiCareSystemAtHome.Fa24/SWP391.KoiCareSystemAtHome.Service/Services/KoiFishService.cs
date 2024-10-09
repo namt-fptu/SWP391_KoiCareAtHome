@@ -12,10 +12,12 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
     public class KoiFishService
     {
         private readonly UnitOfWork _unitOfWork;
+        private readonly KoiGrowthReportService _koiGrowthReportService;
 
-        public KoiFishService(UnitOfWork unitOfWork)
+        public KoiFishService(UnitOfWork unitOfWork, KoiGrowthReportService koiGrowthReportService)
         {
             _unitOfWork = unitOfWork;
+            _koiGrowthReportService = koiGrowthReportService;
         }
 
         public async Task<IEnumerable<KoiFishModel>> GetKoiFishByPondIdAsync(int pondId)
@@ -99,6 +101,45 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
 
             _unitOfWork.KoiFishs.UpdateAsync(fish);
             await _unitOfWork.SaveAsync();
+
+
+            return true;
+        }
+
+        public async Task<bool> DeleteKoiFishAsync(int fishId)
+        {
+            var koiFish = await _unitOfWork.KoiFishs.GetByIdAsync(fishId);
+
+            if (koiFish == null)
+                return false;
+
+            bool deleteKoiGrowthReport = false;
+            deleteKoiGrowthReport = await _koiGrowthReportService.DeleteKoiGrowthReportAsync(fishId);
+
+            if (!deleteKoiGrowthReport)
+                return false;
+
+            _unitOfWork.KoiFishs.DeleteAsync(koiFish);
+            await _unitOfWork.SaveAsync();
+
+            return true;
+        }
+
+        public async Task<bool> DeleteKoiByPondIdAsync(int pondId)
+        {
+            var koiFishs = await _unitOfWork.KoiFishs.GetAsync();
+
+            var fillteredFishs = koiFishs.Where(f => f.PondId == pondId).ToList();
+
+            if (!fillteredFishs.Any())
+                return false;
+
+            foreach (var entity in fillteredFishs)
+            {
+                bool success = await DeleteKoiFishAsync(entity.Id);
+                if(!success)
+                    return false;
+            }
 
             return true;
         }

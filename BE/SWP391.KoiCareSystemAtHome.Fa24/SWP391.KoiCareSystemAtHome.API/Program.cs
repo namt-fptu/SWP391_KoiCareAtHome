@@ -26,21 +26,10 @@ namespace SWP391.KoiCareSystemAtHome.API
             builder.Services.AddDbContext<Swp391koiCareSystemAtHomeContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             //add cors
-            builder.Services.AddCors(option =>
-                option.AddPolicy("CORS", builder =>
-                    builder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin()));
+            //builder.Services.AddCors(option =>
+            //    option.AddPolicy("CORS", builder =>
+            //        builder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin()));
 
-            //Add Swagger authentication
-            //builder.Services.AddSwaggerGen(option =>
-            //{
-            //    option.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-            //    {
-            //        In = ParameterLocation.Header,
-            //        Name = "Authorization",
-            //        Type = SecuritySchemeType.ApiKey,
-            //    });
-            //    option.OperationFilter<SecurityRequirementsOperationFilter>();
-            //});
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowLocalhost",
@@ -51,6 +40,19 @@ namespace SWP391.KoiCareSystemAtHome.API
                               .AllowAnyMethod();
                     });
             }); ;
+
+            //Add Swagger authentication
+            builder.Services.AddSwaggerGen(option =>
+            {
+                option.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                });
+                option.OperationFilter<SecurityRequirementsOperationFilter>();
+            });
+            
 
             //add Scope
             builder.Services.AddScoped<UnitOfWork>();
