@@ -92,7 +92,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             await _unitOfWork.WaterReports.InsertAsync(waterReportEntity);
             await _unitOfWork.SaveAsync();
 
-            return waterReportEntity.PondId;
+            return waterReportEntity.Id;
         }
 
         public async Task<bool> DeleteWaterReportAsync(int pondId)

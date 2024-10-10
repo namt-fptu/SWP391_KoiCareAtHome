@@ -12,10 +12,12 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
     public class PondOwnerService
     {
         private readonly UnitOfWork _unitOfWork;
+        private readonly PondService _pondService;
 
-        public PondOwnerService(UnitOfWork unitOfWork)
+        public PondOwnerService(UnitOfWork unitOfWork, PondService pondService)
         {
             _unitOfWork = unitOfWork;
+            _pondService = pondService;
         }
 
         public async Task<PondOwnerModel> GetPondOwnerByIdAsync(int id)
@@ -72,11 +74,13 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             if (pondOwners == null)
                 return false;
 
-            var pondOwnerToUpdate = pondOwners.Where(x => x.PondOwnerId == id).FirstOrDefault();
-            if (pondOwnerToUpdate == null)
+            var pondOwnerToDelete = pondOwners.Where(x => x.PondOwnerId == id).FirstOrDefault();
+            if (pondOwnerToDelete == null)
                 return false;
 
-            _unitOfWork.PondOwners.DeleteAsync(pondOwnerToUpdate);
+            bool success = await _pondService.DeletePondByOwnerIdAsync(id);
+
+            _unitOfWork.PondOwners.DeleteAsync(pondOwnerToDelete);
             await _unitOfWork.SaveAsync();
             return true;
         }

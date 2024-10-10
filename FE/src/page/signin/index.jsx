@@ -2,28 +2,30 @@ import { Form, Input } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import signinimg from "../../assets/signin.png";
 import { useState } from "react";
+import api from "../../config/axios"
 
 const Signin = () => {
   const [errorMessage, setErrorMessage] = useState(null); // For error messages
   const navigate = useNavigate(); // Initialize useNavigate
 
   const handleSignin = async (values) => {
-    const { email, password, staySignedIn } = values;
+    const { email, password, staySignedIn } = values; // Get form values
 
     try {
-      const response = await fetch("http://localhost:5088/api/Account/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await api.post("Account/login", 
+        {
+          email: email,
+          password: password
         },
-        body: JSON.stringify({ email, password }),
-      });
+        {
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }
+      );
 
-      if (!response.ok) {
-        throw new Error("Login failed");
-      }
-
-      const data = await response.json();
+      // Axios automatically throws errors for non-2xx status codes, so no need for .ok or .json()
+      const data = response.data; // Extract response data
       console.log("Login successful", data);
 
       // Store token based on "Stay signed in" checkbox
