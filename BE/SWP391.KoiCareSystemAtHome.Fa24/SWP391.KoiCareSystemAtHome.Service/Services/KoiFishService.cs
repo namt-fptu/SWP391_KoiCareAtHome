@@ -116,8 +116,8 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             bool deleteKoiGrowthReport = false;
             deleteKoiGrowthReport = await _koiGrowthReportService.DeleteKoiGrowthReportAsync(fishId);
 
-            if (!deleteKoiGrowthReport)
-                return false;
+            //if (!deleteKoiGrowthReport)
+            //    return false;
 
             _unitOfWork.KoiFishs.DeleteAsync(koiFish);
             await _unitOfWork.SaveAsync();
@@ -137,8 +137,8 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             foreach (var entity in fillteredFishs)
             {
                 bool success = await DeleteKoiFishAsync(entity.Id);
-                if(!success)
-                    return false;
+                //if(!success)
+                //    return false;
             }
 
             return true;
