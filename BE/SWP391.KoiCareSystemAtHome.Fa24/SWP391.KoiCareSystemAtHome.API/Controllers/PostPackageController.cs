@@ -15,23 +15,6 @@ namespace SWP391_KoiManagement.API.Controllers
         {
             _postPackageService = postPackageService;
         }
-        [HttpGet("postPackage/{postId}")]
-        public async Task<ActionResult<IEnumerable<PostPackageResponseModel>>> GetPostPackageByPostId(int id)
-        {
-            var postPackages = await _postPackageService.GetPostPackageByIdAsync(id);
-
-            if (postPackages == null || !postPackages.Any())
-                return NotFound();
-
-            var response = postPackages.Select(pp => new PostPackageResponseModel
-            {
-                 Id = pp.Id,
-                 Name = pp.Name,
-                 Duration = pp.Duration,
-                 Price = pp.Price,
-            });
-            return Ok(response);
-        }
 
         [HttpGet("postPackage")]
         public async Task<ActionResult<PostPackageResponseModel>> GePostPackageById(PostPackageRequestModel request)
