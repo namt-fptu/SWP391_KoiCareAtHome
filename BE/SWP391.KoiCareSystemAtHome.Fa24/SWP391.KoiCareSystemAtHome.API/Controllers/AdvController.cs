@@ -39,22 +39,19 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("adv")]
-        public async Task<ActionResult<AdvResponseModel>> GetAdvById(AdvRequestModel request)
+        [HttpGet("advId/{advId}")]
+        public async Task<ActionResult<AdvResponseModel>> GetAdvById(int advId)
         {
-            var advs = await _advService.GetAdvByShopIdAsync(request.ShopId);
 
-            if (advs == null || !advs.Any())
-                return NotFound();
+            var adv = await _advService.GetAdvByIdAsync(advId);
 
-            var adv = advs.Where(a => a.Id == request.AdvId).FirstOrDefault();
             if (adv == null)
                 return NotFound();
 
             var response = new AdvResponseModel
             {
                 Id = adv.Id,
-                ShopId = adv.ShopId,
+                ShopId=adv.ShopId,
                 Title = adv.Title,
                 Url = adv.Url,
                 AdvDate = adv.AdvDate,
@@ -66,6 +63,8 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
 
             return Ok(response);
         }
+
+
         [HttpPost("createAdv")]
         public async Task<ActionResult> CreateAdv(AdvModel request)
         {

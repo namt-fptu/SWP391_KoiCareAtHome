@@ -56,6 +56,26 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             });
             return paymentModels;
         }
+
+        public async Task<PaymentModel> GetPaymentByIdAsync(int paymentId)
+        {
+            var payments = await _unitOfWork.Payments.GetAsync();
+            var payment = payments.FirstOrDefault(a => a.Id == paymentId);
+
+            if (payment == null)
+                return null;
+
+            var paymentModel = new PaymentModel
+            {
+                Id= payment.Id,
+                PackageId= payment.PackageId,
+                PostId= payment.PostId,
+                PayDate = payment.PayDate,
+                Quantity = payment.Quantity,
+                Duration = payment.Duration,
+            };
+            return paymentModel;
+        }
         public async Task<int> CreatePaymentAsync(PaymentModel paymentModel)
         {
             var paymentEntity = new Payment

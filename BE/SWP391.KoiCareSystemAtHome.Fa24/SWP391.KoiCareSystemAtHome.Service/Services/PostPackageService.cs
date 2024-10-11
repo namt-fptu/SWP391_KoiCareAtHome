@@ -18,21 +18,40 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
         {
             _unitOfWork = unitOfWork;
         }
-        public async Task<IEnumerable<PostPackageModel>> GetPostPackageByIdAsync(int id)
+        public async Task<PostPackageModel> GetPostPackageByIdAsync(int postPackageId)
         {
             var postPackages = await _unitOfWork.PostPackages.GetAsync();
-            if (postPackages.Any())
-                return Enumerable.Empty<PostPackageModel>();
 
-            var postpakageModels = postPackages.Select(pp => new PostPackageModel
+            var postPackage = postPackages.FirstOrDefault(pp => pp.Id == postPackageId);
+
+            if (postPackage == null)
+                return null;
+
+            var postPackageModel = new PostPackageModel
             {
-                Id = pp.Id,
-                Name = pp.Name,
-                Duration = pp.Duration,
-                Price = pp.Price,
-            });
-            return postpakageModels;
+                Id = postPackage.Id,
+                Name = postPackage.Name,
+                Price = postPackage.Price,
+                Duration = postPackage.Duration,
+
+            };
+            return postPackageModel;
         }
+        //public async Task<IEnumerable<PostPackageModel>> GetPostPackageByIdAsync(int id)
+        //{
+        //    var postPackages = await _unitOfWork.PostPackages.GetAsync();
+        //    if (postPackages.Any())
+        //        return Enumerable.Empty<PostPackageModel>();
+
+        //    var postpakageModels = postPackages.Select(pp => new PostPackageModel
+        //    {
+        //        Id = pp.Id,
+        //        Name = pp.Name,
+        //        Duration = pp.Duration,
+        //        Price = pp.Price,
+        //    });
+        //    return postpakageModels;
+        //}
 
         //public async Task<PostPackageModel> GetPostPackageByIdAsync(int postPackageId)
         //{
@@ -69,7 +88,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return postPackageEntity.Id;
         }
 
-        public async Task<bool> UpdatePostPakageAsync(int id, PostPackageModel postPackageModel)
+        public async Task<bool> UpdatePostPackageAsync(int id, PostPackageModel postPackageModel)
         {
             var postPakages = await _unitOfWork.PostPackages.GetAsync();
             if (postPakages == null)
@@ -88,7 +107,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return true;
         }
 
-        public async Task<bool> DeletePostPakageAsync(int id)
+        public async Task<bool> DeletePostPackageAsync(int id)
         {
             var postPakages = await _unitOfWork.PostPackages.GetAsync();
             if (postPakages == null)

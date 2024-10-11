@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SWP391.KoiCareSystemAtHome.API.RequestModel;
 using SWP391.KoiCareSystemAtHome.API.ResponseModel;
+using SWP391.KoiCareSystemAtHome.Service.BusinessModels;
 using SWP391.KoiCareSystemAtHome.Service.Services;
 
 namespace SWP391_KoiManagement.API.Controllers
@@ -55,15 +56,12 @@ namespace SWP391_KoiManagement.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("payment")]
-        public async Task<ActionResult<PaymentResponseModel>> GetPaymentById(PaymentRequestModel request)
+        [HttpGet("paymentId/{paymentId}")]
+        public async Task<ActionResult<PaymentResponseModel>> GetPaymentById(int paymentId)
         {
-            var payments = await _paymentService.GetPaymentByPostIdAsync(request.PostId);
 
-            if (payments == null || !payments.Any())
-                return NotFound();
+            var payment = await _paymentService.GetPaymentByIdAsync(paymentId);
 
-            var payment = payments.Where(k => k.Id == request.PaymentId).FirstOrDefault();
             if (payment == null)
                 return NotFound();
 
@@ -80,5 +78,97 @@ namespace SWP391_KoiManagement.API.Controllers
             return Ok(response);
         }
 
+        [HttpPost("createPayment")]
+        public async Task<ActionResult> CreatePayment(PaymentModel request)
+        {
+            if (request == null)
+                return BadRequest("Payment data is required.");
+            try
+            {
+                var paymentModdel = new PaymentModel
+                {
+                    PackageId = request.PackageId,
+                    PostId = request.PostId,
+                    PayDate = request.PayDate,
+                    Quantity = request.Quantity,
+                    Duration = request.Duration,
+
+                };
+
+                int paymentId = await _paymentService.CreatePaymentAsync(paymentModdel);
+                var payment = await _paymentService.GetPaymentByIdAsync(paymentId);
+
+                if (payment == null)
+                    return NotFound();
+
+                var response = new PaymentResponseModel
+                {
+                    Id= payment.Id,
+                    PackageId= payment.PackageId,
+                    PostId= payment.PostId,
+                    PayDate= payment.PayDate,
+                    Quantity = payment.Quantity,
+                    Duration = payment.Duration,
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while creating the payment.");
+            }
+        }
+
+        [HttpPut("updatePayment/{paymentId}")]
+        public async Task<ActionResult> UpdatePayment(int paymentId, PaymentRequestModel paymentRequestModel)
+        {
+            PaymentModel paymentModel = await _paymentService.GetPaymentByIdAsync(paymentId);
+
+            if (paymentModel == null)
+                return NotFound();
+
+            try
+            {
+                paymentModel.PayDate = paymentRequestModel.PayDate;
+                paymentRequestModel.Quantity = paymentModel.Quantity;
+                paymentRequestModel.Duration = paymentModel.Duration;
+
+                bool success = await _paymentService.UpdatePaymentAsync(paymentId, paymentModel);
+
+                if (!success)
+                    return NotFound();
+
+                var payment = await _paymentService.GetPaymentByIdAsync(paymentId);
+
+                if (payment == null)
+                    return NotFound();
+
+                var response = new PaymentResponseModel
+                {
+                    Id = payment.Id,
+                    PackageId = payment.PackageId,
+                    PostId = payment.PostId,
+                    PayDate = payment.PayDate,
+                    Quantity = payment.Quantity,
+                    Duration = payment.Duration,
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the payment.");
+            }
+        }
+
+        [HttpDelete("deletePayment/{paymentId}")]
+        public async Task<ActionResult> DeleteAdv(int paymentId)
+        {
+            bool success = await _paymentService.DeletePaymentAsync(paymentId);
+            if (!success)
+                return NotFound();
+
+            return NoContent();
+        }
     }
 }
