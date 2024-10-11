@@ -39,7 +39,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("adv/{advId}")]
+        [HttpGet("adv")]
         public async Task<ActionResult<AdvResponseModel>> GetAdvById(AdvRequestModel request)
         {
             var advs = await _advService.GetAdvByShopIdAsync(request.ShopId);

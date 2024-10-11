@@ -55,8 +55,8 @@ namespace SWP391_KoiManagement.API.Controllers
             return Ok(response);
         }
 
-        [HttpPost("payment")]
-        public async Task<ActionResult<PaymentResponseModel>> GetPaymentByPostId(PaymentRequestModel request)
+        [HttpGet("payment")]
+        public async Task<ActionResult<PaymentResponseModel>> GetPaymentById(PaymentRequestModel request)
         {
             var payments = await _paymentService.GetPaymentByPostIdAsync(request.PostId);
 

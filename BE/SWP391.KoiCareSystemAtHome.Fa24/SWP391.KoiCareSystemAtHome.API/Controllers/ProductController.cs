@@ -35,7 +35,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpPost("product")]
+        [HttpGet("product")]
         public async Task<ActionResult<ProductResponseModel>> GetProductById(ProductRequestModel request)
         {
             var products = await _productService.GetProductByPostIdAsync(request.PostId);

@@ -15,7 +15,7 @@ namespace SWP391_KoiManagement.API.Controllers
         {
             _postPackageService = postPackageService;
         }
-        [HttpGet("postPackage")]
+        [HttpGet("postPackage/{postId}")]
         public async Task<ActionResult<IEnumerable<PostPackageResponseModel>>> GetPostPackageByPostId(int id)
         {
             var postPackages = await _postPackageService.GetPostPackageByIdAsync(id);
@@ -33,7 +33,7 @@ namespace SWP391_KoiManagement.API.Controllers
             return Ok(response);
         }
 
-        [HttpPost("postPackage")]
+        [HttpGet("postPackage")]
         public async Task<ActionResult<PostPackageResponseModel>> GePostPackageById(PostPackageRequestModel request)
         {
             var postPackages = await _postPackageService.GetPostPackageByIdAsync(request.PostPackageId);
