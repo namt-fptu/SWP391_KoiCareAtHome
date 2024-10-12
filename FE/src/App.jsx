@@ -14,6 +14,8 @@ import Statistics from "./component/Statistics";
 import FoodCalculator from "./component/FoodCalculator";
 import MainLayout from "./page/MainLayout/MainLayout";
 import Blog from "./component/Blog";
+import Admin from "./page/admin";
+import Shop from "./page/shop";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -28,6 +30,14 @@ const App = () => {
     {
       path: "signup",
       element: <Signup />,
+    },
+    {
+      path: "admin",
+      element: <Admin />,
+    },
+    {
+      path: "shop",
+      element: <Shop />,
     },
     {
       element: <MainLayout />, // Use MainLayout for all routes that require the sidebar
