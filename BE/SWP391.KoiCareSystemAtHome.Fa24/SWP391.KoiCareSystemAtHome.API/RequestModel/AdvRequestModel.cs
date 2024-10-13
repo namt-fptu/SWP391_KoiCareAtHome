@@ -12,7 +12,7 @@
 
         public DateTime AdvDate { get; set; }
 
-        public bool Status { get; set; }
+        public string Status { get; set; } = null!;
 
         public DateTime? EditedDate { get; set; }
 

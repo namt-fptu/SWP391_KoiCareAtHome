@@ -16,7 +16,8 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         {
             _advService = advService;
         }
-        [HttpGet("adv/{shopId}")]
+
+        [HttpGet("getAdvByShopId/{shopId}")]
         public async Task<ActionResult<IEnumerable<AdvResponseModel>>> GetAdvByShopId(int shopId)
         {
             var advs = await _advService.GetAdvByShopIdAsync(shopId);
@@ -39,15 +40,11 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("adv")]
-        public async Task<ActionResult<AdvResponseModel>> GetAdvById(AdvRequestModel request)
+        [HttpGet("GetAdvById/{advId}")]
+        public async Task<ActionResult<AdvResponseModel>> GetAdvById(int advId)
         {
-            var advs = await _advService.GetAdvByShopIdAsync(request.ShopId);
+            var adv = await _advService.GetAdvByIdAsync(advId);
 
-            if (advs == null || !advs.Any())
-                return NotFound();
-
-            var adv = advs.Where(a => a.Id == request.AdvId).FirstOrDefault();
             if (adv == null)
                 return NotFound();
 
@@ -66,6 +63,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
 
             return Ok(response);
         }
+
         [HttpPost("createAdv")]
         public async Task<ActionResult> CreateAdv(AdvModel request)
         {
@@ -95,14 +93,14 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 var response = new AdvResponseModel
                 {
                     Id = adv.Id,
-                    ShopId = request.ShopId,
-                    Title = request.Title,
-                    Url = request.Url,
-                    AdvDate = request.AdvDate,
-                    Status = request.Status,
-                    EditedDate = request.EditedDate,
-                    ExpiredDate= request.ExpiredDate,
-                    Duration = request.Duration,
+                    ShopId = adv.ShopId,
+                    Title = adv.Title,
+                    Url = adv.Url,
+                    AdvDate = adv.AdvDate,
+                    Status = adv.Status,
+                    EditedDate = adv.EditedDate,
+                    ExpiredDate = adv.ExpiredDate,
+                    Duration = adv.Duration,
 
                 };
 
@@ -163,15 +161,6 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
         }
 
-        [HttpDelete("deleteAdv/{advId}")]
-        public async Task<ActionResult> DeleteAdv(int advId)
-        {
-            bool success = await _advService.DeleteAdvAsync(advId);
-            if (!success)
-                return NotFound();
-
-            return NoContent();
-        }
 
     }
 }

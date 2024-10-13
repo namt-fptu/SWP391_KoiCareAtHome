@@ -90,9 +90,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
 
         public async Task<bool> UpdatePondAsync(int pondId, PondModel pondModel)
         {
-            var ponds = await _unitOfWork.Ponds.GetAsync();
-
-            var pond = ponds.FirstOrDefault(p => p.Id == pondId);
+            var pond = await _unitOfWork.Ponds.GetByIdAsync(pondId);
 
             if (pond == null)
                 return false;

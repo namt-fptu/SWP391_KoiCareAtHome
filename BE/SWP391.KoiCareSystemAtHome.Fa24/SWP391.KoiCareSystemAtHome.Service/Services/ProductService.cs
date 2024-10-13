@@ -22,7 +22,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             var product = await _unitOfWork.Products.GetAsync();
             var productOfPost = product.Where(p => p.PostId == id);
 
-            if (productOfPost.Any())
+            if (!productOfPost.Any())
                 return Enumerable.Empty<ProductModel>();
 
             var productModels = productOfPost.Select(p => new ProductModel
@@ -34,6 +34,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                 Description = p.Description,
 
             });
+
             return productModels;
         }
 
@@ -55,13 +56,14 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                 Description = product.Description,
 
             };
+
             return productModel;
         }
         public async Task<int> CreateProductAsync(ProductModel productModel)
         {
             var productEntity = new Product
             {
-                Id = productModel.Id,
+                PostId = productModel.PostId,
                 Title = productModel.Title,
                 ImageUrl = productModel.ImageUrl,
                 Description = productModel.Description,
@@ -88,22 +90,19 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             _unitOfWork.Products.UpdateAsync(product);
             await _unitOfWork.SaveAsync();
 
-
             return true;
         }
 
         public async Task<bool> DeleteProductAsync(int productId)
         {
-            var products = await _unitOfWork.Products.GetAsync();
-            if (products == null)
-                return false;
+            var productToUpdate = await _unitOfWork.Products.GetByIdAsync(productId);
 
-            var productToUpdate = products.Where(x => x.Id == productId).FirstOrDefault();
             if (productToUpdate == null)
                 return false;
 
             _unitOfWork.Products.DeleteAsync(productToUpdate);
             await _unitOfWork.SaveAsync();
+
             return true;
         }
     }

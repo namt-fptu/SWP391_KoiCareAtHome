@@ -1,12 +1,10 @@
 ﻿using SWP391.KoiCareSystemAtHome.Repository;
 using SWP391.KoiCareSystemAtHome.Service.BusinessModels;
-using SWP391.KoiCareSystemAtHome.Repository.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 
 namespace SWP391.KoiCareSystemAtHome.Service.Services
 {
@@ -18,92 +16,74 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
         {
             _unitOfWork = unitOfWork;
         }
-        public async Task<IEnumerable<PaymentModel>> GetPaymentByPostIdAsync(int id)
+
+        public async Task<IEnumerable<PaymentModel>> GetPaymentByPackageIdAsync(int packegeId)
         {
             var payments = await _unitOfWork.Payments.GetAsync();
-            var paymentOfPost = payments.Where(pm => pm.PostId == id);
+            var fillteredPayments = payments.Where(p => p.PackageId == packegeId);
 
-            if (paymentOfPost.Any())
+            if (fillteredPayments == null || !fillteredPayments.Any()) 
                 return Enumerable.Empty<PaymentModel>();
 
-            var paymentModels = paymentOfPost.Select(pm => new PaymentModel
+            var pamentModels = fillteredPayments.Select(p => new PaymentModel
             {
-                Id = pm.Id,
-                PostId = pm.PostId,
-                PackageId = pm.PackageId,
-                PayDate = pm.PayDate,
-                Quantity = pm.Quantity,
-                Duration = pm.Duration,
+                Id = p.Id,
+                PackageId = p.PackageId,
+                PostId = p.PostId,
+                PayDate = p.PayDate,
+                Description = p.Description,
+                TransactionId = p.TransactionId,
+                Success = p.Success,
+                Token = p.Token
             });
-            return paymentModels;
+
+            return pamentModels;
         }
-        public async Task<IEnumerable<PaymentModel>> GetPaymentByPackageIdAsync(int id)
+
+        public async Task<IEnumerable<PaymentModel>> GetPaymentByAdvIdAsync(int advId)
         {
             var payments = await _unitOfWork.Payments.GetAsync();
-            var paymentOfPost = payments.Where(pm => pm.PackageId == id);
+            var fillteredPayments = payments.Where(p => p.PostId == advId);
 
-            if (paymentOfPost.Any())
+            if (fillteredPayments == null || !fillteredPayments.Any())
                 return Enumerable.Empty<PaymentModel>();
 
-            var paymentModels = paymentOfPost.Select(pm => new PaymentModel
+            var pamentModels = fillteredPayments.Select(p => new PaymentModel
             {
-                Id = pm.Id,
-                PostId = pm.PostId,
-                PackageId = pm.PackageId,
-                PayDate = pm.PayDate,
-                Quantity = pm.Quantity,
-                Duration = pm.Duration,
+                Id = p.Id,
+                PackageId = p.PackageId,
+                PostId = p.PostId,
+                PayDate = p.PayDate,
+                Description = p.Description,
+                TransactionId = p.TransactionId,
+                Success = p.Success,
+                Token = p.Token
             });
-            return paymentModels;
+
+            return pamentModels;
         }
-        public async Task<int> CreatePaymentAsync(PaymentModel paymentModel)
+
+        public async Task<PaymentModel> GetPaymentByIdAsync(int paymentID)
         {
-            var paymentEntity = new Payment
+            var payment = await _unitOfWork.Payments.GetByIdAsync(paymentID);
+
+            if (payment == null)
+                return null;
+
+            var pamentModel = new PaymentModel
             {
-                Id = paymentModel.Id,
-                PayDate = paymentModel.PayDate,
-                Quantity = paymentModel.Quantity,
-                Duration = paymentModel.Duration,
+                Id = payment.Id,
+                PackageId = payment.PackageId,
+                PostId = payment.PostId,
+                PayDate = payment.PayDate,
+                Description = payment.Description,
+                TransactionId = payment.TransactionId,
+                Success = payment.Success,
+                Token = payment.Token
             };
 
-            await _unitOfWork.Payments.InsertAsync(paymentEntity);
-            await _unitOfWork.SaveAsync();
-
-            return paymentEntity.Id;
+            return pamentModel;
         }
 
-        public async Task<bool> UpdatePaymentAsync(int id, PaymentModel paymentModel)
-        {
-            var payments = await _unitOfWork.Payments.GetAsync();
-            if (payments == null)
-                return false;
-
-            var paymentToUpdate = payments.Where(x => x.Id == id).FirstOrDefault();
-            if (paymentToUpdate == null)
-                return false;
-
-            paymentToUpdate.PayDate = paymentModel.PayDate;
-            paymentToUpdate.Quantity = paymentModel.Quantity;
-            paymentToUpdate.Duration = paymentModel.Duration;
-
-            _unitOfWork.Payments.UpdateAsync(paymentToUpdate);
-            await _unitOfWork.SaveAsync();
-            return true;
-        }
-
-        public async Task<bool> DeletePaymentAsync(int id)
-        {
-            var payments = await _unitOfWork.Payments.GetAsync();
-            if (payments == null)
-                return false;
-
-            var paymentToUpdate = payments.Where(x => x.Id == id).FirstOrDefault();
-            if (paymentToUpdate == null)
-                return false;
-
-            _unitOfWork.Payments.DeleteAsync(paymentToUpdate);
-            await _unitOfWork.SaveAsync();
-            return true;
-        }
     }
 }
