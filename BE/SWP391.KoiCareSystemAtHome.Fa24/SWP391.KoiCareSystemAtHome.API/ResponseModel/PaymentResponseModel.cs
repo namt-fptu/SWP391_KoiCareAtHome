@@ -10,8 +10,12 @@
 
         public DateTime PayDate { get; set; }
 
-        public int Quantity { get; set; }
+        public string Description { get; set; } = null!;
 
-        public int Duration { get; set; }
+        public int TransactionId { get; set; }
+
+        public bool Success { get; set; }
+
+        public string Token { get; set; } = null!;
     }
 }

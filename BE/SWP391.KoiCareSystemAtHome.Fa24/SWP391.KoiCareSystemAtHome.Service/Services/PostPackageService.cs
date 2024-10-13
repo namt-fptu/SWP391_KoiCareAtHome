@@ -18,10 +18,12 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
         {
             _unitOfWork = unitOfWork;
         }
-        public async Task<IEnumerable<PostPackageModel>> GetPostPackageByIdAsync(int id)
+
+        public async Task<IEnumerable<PostPackageModel>> GetPostPackageAsync()
         {
             var postPackages = await _unitOfWork.PostPackages.GetAsync();
-            if (postPackages.Any())
+
+            if (postPackages == null || !postPackages.Any())
                 return Enumerable.Empty<PostPackageModel>();
 
             var postpakageModels = postPackages.Select(pp => new PostPackageModel
@@ -31,33 +33,32 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                 Duration = pp.Duration,
                 Price = pp.Price,
             });
+
             return postpakageModels;
         }
 
-        //public async Task<PostPackageModel> GetPostPackageByIdAsync(int postPackageId)
-        //{
-        //    var postPackages = await _unitOfWork.PostPackages.GetAsync();
+        public async Task<PostPackageModel> GetPostPackageByIdAsync(int id)
+        {
+            var postPackage = await _unitOfWork.PostPackages.GetByIdAsync(id);
 
-        //    var postPackage = postPackages.FirstOrDefault(pp => pp.Id == postPackageId);
+            if (postPackage == null)
+                return null;
 
-        //    if (postPackage == null)
-        //        return null;
+            var postpakageModel = new PostPackageModel
+            {
+                Id = postPackage.Id,
+                Name = postPackage.Name,
+                Duration = postPackage.Duration,
+                Price = postPackage.Price,
+            };
 
-        //    var postPackageModel = new PostPackageModel
-        //    {
-        //        Id = postPackage.Id,
-        //        Name = postPackage.Name,
-        //        Duration = postPackage.Duration,
-        //        Price = postPackage.Price,
-        //    };
-        //    return postPackageModel;
-        //}
+            return postpakageModel;
+        }
 
         public async Task<int> CreatePostPackageAsync(PostPackageModel postPackageModel)
         {
             var postPackageEntity = new PostPackage
             {
-                Id = postPackageModel.Id,
                 Name = postPackageModel.Name,
                 Duration = postPackageModel.Duration,
                 Price = postPackageModel.Price,
@@ -71,11 +72,8 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
 
         public async Task<bool> UpdatePostPakageAsync(int id, PostPackageModel postPackageModel)
         {
-            var postPakages = await _unitOfWork.PostPackages.GetAsync();
-            if (postPakages == null)
-                return false;
 
-            var postPakageToUpdate = postPakages.Where(x => x.Id == id).FirstOrDefault();
+            var postPakageToUpdate = await _unitOfWork.PostPackages.GetByIdAsync(id);
             if (postPakageToUpdate == null)
                 return false;
 
@@ -85,21 +83,19 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
 
             _unitOfWork.PostPackages.UpdateAsync(postPakageToUpdate);
             await _unitOfWork.SaveAsync();
+
             return true;
         }
 
         public async Task<bool> DeletePostPakageAsync(int id)
         {
-            var postPakages = await _unitOfWork.PostPackages.GetAsync();
-            if (postPakages == null)
+            var postPakageToDelete = await _unitOfWork.PostPackages.GetByIdAsync(id);
+            if (postPakageToDelete == null)
                 return false;
 
-            var postPakageToUpdate = postPakages.Where(x => x.Id == id).FirstOrDefault();
-            if (postPakageToUpdate == null)
-                return false;
-
-            _unitOfWork.PostPackages.DeleteAsync(postPakageToUpdate);
+            _unitOfWork.PostPackages.DeleteAsync(postPakageToDelete);
             await _unitOfWork.SaveAsync();
+
             return true;
         }
     }

@@ -20,12 +20,12 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
         public async Task<IEnumerable<AdvModel>> GetAdvByShopIdAsync(int shopId)
         {
             var advs = await _unitOfWork.Advs.GetAsync();
-            var advOfPost = advs.Where(a => a.ShopId == shopId);
+            var advOfShop = advs.Where(a => a.ShopId == shopId);
 
-            if (!advOfPost.Any() || advOfPost == null)
+            if (!advOfShop.Any() || advOfShop == null)
                 return Enumerable.Empty<AdvModel>();
 
-            var advModels = advOfPost.Select(a => new AdvModel
+            var advModels = advOfShop.Select(a => new AdvModel
             {
                 Id = a.Id,
                 Title = a.Title,
@@ -42,9 +42,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
 
         public async Task<AdvModel> GetAdvByIdAsync(int advId)
         {
-            var advs = await _unitOfWork.Advs.GetAsync();
-
-            var adv = advs.FirstOrDefault(a => a.Id == advId);
+            var adv = await _unitOfWork.Advs.GetByIdAsync(advId);
 
             if (adv == null)
                 return null;
@@ -67,8 +65,14 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
         {
             var advEntity = new Adv
             {
-                Id = advModel.Id,
-
+                ShopId = advModel.ShopId,
+                Title = advModel.Title,
+                Url = advModel.Url,
+                AdvDate = advModel.AdvDate,
+                Status = advModel.Status,
+                EditedDate = advModel.EditedDate,
+                ExpiredDate = advModel.ExpiredDate,
+                Duration = advModel.Duration,
             };
 
             await _unitOfWork.Advs.InsertAsync(advEntity);
@@ -79,11 +83,9 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
 
         public async Task<bool> UpdateAdvAsync(int id, AdvModel advModel)
         {
-            var advs = await _unitOfWork.Advs.GetAsync();
-            if (advs == null)
-                return false;
 
-            var advToUpdate = advs.Where(x => x.Id == id).FirstOrDefault();
+            var advToUpdate = await _unitOfWork.Advs.GetByIdAsync(id);
+
             if (advToUpdate == null)
                 return false;
 
@@ -100,19 +102,5 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return true;
         }
 
-        public async Task<bool> DeleteAdvAsync(int id)
-        {
-            var advs = await _unitOfWork.Advs.GetAsync();
-            if (advs == null)
-                return false;
-
-            var advToUpdate = advs.Where(a => a.Id == id).FirstOrDefault();
-            if (advToUpdate == null)
-                return false;
-
-            _unitOfWork.Advs.DeleteAsync(advToUpdate);
-            await _unitOfWork.SaveAsync();
-            return true;
-        }
     }
 }

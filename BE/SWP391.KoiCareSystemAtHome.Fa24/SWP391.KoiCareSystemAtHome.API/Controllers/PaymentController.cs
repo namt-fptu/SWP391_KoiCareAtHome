@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SWP391.KoiCareSystemAtHome.API.RequestModel;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using SWP391.KoiCareSystemAtHome.API.ResponseModel;
 using SWP391.KoiCareSystemAtHome.Service.Services;
 
-namespace SWP391_KoiManagement.API.Controllers
+namespace SWP391.KoiCareSystemAtHome.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -15,27 +15,31 @@ namespace SWP391_KoiManagement.API.Controllers
         {
             _paymentService = paymentService;
         }
-        [HttpGet("payment/{postId}")]
-        public async Task<ActionResult<IEnumerable<PaymentResponseModel>>> GetPaymentByPostId(int postId)
+
+        [HttpGet("getPaymentByAdvId/{advId}")]
+        public async Task<ActionResult<IEnumerable<PaymentResponseModel>>> GetPaymentByAdvId(int advId)
         {
-            var payments = await _paymentService.GetPaymentByPostIdAsync(postId);
+            var payments = await _paymentService.GetPaymentByAdvIdAsync(advId);
 
             if (payments == null || !payments.Any())
                 return NotFound();
 
-            var response = payments.Select(pm => new PaymentResponseModel
+            var response = payments.Select(x => new PaymentResponseModel
             {
-                Id = pm.Id,
-                PostId = pm.PostId,
-                PackageId = pm.PackageId,
-                PayDate = pm.PayDate,
-                Quantity = pm.Quantity,
-                Duration = pm.Duration,
+                Id = x.Id,
+                PackageId = x.PackageId,
+                PostId = x.PostId,
+                PayDate = x.PayDate,
+                Description = x.Description,
+                TransactionId = x.TransactionId,
+                Success = x.Success,
+                Token = x.Token,
             });
+
             return Ok(response);
         }
 
-        [HttpGet("payment/{packageId}")]
+        [HttpGet("getPaymentByPaclageId/{packageId}")]
         public async Task<ActionResult<IEnumerable<PaymentResponseModel>>> GetPaymentByPackageId(int packageId)
         {
             var payments = await _paymentService.GetPaymentByPackageIdAsync(packageId);
@@ -43,42 +47,42 @@ namespace SWP391_KoiManagement.API.Controllers
             if (payments == null || !payments.Any())
                 return NotFound();
 
-            var response = payments.Select(pm => new PaymentResponseModel
+            var response = payments.Select(x => new PaymentResponseModel
             {
-                Id = pm.Id,
-                PostId = pm.PostId,
-                PackageId = pm.PackageId,
-                PayDate = pm.PayDate,
-                Quantity = pm.Quantity,
-                Duration = pm.Duration,
+                Id = x.Id,
+                PackageId = x.PackageId,
+                PostId = x.PostId,
+                PayDate = x.PayDate,
+                Description = x.Description,
+                TransactionId = x.TransactionId,
+                Success = x.Success,
+                Token = x.Token,
             });
+
             return Ok(response);
         }
 
-        [HttpGet("payment")]
-        public async Task<ActionResult<PaymentResponseModel>> GetPaymentById(PaymentRequestModel request)
+        [HttpGet("getPaymentByPaymentId/{paymentId}")]
+        public async Task<ActionResult<IEnumerable<PaymentResponseModel>>> GetPaymentByPaymentId(int paymentId)
         {
-            var payments = await _paymentService.GetPaymentByPostIdAsync(request.PostId);
+            var payment = await _paymentService.GetPaymentByIdAsync(paymentId);
 
-            if (payments == null || !payments.Any())
-                return NotFound();
-
-            var payment = payments.Where(k => k.Id == request.PaymentId).FirstOrDefault();
             if (payment == null)
                 return NotFound();
 
             var response = new PaymentResponseModel
             {
                 Id = payment.Id,
-                PostId = payment.PostId,
                 PackageId = payment.PackageId,
+                PostId = payment.PostId,
                 PayDate = payment.PayDate,
-                Quantity = payment.Quantity,
-                Duration = payment.Duration,
+                Description = payment.Description,
+                TransactionId = payment.TransactionId,
+                Success = payment.Success,
+                Token = payment.Token,
             };
 
             return Ok(response);
         }
-
     }
 }
