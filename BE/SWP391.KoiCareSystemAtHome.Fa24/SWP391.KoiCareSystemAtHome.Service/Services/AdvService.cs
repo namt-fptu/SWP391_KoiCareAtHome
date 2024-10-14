@@ -30,6 +30,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                 Id = a.Id,
                 Title = a.Title,
                 Url = a.Url,
+                ImageUrl = a.ImageUrl,
                 AdvDate = a.AdvDate,
                 Status = a.Status,
                 EditedDate = a.EditedDate,
@@ -53,6 +54,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                 ShopId = adv.ShopId,
                 Title = adv.Title,
                 Url = adv.Url,
+                ImageUrl = adv.ImageUrl,
                 AdvDate = adv.AdvDate,
                 Status = adv.Status,
                 EditedDate = adv.EditedDate,
@@ -61,6 +63,17 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             };
             return advModel;
         }
+
+        public async Task<bool> CheckAdvExistAsync(int advId)
+        {
+            var adv = await _unitOfWork.Advs.GetByIdAsync(advId);
+
+            if (adv == null)
+                return false;
+
+            return true;
+        }
+
         public async Task<int> CreateAdvAsync(AdvModel advModel)
         {
             var advEntity = new Adv
@@ -68,6 +81,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                 ShopId = advModel.ShopId,
                 Title = advModel.Title,
                 Url = advModel.Url,
+                ImageUrl = advModel.ImageUrl,
                 AdvDate = advModel.AdvDate,
                 Status = advModel.Status,
                 EditedDate = advModel.EditedDate,
@@ -91,6 +105,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
 
             advToUpdate.Title = advModel.Title;
             advToUpdate.Url = advModel.Url;
+            advToUpdate.ImageUrl = advModel.ImageUrl;
             advToUpdate.AdvDate = advModel.AdvDate;
             advToUpdate.Status = advModel.Status;
             advToUpdate.EditedDate = advModel.EditedDate;
@@ -100,6 +115,30 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             _unitOfWork.Advs.UpdateAsync(advToUpdate);
             await _unitOfWork.SaveAsync();
             return true;
+        }
+
+        public async Task<AdvModel> GetAdvByStatusAsync(string status)
+        {
+            var advs = await _unitOfWork.Advs.GetAsync();
+            var adv = advs.FirstOrDefault(a => a.Status == status);
+
+            if (adv == null)
+                return null;
+
+            var advModel = new AdvModel
+            {
+                Id = adv.Id,
+                ShopId = adv.ShopId,
+                Title = adv.Title,
+                Url = adv.Url,
+                ImageUrl = adv.ImageUrl,
+                AdvDate = adv.AdvDate,
+                Status = adv.Status,
+                EditedDate = adv.EditedDate,
+                ExpiredDate = adv.ExpiredDate,
+                Duration = adv.Duration,
+            };
+            return advModel;
         }
 
     }

@@ -30,7 +30,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                 Id = p.Id,
                 PostId = p.PostId,
                 Title = p.Title,
-                ImageUrl = p.ImageUrl,
+                Url = p.Url,
                 Description = p.Description,
 
             });
@@ -52,7 +52,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                 Id = product.Id,
                 PostId = product.PostId,
                 Title = product.Title,
-                ImageUrl = product.ImageUrl,
+                Url = product.Url,
                 Description = product.Description,
 
             };
@@ -65,7 +65,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             {
                 PostId = productModel.PostId,
                 Title = productModel.Title,
-                ImageUrl = productModel.ImageUrl,
+                Url = productModel.Url,
                 Description = productModel.Description,
             };
 
@@ -84,7 +84,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                 return false;
 
             product.Title = productModel.Title;
-            product.ImageUrl = productModel.ImageUrl;
+            product.Url = productModel.Url;
             product.Description = productModel.Description;
 
             _unitOfWork.Products.UpdateAsync(product);

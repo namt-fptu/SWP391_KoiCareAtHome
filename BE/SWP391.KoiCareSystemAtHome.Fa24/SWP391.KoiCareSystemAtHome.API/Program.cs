@@ -70,6 +70,7 @@ namespace SWP391.KoiCareSystemAtHome.API
             builder.Services.AddScoped<ProductService>();
             builder.Services.AddScoped<AdvService>();
             builder.Services.AddScoped<PaymentService>();
+            builder.Services.AddScoped<VnPayService>();
 
             var app = builder.Build();
 

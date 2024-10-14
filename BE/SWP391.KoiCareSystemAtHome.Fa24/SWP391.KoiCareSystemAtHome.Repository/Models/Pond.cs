@@ -19,6 +19,8 @@ public partial class Pond
 
     public int? SkimmerCount { get; set; }
 
+    public string ImageUrl { get; set; } = null!;
+
     public float? PumpingCapacity { get; set; }
 
     public virtual ICollection<KoiFish> KoiFishes { get; set; } = new List<KoiFish>();
