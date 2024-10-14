@@ -25,14 +25,14 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             if (!koiVarietys.Any()) 
                 return Enumerable.Empty<KoiVarietyModel>();
 
-            var koiVarietysModel = koiVarietys.Select(k => new KoiVarietyModel
+            var koiVarietyModels = koiVarietys.Select(k => new KoiVarietyModel
             {
                 Variety = k.Variety,
                 Color = k.Color,
                 Rarity = k.Rarity
             });
 
-            return koiVarietysModel;
+            return koiVarietyModels;
         }
 
         public async Task<KoiVarietyModel> GetKoiVarietyAsync(string variety)

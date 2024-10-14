@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SWP391.KoiCareSystemAtHome.Repository.Models;
+namespace SWP391.KoiCareSystemAtHome.Service.BusinessModels;
 
-public partial class Adv
+public partial class AdvModel
 {
     public int Id { get; set; }
 
@@ -23,9 +23,5 @@ public partial class Adv
 
     public int Duration { get; set; }
 
-    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
-    public virtual ICollection<Product> Products { get; set; } = new List<Product>();
-
-    public virtual Shop Shop { get; set; } = null!;
 }

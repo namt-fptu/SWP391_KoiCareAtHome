@@ -12,10 +12,14 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
     public class PondService
     {
         private readonly UnitOfWork _unitOfWork;
+        private readonly KoiFishService _koiFishService;
+        private readonly WaterReportService _waterReportService;
 
-        public PondService(UnitOfWork unitOfWork)
+        public PondService(UnitOfWork unitOfWork, KoiFishService koiFishService, WaterReportService waterReportService)
         {
             _unitOfWork = unitOfWork;
+            _koiFishService = koiFishService;
+            _waterReportService = waterReportService;
         }
 
         public async Task<IEnumerable<PondModel>> GetPondByOwnerIdAsync(int id)
@@ -86,9 +90,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
 
         public async Task<bool> UpdatePondAsync(int pondId, PondModel pondModel)
         {
-            var ponds = await _unitOfWork.Ponds.GetAsync();
-
-            var pond = ponds.FirstOrDefault(p => p.Id == pondId);
+            var pond = await _unitOfWork.Ponds.GetByIdAsync(pondId);
 
             if (pond == null)
                 return false;
@@ -102,6 +104,45 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
 
             _unitOfWork.Ponds.UpdateAsync(pond);
             await _unitOfWork.SaveAsync();
+
+            return true;
+        }
+
+        public async Task<bool> DeletePondAsync(int pondId)
+        {
+            var pond = await _unitOfWork.Ponds.GetByIdAsync(pondId);
+            if (pond == null)
+                return false;
+
+            bool deleteKoiFishs = false;
+            deleteKoiFishs = await _koiFishService.DeleteKoiByPondIdAsync(pondId);
+            bool deleteWaterReports = false;
+            deleteWaterReports = await _waterReportService.DeleteWaterReportAsync(pondId);
+
+            //if (!deleteKoiFishs || !deleteWaterReports)
+            //    return false;
+
+            _unitOfWork.Ponds.DeleteAsync(pond);
+            await _unitOfWork.SaveAsync();
+            return true;
+        }
+
+        public async Task<bool> DeletePondByOwnerIdAsync(int ownerID)
+        {
+            var ponds = await _unitOfWork.Ponds.GetAsync();
+            if (!ponds.Any() || ponds == null)
+                return false ;
+
+            var fillteredPonds = ponds.Where(p => p.PondOwnerId == ownerID).ToList();
+            if (!fillteredPonds.Any() || fillteredPonds == null)
+                return false;
+
+            foreach (var entity in fillteredPonds)
+            {
+                bool success = await DeletePondAsync(entity.PondOwnerId);
+                //if (!success)
+                //    return false;
+            }
 
             return true;
         }

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SWP391.KoiCareSystemAtHome.Repository.Models;
+namespace SWP391.KoiCareSystemAtHome.Service.BusinessModels;
 
-public partial class Payment
+public partial class PaymentModel
 {
     public int Id { get; set; }
 
@@ -21,7 +21,5 @@ public partial class Payment
 
     public string Token { get; set; } = null!;
 
-    public virtual PostPackage Package { get; set; } = null!;
 
-    public virtual Adv Post { get; set; } = null!;
 }
