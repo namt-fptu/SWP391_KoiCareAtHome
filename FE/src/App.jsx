@@ -14,6 +14,7 @@ import AboutKoi from "./component/AboutKoi";
 import Statistics from "./component/Statistics";
 import FoodCalculator from "./component/FoodCalculator";
 import Blog from "./component/Blog";
+//    import Admin from "./page/admin";
 
 import Shop from "./page/shop";
 import ShopOverview from "./component/ShopOverview";
