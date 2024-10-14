@@ -23,6 +23,8 @@ namespace SWP391.KoiCareSystemAtHome.Service.BusinessModels
 
         public int? SkimmerCount { get; set; }
 
+        public string ImageUrl { get; set; } = null!;
+
         public float? PumpingCapacity { get; set; }
 
     }

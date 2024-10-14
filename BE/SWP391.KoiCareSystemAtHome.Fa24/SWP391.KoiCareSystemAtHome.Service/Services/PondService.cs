@@ -39,6 +39,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                 Volume = pond.Volume,
                 DraimCount = pond.DraimCount,
                 SkimmerCount = pond.SkimmerCount,
+                ImageUrl = pond.ImageUrl,
                 PumpingCapacity = pond.PumpingCapacity
             });
 
@@ -63,6 +64,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                 Volume = pond.Volume,
                 DraimCount = pond.DraimCount,
                 SkimmerCount = pond.SkimmerCount,
+                ImageUrl = pond.ImageUrl,
                 PumpingCapacity = pond.PumpingCapacity
             };
 
@@ -79,6 +81,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                 Volume = pondModel.Volume,
                 DraimCount = pondModel.DraimCount,
                 SkimmerCount = pondModel.SkimmerCount,
+                ImageUrl = pondModel.ImageUrl,
                 PumpingCapacity = pondModel.PumpingCapacity
             };
 
@@ -100,6 +103,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             pond.Volume = pondModel.Volume;
             pond.DraimCount = pondModel.DraimCount;
             pond.SkimmerCount = pondModel.SkimmerCount;
+            pond.ImageUrl = pondModel.ImageUrl;
             pond.PumpingCapacity = pondModel.PumpingCapacity;
 
             _unitOfWork.Ponds.UpdateAsync(pond);

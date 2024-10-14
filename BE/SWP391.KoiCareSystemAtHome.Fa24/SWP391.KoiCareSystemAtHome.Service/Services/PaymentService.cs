@@ -1,4 +1,5 @@
 ﻿using SWP391.KoiCareSystemAtHome.Repository;
+using SWP391.KoiCareSystemAtHome.Repository.Models;
 using SWP391.KoiCareSystemAtHome.Service.BusinessModels;
 using System;
 using System.Collections.Generic;
@@ -83,6 +84,25 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             };
 
             return pamentModel;
+        }
+
+        public async Task<bool> CreatePaymentAsync(PaymentModel paymentModel)
+        {
+            var entity = new Payment
+            {
+                PackageId = paymentModel.PackageId,
+                PostId = paymentModel.PostId,
+                PayDate = paymentModel.PayDate,
+                Description = paymentModel.Description,
+                TransactionId = paymentModel.TransactionId,
+                Success = paymentModel.Success,
+                Token = paymentModel.Token
+            };
+
+            await _unitOfWork.Payments.InsertAsync(entity);
+            await _unitOfWork.SaveAsync();
+
+            return true;
         }
 
     }

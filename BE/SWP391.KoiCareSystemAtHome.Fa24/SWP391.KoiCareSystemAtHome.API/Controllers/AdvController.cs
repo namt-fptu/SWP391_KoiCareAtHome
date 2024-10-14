@@ -31,6 +31,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 ShopId = a.ShopId,
                 Title = a.Title,
                 Url = a.Url,
+                ImageUrl = a.ImageUrl,
                 AdvDate = a.AdvDate,
                 Status = a.Status,
                 EditedDate = a.EditedDate,
@@ -54,6 +55,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 ShopId = adv.ShopId,
                 Title = adv.Title,
                 Url = adv.Url,
+                ImageUrl = adv.ImageUrl,
                 AdvDate = adv.AdvDate,
                 Status = adv.Status,
                 EditedDate = adv.EditedDate,
@@ -65,7 +67,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         }
 
         [HttpPost("createAdv")]
-        public async Task<ActionResult> CreateAdv(AdvModel request)
+        public async Task<ActionResult> CreateAdv(AdvRequestModel request)
         {
             if (request == null)
                 return BadRequest("Adv data is required.");
@@ -76,12 +78,12 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                     ShopId = request.ShopId,
                     Title = request.Title,
                     Url = request.Url,
+                    ImageUrl = request.ImageUrl,
                     AdvDate = request.AdvDate,
                     Status = request.Status,
                     EditedDate = request.EditedDate,
                     ExpiredDate = request.ExpiredDate,
                     Duration = request.Duration,
-
                 };
 
                 int advId = await _advService.CreateAdvAsync(advModdel);
@@ -96,12 +98,12 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                     ShopId = adv.ShopId,
                     Title = adv.Title,
                     Url = adv.Url,
+                    ImageUrl = adv.ImageUrl,
                     AdvDate = adv.AdvDate,
                     Status = adv.Status,
                     EditedDate = adv.EditedDate,
                     ExpiredDate = adv.ExpiredDate,
                     Duration = adv.Duration,
-
                 };
 
                 return Ok(response);
@@ -124,6 +126,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             {
                 advModel.Title = advRequestModel.Title;
                 advModel.Url = advRequestModel.Url;
+                advModel.ImageUrl = advRequestModel.ImageUrl;
                 advModel.AdvDate = advRequestModel.AdvDate;
                 advModel.Status = advRequestModel.Status;
                 advModel.EditedDate = advRequestModel.EditedDate;
@@ -146,6 +149,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                     ShopId = adv.ShopId,
                     Title = adv.Title,
                     Url = adv.Url,
+                    ImageUrl = adv.ImageUrl,
                     AdvDate = adv.AdvDate,
                     Status = adv.Status,
                     EditedDate = adv.EditedDate,

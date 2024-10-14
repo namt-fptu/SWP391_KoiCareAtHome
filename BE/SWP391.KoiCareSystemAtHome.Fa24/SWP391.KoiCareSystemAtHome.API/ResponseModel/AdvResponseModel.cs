@@ -10,6 +10,8 @@
 
         public string Url { get; set; } = null!;
 
+        public string ImageUrl { get; set; } = null!;
+
         public DateTime AdvDate { get; set; }
 
         public string Status { get; set; } = null!;

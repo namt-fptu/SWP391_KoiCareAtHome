@@ -38,6 +38,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 Volume = pond.Volume,
                 DrainCount = pond.DraimCount,
                 PumpingCapacity = pond.PumpingCapacity,
+                ImageUrl = pond.ImageUrl,
                 SkimmerCount = pond.SkimmerCount
             });
 
@@ -62,6 +63,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 Volume = pond.Volume,
                 DrainCount = pond.DraimCount,
                 SkimmerCount = pond.SkimmerCount,
+                ImageUrl = pond.ImageUrl,
                 PumpingCapacity = pond.PumpingCapacity
             };
 
@@ -84,6 +86,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                     Volume = request.Volume,
                     DraimCount = request.DraimCount,
                     SkimmerCount = request.SkimmerCount,
+                    ImageUrl = request.ImageUrl,
                     PumpingCapacity = request.PumpingCapacity
 
                 };
@@ -104,6 +107,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                     Volume = pond.Volume,
                     DrainCount = pond.DraimCount,
                     SkimmerCount = pond.SkimmerCount,
+                    ImageUrl = pond.ImageUrl,
                     PumpingCapacity = pond.PumpingCapacity
                 };
 
@@ -126,19 +130,17 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         {
             PondModel pondModel = await _pondService.GetPondByIdAsync(pondId);
 
-            if(pondModel == null)
+            if (pondModel == null)
                 return NotFound();
 
             try
             {
-                if (!pondRequestModel.Name.IsNullOrEmpty())
-                    pondModel.Name = pondRequestModel.Name;
-                if (pondRequestModel.Depth > 0)
-                    pondModel.Depth = pondRequestModel.Depth;
-                if (pondRequestModel.Volume > 0)
-                    pondModel.Volume = pondRequestModel.Volume;
+                pondModel.Name = pondRequestModel.Name;
+                pondModel.Depth = pondRequestModel.Depth;
+                pondModel.Volume = pondRequestModel.Volume;
                 pondModel.DraimCount = pondRequestModel.DraimCount;
                 pondModel.SkimmerCount = pondRequestModel.SkimmerCount;
+                pondModel.ImageUrl = pondRequestModel.ImageUrl;
                 pondModel.PumpingCapacity = pondRequestModel.PumpingCapacity;
 
                 bool success = await _pondService.UpdatePondAsync(pondId, pondModel);
@@ -160,6 +162,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                     Volume = pond.Volume,
                     DrainCount = pond.DraimCount,
                     SkimmerCount = pond.SkimmerCount,
+                    ImageUrl = pond.ImageUrl,
                     PumpingCapacity = pond.PumpingCapacity
                 };
 
@@ -173,7 +176,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         }
 
         [HttpDelete("deletePond/{pondId}")]
-        public async Task<ActionResult> DeletePond (int pondId)
+        public async Task<ActionResult> DeletePond(int pondId)
         {
             bool succsess = await _pondService.DeletePondAsync(pondId);
             if (!succsess)
