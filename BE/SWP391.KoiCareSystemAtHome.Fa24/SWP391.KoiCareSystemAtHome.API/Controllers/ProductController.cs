@@ -30,7 +30,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 Id = product.Id,
                 PostId = product.PostId,
                 Title = product.Title,
-                ImageUrl = product.ImageUrl,
+                Url = product.Url,
                 Description = product.Description,
             });
 
@@ -50,7 +50,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 Id = product.Id,
                 PostId = product.PostId,
                 Title = product.Title,
-                ImageUrl = product.ImageUrl,
+                Url = product.Url,
                 Description = product.Description,
             };
 
@@ -68,7 +68,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 ProductModel productModel = new()
                 {
                     Title = request.Title,
-                    ImageUrl = request.ImageUrl,
+                    Url = request.Url,
                     Description = request.Description,
                 };
 
@@ -84,7 +84,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                     Id = product.Id,
                     PostId = product.PostId,
                     Title = product.Title,
-                    ImageUrl = product.ImageUrl,
+                    Url = product.Url,
                     Description = product.Description,
                 };
 
@@ -109,7 +109,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             try
             {
                 product.Title = request.Title;
-                product.ImageUrl = request.ImageUrl;
+                product.Url = request.Url;
                 product.Description = request.Description;
 
                 bool success = await _productService.UpdateProductAsync(productId, product);
@@ -127,7 +127,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                     Id = productResponse.Id,
                     PostId = productResponse.PostId,
                     Title = productResponse.Title,
-                    ImageUrl = productResponse.ImageUrl,
+                    Url = productResponse.Url,
                     Description = productResponse.Description,
                 };
 

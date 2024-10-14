@@ -55,6 +55,16 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return postpakageModel;
         }
 
+        public async Task<bool> CheckPostPackageExistAsync(int id)
+        {
+            var postPackage = await _unitOfWork.PostPackages.GetByIdAsync(id);
+
+            if (postPackage == null)
+                return false;
+
+            return true;
+        }
+
         public async Task<int> CreatePostPackageAsync(PostPackageModel postPackageModel)
         {
             var postPackageEntity = new PostPackage
