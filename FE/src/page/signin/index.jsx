@@ -16,13 +16,13 @@ const Signin = () => {
         throw new Error("Token is undefined");
       }
 
-      const tokenParts = token.split('.');
+      const tokenParts = token.split(".");
       if (tokenParts.length !== 3) {
         throw new Error("Invalid token format");
       }
 
       const base64Url = tokenParts[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
       const decodedPayload = atob(base64);
       return JSON.parse(decodedPayload);
     } catch (error) {
@@ -60,7 +60,9 @@ const Signin = () => {
         }
       } catch (storageError) {
         console.error("Error storing token:", storageError);
-        setErrorMessage("Error storing authentication token. Please try again.");
+        setErrorMessage(
+          "Error storing authentication token. Please try again."
+        );
         return;
       }
 
@@ -71,7 +73,11 @@ const Signin = () => {
         return;
       }
 
-      const userRole = decodedToken.role || decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+      const userRole =
+        decodedToken.role ||
+        decodedToken[
+          "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+        ];
 
       // Navigate based on the role
       if (userRole === "Admin") {
@@ -79,7 +85,7 @@ const Signin = () => {
       } else if (userRole === "PondOwner") {
         navigate("/overview");
       } else if (userRole === "Shop") {
-        navigate("/shop");
+        navigate("/ShopOverview");
       } else {
         setErrorMessage("Unknown user role.");
       }
@@ -108,7 +114,11 @@ const Signin = () => {
 
         <div className="signin__form flex flex-col justify-center w-full md:w-1/2 bg-gray-50 p-8 md:p-16">
           <div className="form-wrapper">
-            <Form className="form" labelCol={{ span: 24 }} onFinish={handleSignin}>
+            <Form
+              className="form"
+              labelCol={{ span: 24 }}
+              onFinish={handleSignin}
+            >
               <h1 className="text-3xl font-semibold mb-6">Sign In</h1>
               <p className="mb-4">
                 New User?{" "}
@@ -117,7 +127,9 @@ const Signin = () => {
                 </Link>
               </p>
 
-              {errorMessage && <div className="mb-4 text-red-500">{errorMessage}</div>}
+              {errorMessage && (
+                <div className="mb-4 text-red-500">{errorMessage}</div>
+              )}
 
               <Form.Item
                 label="Email"
@@ -127,19 +139,36 @@ const Signin = () => {
                   { type: "email", message: "Please enter a valid email!" },
                 ]}
               >
-                <Input type="email" placeholder="John@example.com" aria-label="Email" />
+                <Input
+                  type="email"
+                  placeholder="John@example.com"
+                  aria-label="Email"
+                />
               </Form.Item>
               <Form.Item
                 label="Password"
                 name="password"
-                rules={[{ required: true, message: "Please enter your Password !!" }]}
+                rules={[
+                  { required: true, message: "Please enter your Password !!" },
+                ]}
               >
-                <Input type="password" placeholder="••••••••••••" aria-label="Password" />
+                <Input
+                  type="password"
+                  placeholder="••••••••••••"
+                  aria-label="Password"
+                />
               </Form.Item>
               <Form.Item>
                 <div className="flex items-center mb-6">
-                  <Form.Item name="staySignedIn" valuePropName="checked" noStyle>
-                    <Checkbox checked={staySignedIn} onChange={(e) => setStaySignedIn(e.target.checked)}>
+                  <Form.Item
+                    name="staySignedIn"
+                    valuePropName="checked"
+                    noStyle
+                  >
+                    <Checkbox
+                      checked={staySignedIn}
+                      onChange={(e) => setStaySignedIn(e.target.checked)}
+                    >
                       Stay signed in
                     </Checkbox>
                   </Form.Item>

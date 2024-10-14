@@ -135,7 +135,7 @@ const ShopPost = () => {
         </Modal>
 
         {isInfoVisible && (
-          <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
+          <Row gutter={[400, 400]} style={{ marginTop: "20px" }}>
             {posts.map((post, index) => (
               <Col key={index} xs={24} sm={12} md={8} lg={6}>
                 <Card
