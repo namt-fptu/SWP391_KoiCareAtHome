@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-const Overview = () => {
+const MemberOverview = () => {
   return (
     <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
       <div className="flex items-center justify-between mb-5">
@@ -48,10 +48,9 @@ const Overview = () => {
             About Koi
           </button>
         </Link>
-        
       </div>
     </div>
   );
 };
 
-export default Overview;
+export default MemberOverview;

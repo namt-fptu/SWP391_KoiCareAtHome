@@ -12,7 +12,7 @@ import statsIcon from "./../../assets/Logo sidebar/statistics.png"; // Thêm ico
 import aboutKoiIcon from "./../../assets/Logo sidebar/aboutKoi.png"; // Thêm icon cho About Koi
 import logOutIcon from "./../../assets/Logo sidebar/logout.png"; // Thêm icon cho Log Out
 
-const SideBar = () => {
+const MemberSideBar = () => {
   const [open, setOpen] = useState(true);
   const navigate = useNavigate(); // Create a navigate function
 
@@ -183,4 +183,4 @@ const SideBar = () => {
   );
 };
 
-export default SideBar;
+export default MemberSideBar;

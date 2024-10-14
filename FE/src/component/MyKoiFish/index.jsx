@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState } from "react";
 import {
   Button,
@@ -12,6 +13,7 @@ import {
   Upload,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
+// eslint-disable-next-line no-unused-vars
 import dayjs from "dayjs";
 
 const MyKoiFish = () => {
@@ -78,7 +80,7 @@ const MyKoiFish = () => {
         <p className="text-white p-8">Thông tin chi tiết về cá Koi của bạn.</p>
         <div>
           {/* Nút để mở popup */}
-          <div class="flex flex-col items-center">
+          <div>
             <Button className="" type="primary" onClick={showModal}>
               Input
             </Button>
