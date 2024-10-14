@@ -1,16 +1,44 @@
-// eslint-disable-next-line no-unused-vars
-import React, { useState } from "react";
-import { Button, Modal, Form, Input, Card, Row, Col, Upload } from "antd";
+import React, { useState, useEffect } from "react";
+import { Button, Modal, Form, Input, Card, Row, Col, Upload, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-// eslint-disable-next-line no-unused-vars
-import dayjs from "dayjs";
+import { initializeApp } from "firebase/app";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import api from "../../config/axios"; // Import the Axios instance
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyBIcvSZRnSTBxw8yrLcq7AqLjqNhvaUQyk",
+  authDomain: "swp391-76ab5.firebaseapp.com",
+  projectId: "swp391-76ab5",
+  storageBucket: "swp391-76ab5.appspot.com",
+  messagingSenderId: "86962001326",
+  appId: "1:86962001326:web:936799b1e20348cbb8643f",
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const storage = getStorage(app);
 
 const MyPond = () => {
   const [ponds, setPonds] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isInfoVisible, setIsInfoVisible] = useState(false);
-
   const [imageUrl, setImageUrl] = useState(null);
+  const [fileList, setFileList] = useState([]);
+  const ownerId = "yourOwnerId"; // This should be dynamically set based on the logged-in user.
+
+  // Fetch ponds from the API on component mount
+  useEffect(() => {
+    const fetchPonds = async () => {
+      try {
+        const response = await api.get(`Pond/ponds/${ownerId}`);
+        setPonds(response.data);
+      } catch (error) {
+        message.error("Failed to fetch pond data.");
+      }
+    };
+
+    fetchPonds();
+  }, [ownerId]);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -18,66 +46,83 @@ const MyPond = () => {
 
   const handleCancel = () => {
     setIsModalVisible(false);
+    setFileList([]);
+    setImageUrl(null);
   };
+
   const handleUpload = (file) => {
+    setFileList([file]); // Store the selected file in fileList
     const reader = new FileReader();
-    reader.onload = () => {
-      setImageUrl(reader.result); // Save base64 image
-      // eslint-disable-next-line no-undef
-      message.success(`${file.name} file uploaded successfully`);
+    reader.onload = (e) => {
+      setImageUrl(e.target.result); // Set preview URL
     };
-    reader.readAsDataURL(file); // Convert the image file to base64
+    reader.readAsDataURL(file); // Convert file to base64 for immediate preview
     return false; // Prevent antd's automatic upload
   };
 
-  // Handle change in the upload component to trigger preview
-  const handleChange = (info) => {
-    if (info.file.status === "error") {
-      // eslint-disable-next-line no-undef
-      message.error(`${info.file.name} file upload failed.`);
+  const uploadToFirebase = async (file) => {
+    if (!file) return null;
+    const storageRef = ref(storage, `pond-images/${file.name}`);
+
+    try {
+      const snapshot = await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      return downloadURL;
+    } catch (error) {
+      console.error("Error uploading image to Firebase: ", error);
+      message.error("Image upload failed!");
+      return null;
     }
   };
 
-  //delete Pond
-  const deletePond = (index) => {
-    const newPonds = ponds.filter((_, i) => i !== index);
-    setPonds(newPonds);
-  };
+  const onFinish = async (values) => {
+    const file = fileList[0];
+    const uploadedImageUrl = await uploadToFirebase(file);
 
-  const onFinish = (values) => {
-    const formattedValues = {
-      ...values,
-      imageUrl,
-    };
-    console.log("Form values:", formattedValues);
-    setPonds([...ponds, formattedValues]);
-    setIsModalVisible(false); // Close modal after submit
-    setIsInfoVisible(true); // Show info after input
+    if (uploadedImageUrl) {
+      const pondData = {
+        name: values.name,
+        depth: Number(values.depth),
+        volume: Number(values.volume),
+        drainCount: Number(values.drainCount),
+        skimmerCount: Number(values.skimmerCount),
+        pumpingCapacity: Number(values.pumpingCapacity),
+        imageUrl: uploadedImageUrl,
+      };
+
+      try {
+        // Send the pond data to the API to save it to the database
+        const response = await api.post("Pond/createPond", pondData);
+        setPonds([...ponds, response.data]); // Update state with the newly created pond
+        setIsModalVisible(false);
+        message.success("Pond information added successfully!");
+      } catch (error) {
+        message.error("Failed to add pond information.");
+      }
+    } else {
+      message.error("Failed to upload image.");
+    }
   };
 
   return (
     <div className="flex-container">
       <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
         <h1 className="text-3xl font-bold mb-8 text-white p-8">My Pond</h1>
-        <p className="text-white p-8">
-          Thông tin chi tiết về hồ cá Koi của bạn.
-        </p>
+        <p className="text-white p-8">Thông tin chi tiết về hồ cá Koi của bạn.</p>
         <div>
-          {/* Nút để mở popup */}
           <div className="flex flex-col items-center">
             <Button className="" type="primary" onClick={showModal}>
               Input
             </Button>
           </div>
-          {/* Form trong Modal */}
+
           <Modal
             title="Input Pond Information"
-            visible={isModalVisible}
-            onCancel={handleCancel} // Nút close
-            footer={null} // Tùy chỉnh để không có nút mặc định ở dưới modal
+            open={isModalVisible}
+            onCancel={handleCancel}
+            footer={null}
           >
             <Form layout="vertical" onFinish={onFinish}>
-              {/* Upload component for image */}
               <Form.Item
                 label="Upload Image"
                 name="image"
@@ -88,8 +133,9 @@ const MyPond = () => {
                   listType="picture"
                   maxCount={1}
                   showUploadList={false}
+                  fileList={fileList}
                   beforeUpload={handleUpload}
-                  onChange={handleChange} // Handle the change event for feedback
+                  onRemove={() => setFileList([])}
                 >
                   <Button icon={<UploadOutlined />}>Select Image</Button>
                 </Upload>
@@ -129,9 +175,7 @@ const MyPond = () => {
               <Form.Item
                 label="Drain Count"
                 name="drainCount"
-                rules={[
-                  { required: true, message: "Please input Drain Count!" },
-                ]}
+                rules={[{ required: true, message: "Please input Drain Count!" }]}
               >
                 <Input />
               </Form.Item>
@@ -139,22 +183,19 @@ const MyPond = () => {
               <Form.Item
                 label="Skimmer Count"
                 name="skimmerCount"
-                rules={[
-                  { required: true, message: "Please input Skimmer Count!" },
-                ]}
+                rules={[{ required: true, message: "Please input Skimmer Count!" }]}
               >
                 <Input />
               </Form.Item>
 
               <Form.Item
-                label="Pumping capacity"
-                name="pumpingCapacity:"
-                rules={[
-                  { required: true, message: "Please input Pumping capacity!" },
-                ]}
+                label="Pumping Capacity"
+                name="pumpingCapacity"
+                rules={[{ required: true, message: "Please input Pumping Capacity!" }]}
               >
                 <Input />
               </Form.Item>
+
               <Form.Item>
                 <Button type="primary" htmlType="submit">
                   Add
@@ -170,20 +211,12 @@ const MyPond = () => {
             </Form>
           </Modal>
 
-          {/*show info form after input*/}
-
-          {isInfoVisible && (
+          {ponds.length > 0 && (
             <Row gutter={[200, 200]} style={{ marginTop: "20px" }}>
               {ponds.map((pond, index) => (
                 <Col key={index} xs={24} sm={12} md={8} lg={6}>
                   <Card
-                    key={index}
                     title={`Pond: ${pond.name}`}
-                    extra={
-                      <Button danger onClick={() => deletePond(index)}>
-                        Delete
-                      </Button>
-                    }
                     style={{ width: 400, marginBottom: "20px" }}
                   >
                     {pond.imageUrl && (
@@ -210,18 +243,17 @@ const MyPond = () => {
                           <strong>Depth:</strong> {pond.depth || "-"}
                         </p>
                       </div>
-
-                      <p>
-                        <strong>Drain Count:</strong> {pond.drainCount || "-"}
-                      </p>
-                      <p>
-                        <strong>Skimmer Count:</strong>{" "}
-                        {pond.skimmerCount || "-"}
-                      </p>
-                      <p>
-                        <strong>Pumping Capacity:</strong>{" "}
-                        {pond.pumpingCapacity || "-"}
-                      </p>
+                      <div>
+                        <p>
+                          <strong>Drain Count:</strong> {pond.drainCount || "-"}
+                        </p>
+                        <p>
+                          <strong>Skimmer Count:</strong> {pond.skimmerCount || "-"}
+                        </p>
+                        <p>
+                          <strong>Pumping Capacity:</strong> {pond.pumpingCapacity || "-"}
+                        </p>
+                      </div>
                     </div>
                   </Card>
                 </Col>
@@ -233,4 +265,5 @@ const MyPond = () => {
     </div>
   );
 };
+
 export default MyPond;
