@@ -23,6 +23,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
 
             var postPackage = await _postPackageService.GetPostPackageByIdAsync(postPackageId);
 
+
             if (postPackage == null)
                 return NotFound();
 
@@ -39,7 +40,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
 
 
         [HttpPost("createPostPackage")]
-        public async Task<ActionResult> CreatePostPackage(PostPackageModel request)
+        public async Task<ActionResult> CreatePostPackage(PostPackageRequestModel request)
         {
             if (request == null)
                 return BadRequest("Post package data is required.");
@@ -72,7 +73,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while creating the post package.");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message, stackTrace = ex.StackTrace });
             }
         }
 
@@ -112,7 +113,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the post package");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message, stackTrace = ex.StackTrace });
             }
         }
 

@@ -22,7 +22,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             var product = await _unitOfWork.Products.GetAsync();
             var productOfPost = product.Where(p => p.PostId == id);
 
-            if (productOfPost.Any())
+            if (!productOfPost.Any())
                 return Enumerable.Empty<ProductModel>();
 
             var productModels = productOfPost.Select(p => new ProductModel
@@ -61,7 +61,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
         {
             var productEntity = new Product
             {
-                Id = productModel.Id,
+                PostId = productModel.PostId,
                 Title = productModel.Title,
                 ImageUrl = productModel.ImageUrl,
                 Description = productModel.Description,
@@ -80,7 +80,8 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
 
             if (product == null)
                 return false;
-
+            
+            product.PostId = productModel.PostId;
             product.Title = productModel.Title;
             product.ImageUrl = productModel.ImageUrl;
             product.Description = productModel.Description;
@@ -94,16 +95,31 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
 
         public async Task<bool> DeleteProductAsync(int productId)
         {
-            var products = await _unitOfWork.Products.GetAsync();
-            if (products == null)
+            var product = await _unitOfWork.Products.GetByIdAsync(productId);
+
+            if (product == null)
                 return false;
 
-            var productToUpdate = products.Where(x => x.Id == productId).FirstOrDefault();
-            if (productToUpdate == null)
-                return false;
-
-            _unitOfWork.Products.DeleteAsync(productToUpdate);
+            _unitOfWork.Products.DeleteAsync(product);
             await _unitOfWork.SaveAsync();
+
+            return true;
+        }
+
+        public async Task<bool> DeleteProductByPostIdAsync(int postId)
+        {
+            var products = await _unitOfWork.Products.GetAsync();
+
+            var pdOfPost = products.Where(pd => pd.PostId == postId).ToList();
+
+            if (!pdOfPost.Any())
+                return false;
+
+            foreach (var pdEntity in pdOfPost)
+            {
+                bool success = await DeleteProductAsync(pdEntity.Id);
+            }
+
             return true;
         }
     }

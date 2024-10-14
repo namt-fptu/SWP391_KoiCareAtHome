@@ -66,7 +66,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
 
 
         [HttpPost("createAdv")]
-        public async Task<ActionResult> CreateAdv(AdvModel request)
+        public async Task<ActionResult> CreateAdv(AdvRequestModel request)
         {
             if (request == null)
                 return BadRequest("Adv data is required.");
@@ -94,14 +94,14 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 var response = new AdvResponseModel
                 {
                     Id = adv.Id,
-                    ShopId = request.ShopId,
-                    Title = request.Title,
-                    Url = request.Url,
-                    AdvDate = request.AdvDate,
-                    Status = request.Status,
-                    EditedDate = request.EditedDate,
-                    ExpiredDate= request.ExpiredDate,
-                    Duration = request.Duration,
+                    ShopId = adv.ShopId,
+                    Title = adv.Title,
+                    Url = adv.Url,
+                    AdvDate = adv.AdvDate,
+                    Status = adv.Status,
+                    EditedDate = adv.EditedDate,
+                    ExpiredDate= adv.ExpiredDate,
+                    Duration = adv.Duration,
 
                 };
 
@@ -109,7 +109,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while creating the post.");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message, stackTrace = ex.StackTrace });
             }
         }
 
@@ -158,7 +158,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the post.");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message, stackTrace = ex.StackTrace });
             }
         }
 

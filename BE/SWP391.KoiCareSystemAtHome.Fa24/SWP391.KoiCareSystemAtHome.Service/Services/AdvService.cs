@@ -12,6 +12,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
     public class AdvService
     {
         private readonly UnitOfWork _unitOfWork;
+        private readonly PaymentService _paymentService;
 
         public AdvService(UnitOfWork unitOfWork)
         {
@@ -67,8 +68,14 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
         {
             var advEntity = new Adv
             {
-                Id = advModel.Id,
-
+                ShopId = advModel.ShopId,
+                Title = advModel.Title,
+                Url = advModel.Url,
+                Status = advModel.Status,
+                AdvDate = advModel.AdvDate,
+                EditedDate = advModel.EditedDate,
+                ExpiredDate = advModel.ExpiredDate,
+                Duration = advModel.Duration,
             };
 
             await _unitOfWork.Advs.InsertAsync(advEntity);
@@ -77,41 +84,60 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return advEntity.Id;
         }
 
-        public async Task<bool> UpdateAdvAsync(int id, AdvModel advModel)
+        public async Task<bool> UpdateAdvAsync(int advId, AdvModel advModel)
         {
             var advs = await _unitOfWork.Advs.GetAsync();
-            if (advs == null)
+            var adv = advs.FirstOrDefault(a => a.Id == advId);
+
+            if (adv == null)
                 return false;
 
-            var advToUpdate = advs.Where(x => x.Id == id).FirstOrDefault();
-            if (advToUpdate == null)
-                return false;
+            adv.ShopId = advModel.ShopId;
+            adv.Title = advModel.Title;
+            adv.Url = advModel.Url;
+            adv.AdvDate = advModel.AdvDate;
+            adv.Status = advModel.Status;
+            adv.EditedDate = advModel.EditedDate;
+            adv.ExpiredDate = advModel.ExpiredDate;
+            adv.Duration = advModel.Duration;
 
-            advToUpdate.Title = advModel.Title;
-            advToUpdate.Url = advModel.Url;
-            advToUpdate.AdvDate = advModel.AdvDate;
-            advToUpdate.Status = advModel.Status;
-            advToUpdate.EditedDate = advModel.EditedDate;
-            advToUpdate.ExpiredDate = advModel.ExpiredDate;
-            advToUpdate.Duration = advModel.Duration;
-
-            _unitOfWork.Advs.UpdateAsync(advToUpdate);
+            _unitOfWork.Advs.UpdateAsync(adv);
             await _unitOfWork.SaveAsync();
+
+
             return true;
         }
 
-        public async Task<bool> DeleteAdvAsync(int id)
+        public async Task<bool> DeleteAdvAsync(int advId)
+        {
+            var adv = await _unitOfWork.Advs.GetByIdAsync(advId);
+
+            if (adv == null)
+                return false;
+
+            //bool deletePayment = false;
+            //deletePayment = await _paymentService.DeletePaymentByPostIdAsync(advId);
+
+            _unitOfWork.Advs.DeleteAsync(adv);
+            await _unitOfWork.SaveAsync();
+
+            return true;
+        }
+
+        public async Task<bool> DeleteAdvByShopIdAsync(int shopId)
         {
             var advs = await _unitOfWork.Advs.GetAsync();
-            if (advs == null)
+
+            var advsByShop = advs.Where(abs => abs.ShopId == shopId).ToList();
+
+            if (!advsByShop.Any())
                 return false;
 
-            var advToUpdate = advs.Where(a => a.Id == id).FirstOrDefault();
-            if (advToUpdate == null)
-                return false;
+            foreach (var adventity in advsByShop)
+            {
+                bool success = await DeleteAdvAsync(adventity.Id);
+            }
 
-            _unitOfWork.Advs.DeleteAsync(advToUpdate);
-            await _unitOfWork.SaveAsync();
             return true;
         }
     }

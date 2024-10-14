@@ -17,6 +17,8 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         {
             _productService = productService;
         }
+
+
         [HttpGet("product/{postId}")]
         public async Task<ActionResult<IEnumerable<ProductResponseModel>>> GetProductByPostId(int postId)
         {
@@ -60,7 +62,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
 
 
         [HttpPost("createProduct")]
-        public async Task<ActionResult> CreateProduct(ProductModel request)
+        public async Task<ActionResult> CreateProduct(ProductRequestModel request)
         {
             if (request == null)
                 return BadRequest("Product data is required.");
@@ -72,7 +74,6 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                     Title = request.Title,
                     ImageUrl = request.ImageUrl,
                     Description = request.Description,
-
                 };
 
                 int productId = await _productService.CreateProductAsync(productModdel);
@@ -88,14 +89,13 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                     Title = product.Title,
                     ImageUrl = product.ImageUrl,
                     Description = product.Description,
-
                 };
 
                 return Ok(response);
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while creating the product.");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message, stackTrace = ex.StackTrace });
             }
         }
 
@@ -109,9 +109,10 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
 
             try
             {
+                productModel.PostId = productRequestModel.PostId;
                 productModel.Title = productRequestModel.Title;
                 productModel.ImageUrl = productRequestModel.ImageUrl;
-                productRequestModel.Description = productRequestModel.Description;
+                productModel.Description = productRequestModel.Description;
 
                 bool success = await _productService.UpdateProductAsync(productId, productModel);
 
@@ -136,7 +137,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the product.");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message, stackTrace = ex.StackTrace });
             }
         }
 

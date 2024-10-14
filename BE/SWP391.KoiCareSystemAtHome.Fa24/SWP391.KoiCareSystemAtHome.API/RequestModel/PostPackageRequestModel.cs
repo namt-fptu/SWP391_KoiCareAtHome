@@ -2,8 +2,6 @@
 {
     public class PostPackageRequestModel
     {
-        public int PostPackageId { get; set; }
-
         public string Name { get; set; } = null!;
 
         public int Duration { get; set; }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SWP391.KoiCareSystemAtHome.API.RequestModel;
 using SWP391.KoiCareSystemAtHome.API.ResponseModel;
+using SWP391.KoiCareSystemAtHome.Repository.Models;
 using SWP391.KoiCareSystemAtHome.Service.BusinessModels;
 using SWP391.KoiCareSystemAtHome.Service.Services;
 
@@ -16,7 +17,7 @@ namespace SWP391_KoiManagement.API.Controllers
         {
             _paymentService = paymentService;
         }
-        [HttpGet("payment/{postId}")]
+        [HttpGet("post/{postId}")]
         public async Task<ActionResult<IEnumerable<PaymentResponseModel>>> GetPaymentByPostId(int postId)
         {
             var payments = await _paymentService.GetPaymentByPostIdAsync(postId);
@@ -36,7 +37,7 @@ namespace SWP391_KoiManagement.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("payment/{packageId}")]
+        [HttpGet("package/{packageId}")]
         public async Task<ActionResult<IEnumerable<PaymentResponseModel>>> GetPaymentByPackageId(int packageId)
         {
             var payments = await _paymentService.GetPaymentByPackageIdAsync(packageId);
@@ -79,7 +80,7 @@ namespace SWP391_KoiManagement.API.Controllers
         }
 
         [HttpPost("createPayment")]
-        public async Task<ActionResult> CreatePayment(PaymentModel request)
+        public async Task<ActionResult> CreatePayment(PaymentRequestModel request)
         {
             if (request == null)
                 return BadRequest("Payment data is required.");
@@ -115,7 +116,7 @@ namespace SWP391_KoiManagement.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while creating the payment.");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message, stackTrace = ex.StackTrace });
             }
         }
 
@@ -129,6 +130,8 @@ namespace SWP391_KoiManagement.API.Controllers
 
             try
             {
+                paymentModel.PackageId = paymentRequestModel.PackageId;
+                paymentModel.PostId = paymentRequestModel.PostId;
                 paymentModel.PayDate = paymentRequestModel.PayDate;
                 paymentRequestModel.Quantity = paymentModel.Quantity;
                 paymentRequestModel.Duration = paymentModel.Duration;
@@ -157,7 +160,7 @@ namespace SWP391_KoiManagement.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the payment.");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message, stackTrace = ex.StackTrace });
             }
         }
 

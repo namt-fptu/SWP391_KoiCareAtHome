@@ -2,8 +2,6 @@
 {
     public class AdvRequestModel
     {
-        public int AdvId { get; set; }
-
         public int ShopId { get; set; }
 
         public string Title { get; set; } = null!;

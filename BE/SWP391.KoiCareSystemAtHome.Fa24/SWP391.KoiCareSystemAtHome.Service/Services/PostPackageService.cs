@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.Intrinsics.Arm;
 
 
 namespace SWP391.KoiCareSystemAtHome.Service.Services
@@ -13,6 +14,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
     public class PostPackageService
     {
         private readonly UnitOfWork _unitOfWork;
+        private readonly PaymentService _paymentService;
 
         public PostPackageService(UnitOfWork unitOfWork)
         {
@@ -37,40 +39,6 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             };
             return postPackageModel;
         }
-        //public async Task<IEnumerable<PostPackageModel>> GetPostPackageByIdAsync(int id)
-        //{
-        //    var postPackages = await _unitOfWork.PostPackages.GetAsync();
-        //    if (postPackages.Any())
-        //        return Enumerable.Empty<PostPackageModel>();
-
-        //    var postpakageModels = postPackages.Select(pp => new PostPackageModel
-        //    {
-        //        Id = pp.Id,
-        //        Name = pp.Name,
-        //        Duration = pp.Duration,
-        //        Price = pp.Price,
-        //    });
-        //    return postpakageModels;
-        //}
-
-        //public async Task<PostPackageModel> GetPostPackageByIdAsync(int postPackageId)
-        //{
-        //    var postPackages = await _unitOfWork.PostPackages.GetAsync();
-
-        //    var postPackage = postPackages.FirstOrDefault(pp => pp.Id == postPackageId);
-
-        //    if (postPackage == null)
-        //        return null;
-
-        //    var postPackageModel = new PostPackageModel
-        //    {
-        //        Id = postPackage.Id,
-        //        Name = postPackage.Name,
-        //        Duration = postPackage.Duration,
-        //        Price = postPackage.Price,
-        //    };
-        //    return postPackageModel;
-        //}
 
         public async Task<int> CreatePostPackageAsync(PostPackageModel postPackageModel)
         {
@@ -90,35 +58,36 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
 
         public async Task<bool> UpdatePostPackageAsync(int id, PostPackageModel postPackageModel)
         {
-            var postPakages = await _unitOfWork.PostPackages.GetAsync();
-            if (postPakages == null)
+            var packages = await _unitOfWork.PostPackages.GetAsync();
+            var postPackage = packages.FirstOrDefault(pp => pp.Id == id);
+
+            if (postPackage == null)
                 return false;
 
-            var postPakageToUpdate = postPakages.Where(x => x.Id == id).FirstOrDefault();
-            if (postPakageToUpdate == null)
-                return false;
+            postPackage.Name = postPackageModel.Name;
+            postPackage.Duration = postPackageModel.Duration;
+            postPackage.Price = postPackageModel.Price;
 
-            postPakageToUpdate.Name = postPackageModel.Name;
-            postPakageToUpdate.Duration = postPackageModel.Duration;
-            postPakageToUpdate.Price = postPackageModel.Price;
-
-            _unitOfWork.PostPackages.UpdateAsync(postPakageToUpdate);
+            _unitOfWork.PostPackages.UpdateAsync(postPackage);
             await _unitOfWork.SaveAsync();
+
+
             return true;
         }
 
         public async Task<bool> DeletePostPackageAsync(int id)
         {
-            var postPakages = await _unitOfWork.PostPackages.GetAsync();
-            if (postPakages == null)
+            var package = await _unitOfWork.PostPackages.GetByIdAsync(id);
+
+            if (package == null)
                 return false;
 
-            var postPakageToUpdate = postPakages.Where(x => x.Id == id).FirstOrDefault();
-            if (postPakageToUpdate == null)
-                return false;
+            //bool deletePayment = false;
+            //deletePayment = await _paymentService.DeletePaymentByPackageIdAsync(id);
 
-            _unitOfWork.PostPackages.DeleteAsync(postPakageToUpdate);
+            _unitOfWork.PostPackages.DeleteAsync(package);
             await _unitOfWork.SaveAsync();
+
             return true;
         }
     }

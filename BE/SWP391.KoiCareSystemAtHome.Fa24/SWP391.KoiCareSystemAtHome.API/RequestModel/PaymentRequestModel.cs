@@ -2,8 +2,6 @@
 {
     public class PaymentRequestModel
     {
-        public int PaymentId { get; set; }
-
         public int PackageId { get; set; }
 
         public int PostId { get; set; }

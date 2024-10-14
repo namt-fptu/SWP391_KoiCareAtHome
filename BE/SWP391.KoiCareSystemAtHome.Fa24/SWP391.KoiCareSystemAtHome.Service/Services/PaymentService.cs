@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.Intrinsics.Arm;
 
 
 namespace SWP391.KoiCareSystemAtHome.Service.Services
@@ -23,7 +24,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             var payments = await _unitOfWork.Payments.GetAsync();
             var paymentOfPost = payments.Where(pm => pm.PostId == id);
 
-            if (paymentOfPost.Any())
+            if (!paymentOfPost.Any())
                 return Enumerable.Empty<PaymentModel>();
 
             var paymentModels = paymentOfPost.Select(pm => new PaymentModel
@@ -40,12 +41,12 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
         public async Task<IEnumerable<PaymentModel>> GetPaymentByPackageIdAsync(int id)
         {
             var payments = await _unitOfWork.Payments.GetAsync();
-            var paymentOfPost = payments.Where(pm => pm.PackageId == id);
+            var paymentOfPackage = payments.Where(pm => pm.PackageId == id);
 
-            if (paymentOfPost.Any())
+            if (!paymentOfPackage.Any())
                 return Enumerable.Empty<PaymentModel>();
 
-            var paymentModels = paymentOfPost.Select(pm => new PaymentModel
+            var paymentModels = paymentOfPackage.Select(pm => new PaymentModel
             {
                 Id = pm.Id,
                 PostId = pm.PostId,
@@ -60,7 +61,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
         public async Task<PaymentModel> GetPaymentByIdAsync(int paymentId)
         {
             var payments = await _unitOfWork.Payments.GetAsync();
-            var payment = payments.FirstOrDefault(a => a.Id == paymentId);
+            var payment = payments.FirstOrDefault(pm => pm.Id == paymentId);
 
             if (payment == null)
                 return null;
@@ -76,11 +77,13 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             };
             return paymentModel;
         }
+
         public async Task<int> CreatePaymentAsync(PaymentModel paymentModel)
         {
             var paymentEntity = new Payment
             {
-                Id = paymentModel.Id,
+                PackageId = paymentModel.PackageId,
+                PostId= paymentModel.PostId,
                 PayDate = paymentModel.PayDate,
                 Quantity = paymentModel.Quantity,
                 Duration = paymentModel.Duration,
@@ -95,35 +98,68 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
         public async Task<bool> UpdatePaymentAsync(int id, PaymentModel paymentModel)
         {
             var payments = await _unitOfWork.Payments.GetAsync();
-            if (payments == null)
+            var payment = payments.FirstOrDefault(pm => pm.Id == id);
+
+            if (payment == null)
                 return false;
 
-            var paymentToUpdate = payments.Where(x => x.Id == id).FirstOrDefault();
-            if (paymentToUpdate == null)
-                return false;
+            payment.PackageId = paymentModel.PackageId;
+            payment.PostId = paymentModel.PostId;
+            payment.PayDate = paymentModel.PayDate;
+            payment.Quantity = paymentModel.Quantity;
+            payment.Duration = paymentModel.Duration;
 
-            paymentToUpdate.PayDate = paymentModel.PayDate;
-            paymentToUpdate.Quantity = paymentModel.Quantity;
-            paymentToUpdate.Duration = paymentModel.Duration;
-
-            _unitOfWork.Payments.UpdateAsync(paymentToUpdate);
+            _unitOfWork.Payments.UpdateAsync(payment);
             await _unitOfWork.SaveAsync();
             return true;
         }
 
         public async Task<bool> DeletePaymentAsync(int id)
         {
-            var payments = await _unitOfWork.Payments.GetAsync();
-            if (payments == null)
+            var payment = await _unitOfWork.Payments.GetByIdAsync(id);
+
+            if (payment == null)
                 return false;
 
-            var paymentToUpdate = payments.Where(x => x.Id == id).FirstOrDefault();
-            if (paymentToUpdate == null)
-                return false;
-
-            _unitOfWork.Payments.DeleteAsync(paymentToUpdate);
+            _unitOfWork.Payments.DeleteAsync(payment);
             await _unitOfWork.SaveAsync();
+
             return true;
         }
+
+        public async Task<bool> DeletePaymentByPostIdAsync(int postId)
+        {
+            var payments = await _unitOfWork.Payments.GetAsync();
+
+            var billOfPost = payments.Where(pm => pm.PostId == postId).ToList();
+
+            if (!billOfPost.Any())
+                return false;
+
+            foreach (var pmEntity in billOfPost)
+            {
+                bool success = await DeletePaymentAsync(pmEntity.Id);
+            }
+
+            return true;
+        }
+
+        public async Task<bool> DeletePaymentByPackageIdAsync(int packageId)
+        {
+            var payments = await _unitOfWork.Payments.GetAsync();
+
+            var billOfPackage = payments.Where(pm => pm.PackageId == packageId).ToList();
+
+            if (!billOfPackage.Any())
+                return false;
+
+            foreach (var pmEntity in billOfPackage)
+            {
+                bool success = await DeletePaymentAsync(pmEntity.Id);
+            }
+
+            return true;
+        }
+
     }
 }
