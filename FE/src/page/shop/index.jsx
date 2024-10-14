@@ -3,7 +3,7 @@ import React from "react";
 import ShopSideBar from "../../component/ShopSidebar";
 import { Outlet } from "react-router-dom";
 
-const Member = () => {
+const Shop = () => {
   return (
     <div className="flex h-max">
       <ShopSideBar />
@@ -14,4 +14,4 @@ const Member = () => {
   );
 };
 
-export default Member;
+export default Shop;

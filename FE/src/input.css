@@ -18,8 +18,3 @@
   width: 100%; /* Đảm bảo header có chiều rộng đúng */
   padding: 10px 20px; /* Khoảng đệm cho nội dung bên trong */
 }
-
-.fit-card {
-  word-wrap: break-word;
-  white-space: pre-wrap;
-}

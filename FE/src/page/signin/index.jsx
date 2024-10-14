@@ -1,42 +1,97 @@
-import { Form, Input } from "antd";
+import { Form, Input, Checkbox } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import signinimg from "../../assets/signin.png";
 import { useState } from "react";
+import api from "../../config/axios";
 
 const Signin = () => {
-  const [errorMessage, setErrorMessage] = useState(null); // For error messages
-  const navigate = useNavigate(); // Initialize useNavigate
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [staySignedIn, setStaySignedIn] = useState(false);
+  const navigate = useNavigate();
+
+  // Function to decode JWT without jwt-decode
+  const decodeJWT = (token) => {
+    try {
+      if (!token) {
+        throw new Error("Token is undefined");
+      }
+
+      const tokenParts = token.split('.');
+      if (tokenParts.length !== 3) {
+        throw new Error("Invalid token format");
+      }
+
+      const base64Url = tokenParts[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const decodedPayload = atob(base64);
+      return JSON.parse(decodedPayload);
+    } catch (error) {
+      console.error("Error decoding token:", error);
+      return null;
+    }
+  };
 
   const handleSignin = async (values) => {
-    const { email, password, staySignedIn } = values;
+    const { email, password } = values;
 
     try {
-      const response = await fetch("http://localhost:5088/api/Account/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      const response = await api.post(
+        "Account/login",
+        { email, password },
+        { headers: { "Content-Type": "application/json" } }
+      );
 
-      if (!response.ok) {
-        throw new Error("Login failed");
-      }
-
-      const data = await response.json();
+      const data = response.data;
       console.log("Login successful", data);
 
-      // Store token based on "Stay signed in" checkbox
-      if (staySignedIn) {
-        localStorage.setItem("authToken", data.token); // Token stored in localStorage
-      } else {
-        sessionStorage.setItem("authToken", data.token); // Token stored in sessionStorage
+      const token = data;
+
+      // Ensure the token exists before proceeding
+      if (!token) {
+        setErrorMessage("Login failed: No token returned from server.");
+        return;
       }
 
-      navigate("/overview"); // Navigate to the overview page
+      try {
+        if (staySignedIn) {
+          localStorage.setItem("authToken", token);
+        } else {
+          sessionStorage.setItem("authToken", token);
+        }
+      } catch (storageError) {
+        console.error("Error storing token:", storageError);
+        setErrorMessage("Error storing authentication token. Please try again.");
+        return;
+      }
+
+      // Decode the token to extract the role
+      const decodedToken = decodeJWT(token);
+      if (!decodedToken) {
+        setErrorMessage("Invalid token. Please try again.");
+        return;
+      }
+
+      const userRole = decodedToken.role || decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+
+      // Navigate based on the role
+      if (userRole === "Admin") {
+        navigate("/admin");
+      } else if (userRole === "PondOwner") {
+        navigate("/overview");
+      } else if (userRole === "Shop") {
+        navigate("/shop");
+      } else {
+        setErrorMessage("Unknown user role.");
+      }
     } catch (error) {
       console.error("Error during login:", error);
-      setErrorMessage("Invalid email or password");
+      if (error.response && error.response.status === 401) {
+        setErrorMessage("Invalid email or password");
+      } else if (error.response) {
+        setErrorMessage(`Login failed: ${error.response.statusText}`);
+      } else {
+        setErrorMessage("Network error. Please try again later.");
+      }
     }
   };
 
@@ -53,11 +108,7 @@ const Signin = () => {
 
         <div className="signin__form flex flex-col justify-center w-full md:w-1/2 bg-gray-50 p-8 md:p-16">
           <div className="form-wrapper">
-            <Form
-              className="form"
-              labelCol={{ span: 24 }}
-              onFinish={handleSignin}
-            >
+            <Form className="form" labelCol={{ span: 24 }} onFinish={handleSignin}>
               <h1 className="text-3xl font-semibold mb-6">Sign In</h1>
               <p className="mb-4">
                 New User?{" "}
@@ -66,46 +117,32 @@ const Signin = () => {
                 </Link>
               </p>
 
-              {errorMessage && (
-                <div className="mb-4 text-red-500">{errorMessage}</div>
-              )}
+              {errorMessage && <div className="mb-4 text-red-500">{errorMessage}</div>}
 
               <Form.Item
                 label="Email"
                 name="email"
                 rules={[
                   { required: true, message: "Please enter your Email !!" },
+                  { type: "email", message: "Please enter a valid email!" },
                 ]}
               >
-                <Input
-                  type="email"
-                  placeholder="John@example.com"
-                  aria-label="Email"
-                />
+                <Input type="email" placeholder="John@example.com" aria-label="Email" />
               </Form.Item>
               <Form.Item
                 label="Password"
                 name="password"
-                rules={[
-                  { required: true, message: "Please enter your Password !!" },
-                ]}
+                rules={[{ required: true, message: "Please enter your Password !!" }]}
               >
-                <Input
-                  type="password"
-                  placeholder="••••••••••••"
-                  aria-label="Password"
-                />
+                <Input type="password" placeholder="••••••••••••" aria-label="Password" />
               </Form.Item>
               <Form.Item>
                 <div className="flex items-center mb-6">
-                  <input
-                    type="checkbox"
-                    id="stay-signed-in"
-                    className="mr-2 h-4 w-4 text-blue-500"
-                  />
-                  <label htmlFor="stay-signed-in" className="text-gray-700">
-                    Stay signed in
-                  </label>
+                  <Form.Item name="staySignedIn" valuePropName="checked" noStyle>
+                    <Checkbox checked={staySignedIn} onChange={(e) => setStaySignedIn(e.target.checked)}>
+                      Stay signed in
+                    </Checkbox>
+                  </Form.Item>
                   <Link to="/forgot-password" className="ml-auto text-blue-500">
                     Forgot password?
                   </Link>
