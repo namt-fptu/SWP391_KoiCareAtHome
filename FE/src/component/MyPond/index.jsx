@@ -1,5 +1,16 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from "react";
-import { Button, Modal, Form, Input, Card, Row, Col, Upload, message } from "antd";
+import {
+  Button,
+  Modal,
+  Form,
+  Input,
+  Card,
+  Row,
+  Col,
+  Upload,
+  message,
+} from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { initializeApp } from "firebase/app";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -24,7 +35,7 @@ const MyPond = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
   const [fileList, setFileList] = useState([]);
-  const ownerId = "yourOwnerId"; // This should be dynamically set based on the logged-in user.
+  const ownerId = "pondOwnerId"; // This should be dynamically set based on the logged-in user.
 
   // Fetch ponds from the API on component mount
   useEffect(() => {
@@ -32,6 +43,7 @@ const MyPond = () => {
       try {
         const response = await api.get(`Pond/ponds/${ownerId}`);
         setPonds(response.data);
+        // eslint-disable-next-line no-unused-vars
       } catch (error) {
         message.error("Failed to fetch pond data.");
       }
@@ -96,6 +108,7 @@ const MyPond = () => {
         setPonds([...ponds, response.data]); // Update state with the newly created pond
         setIsModalVisible(false);
         message.success("Pond information added successfully!");
+        // eslint-disable-next-line no-unused-vars
       } catch (error) {
         message.error("Failed to add pond information.");
       }
@@ -108,7 +121,9 @@ const MyPond = () => {
     <div className="flex-container">
       <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
         <h1 className="text-3xl font-bold mb-8 text-white p-8">My Pond</h1>
-        <p className="text-white p-8">Thông tin chi tiết về hồ cá Koi của bạn.</p>
+        <p className="text-white p-8">
+          Thông tin chi tiết về hồ cá Koi của bạn.
+        </p>
         <div>
           <div className="flex flex-col items-center">
             <Button className="" type="primary" onClick={showModal}>
@@ -175,7 +190,9 @@ const MyPond = () => {
               <Form.Item
                 label="Drain Count"
                 name="drainCount"
-                rules={[{ required: true, message: "Please input Drain Count!" }]}
+                rules={[
+                  { required: true, message: "Please input Drain Count!" },
+                ]}
               >
                 <Input />
               </Form.Item>
@@ -183,7 +200,9 @@ const MyPond = () => {
               <Form.Item
                 label="Skimmer Count"
                 name="skimmerCount"
-                rules={[{ required: true, message: "Please input Skimmer Count!" }]}
+                rules={[
+                  { required: true, message: "Please input Skimmer Count!" },
+                ]}
               >
                 <Input />
               </Form.Item>
@@ -191,7 +210,9 @@ const MyPond = () => {
               <Form.Item
                 label="Pumping Capacity"
                 name="pumpingCapacity"
-                rules={[{ required: true, message: "Please input Pumping Capacity!" }]}
+                rules={[
+                  { required: true, message: "Please input Pumping Capacity!" },
+                ]}
               >
                 <Input />
               </Form.Item>
@@ -248,10 +269,12 @@ const MyPond = () => {
                           <strong>Drain Count:</strong> {pond.drainCount || "-"}
                         </p>
                         <p>
-                          <strong>Skimmer Count:</strong> {pond.skimmerCount || "-"}
+                          <strong>Skimmer Count:</strong>{" "}
+                          {pond.skimmerCount || "-"}
                         </p>
                         <p>
-                          <strong>Pumping Capacity:</strong> {pond.pumpingCapacity || "-"}
+                          <strong>Pumping Capacity:</strong>{" "}
+                          {pond.pumpingCapacity || "-"}
                         </p>
                       </div>
                     </div>
