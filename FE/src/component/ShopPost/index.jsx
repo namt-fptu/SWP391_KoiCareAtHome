@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-unused-vars
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Modal,
@@ -12,10 +11,9 @@ import {
   message,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-// eslint-disable-next-line no-unused-vars
-import { getFirestore, collection, addDoc, getDocs } from "firebase/firestore"; // Firestore imports
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"; // Storage imports
 import { initializeApp } from "firebase/app";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import api from "../../config/axios";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -29,8 +27,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app); // Firestore instance
-const storage = getStorage(app); // Firebase storage instance
+const storage = getStorage(app);
 
 const ShopPost = () => {
   const [posts, setPosts] = useState([]);
@@ -38,55 +35,95 @@ const ShopPost = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isInfoVisible, setIsInfoVisible] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
-  // eslint-disable-next-line no-unused-vars
-  const [fileList, setFileList] = useState([]);
   const [selectedPost, setSelectedPost] = useState(null);
+  const [fileList, setFileList] = useState([]);
 
-  // Show modal
+  // Retrieve pondOwnerId from sessionStorage
+  const id = sessionStorage.getItem("id");
+
+  useEffect(() => {
+    if (!id) {
+      message.error("User not logged in. Unable to fetch posts.");
+      return;
+    }
+
+    // Fetch posts from the API based on the logged-in user's id
+    const fetchPosts = async () => {
+      try {
+        const response = await api.get(`Post/posts/${id}`);
+        setPosts(response.data);
+      } catch (error) {
+        message.error("Failed to fetch post data.");
+      }
+    };
+
+    fetchPosts();
+  }, [id]);
+
   const showModal = () => {
     setIsModalVisible(true);
   };
 
-  // Close modal
   const handleCancel = () => {
     setIsModalVisible(false);
+    setFileList([]);
+    setImageUrl(null);
   };
 
-  // Handle image upload to Firebase storage
-  const handleUpload = (file) => {
-    const storageRef = ref(storage, `post-images/${file.name}`); // Reference to the image location in Firebase Storage
-    uploadBytes(storageRef, file)
-      .then((snapshot) => {
-        // Get the image URL after upload
-        getDownloadURL(snapshot.ref).then((downloadURL) => {
-          setImageUrl(downloadURL);
-        });
-      })
-      // eslint-disable-next-line no-unused-vars
-      .catch((error) => {
-        message.error("Failed to upload image.");
-      });
-    return false;
-  };
+  const uploadToFirebase = async (file) => {
+    if (!file) return null;
+    const storageRef = ref(storage, `post-images/${file.name}`);
 
-  // Save post data to Firestore
-  const onFinish = async (values) => {
     try {
-      const post = { ...values, imageUrl }; // Combine form data with the uploaded image URL
-      await addDoc(collection(db, "posts"), post); // Save to Firestore
-      setPosts([...posts, post]); // Update local state with new post
-      setIsModalVisible(false);
-      setIsInfoVisible(true);
-      message.success("Post added successfully!");
-      // eslint-disable-next-line no-unused-vars
+      const snapshot = await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      return downloadURL;
     } catch (error) {
-      message.error("Failed to add post.");
+      console.error("Error uploading image to Firebase: ", error);
+      message.error("Image upload failed!");
+      return null;
     }
+  };
+
+  const handleUpload = (file) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setImageUrl(e.target.result);
+    };
+    reader.readAsDataURL(file);
+    return false;
   };
 
   const deletePost = (index) => {
     const newPosts = posts.filter((_, i) => i !== index);
     setPosts(newPosts);
+  };
+
+  const onFinish = async (values) => {
+    const file = fileList[0];
+    const uploadedImageUrl = await uploadToFirebase(file);
+
+    if (uploadedImageUrl) {
+      const postData = {
+        shopId: Number(id), // Use ShopId from sessionStorage
+        title: values.title,
+        content: values.content,
+        imageUrl: uploadedImageUrl,
+        advDate: new Date(),
+        status: "Processing",
+      };
+
+      try {
+        const response = await api.post("Adv/createAdv", postData);
+        setPosts([...posts, response.data]); // Update ponds with the newly created one
+        setIsModalVisible(false);
+        message.success("Post information added successfully!");
+      } catch (error) {
+        message.error("Failed to add post information.");
+      }
+    } else {
+      message.error("Failed to upload image.");
+    }
   };
 
   const handleShowDetail = (post) => {
@@ -139,7 +176,7 @@ const ShopPost = () => {
               {imageUrl && (
                 <img
                   src={imageUrl}
-                  alt="Post"
+                  alt="Pond"
                   style={{ width: "100%", marginTop: "10px" }}
                 />
               )}
@@ -164,13 +201,13 @@ const ShopPost = () => {
               />
             </Form.Item>
 
-            <Form.Item
+            {/* <Form.Item
               label="Link"
               name="link"
               rules={[{ required: true, message: "Please input Link!" }]}
             >
               <Input />
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.Item>
               <Button type="primary" htmlType="submit">
@@ -240,9 +277,9 @@ const ShopPost = () => {
             <p className="break-words whitespace-pre-wrap overflow-hidden">
               <strong>Content:</strong> {selectedPost.content}
             </p>
-            <p>
+            {/* <p>
               <strong>Link:</strong> {selectedPost.link}
-            </p>
+            </p> */}
           </Modal>
         )}
       </div>

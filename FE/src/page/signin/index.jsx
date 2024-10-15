@@ -41,32 +41,16 @@ const Signin = () => {
         { headers: { "Content-Type": "application/json" } }
       );
 
-      const data = response.data;
-      console.log("Login successful", data);
+      const token = response.data;
+      console.log("Login successful", token);
 
-      const token = data;
-
-      // Ensure the token exists before proceeding
       if (!token) {
         setErrorMessage("Login failed: No token returned from server.");
         return;
       }
 
-      try {
-        if (staySignedIn) {
-          localStorage.setItem("authToken", token);
-        } else {
-          sessionStorage.setItem("authToken", token);
-        }
-      } catch (storageError) {
-        console.error("Error storing token:", storageError);
-        setErrorMessage(
-          "Error storing authentication token. Please try again."
-        );
-        return;
-      }
+      sessionStorage.setItem("authToken", token);
 
-      // Decode the token to extract the role
       const decodedToken = decodeJWT(token);
       if (!decodedToken) {
         setErrorMessage("Invalid token. Please try again.");
@@ -78,8 +62,25 @@ const Signin = () => {
         decodedToken[
           "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
         ];
+      const id =
+        decodedToken.nameidentifier ||
+        decodedToken[
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        ];
 
-      // Navigate based on the role
+      if (id) {
+        try {
+          sessionStorage.setItem("id", id);
+        } catch (storageError) {
+          console.error("Error storing pond owner ID:", storageError);
+          setErrorMessage("Error storing pond owner ID. Please try again.");
+          return;
+        }
+      } else {
+        setErrorMessage("Failed to retrieve pond owner ID from token.");
+        return;
+      }
+
       if (userRole === "Admin") {
         navigate("/admin");
       } else if (userRole === "PondOwner") {
