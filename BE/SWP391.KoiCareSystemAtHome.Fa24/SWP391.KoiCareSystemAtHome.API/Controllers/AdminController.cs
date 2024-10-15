@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SWP391.KoiCareSystemAtHome.API.RequestModel;
 using SWP391.KoiCareSystemAtHome.API.ResponseModel;
+using SWP391.KoiCareSystemAtHome.Repository.Models;
 using SWP391.KoiCareSystemAtHome.Service.BusinessModels;
 using SWP391.KoiCareSystemAtHome.Service.Services;
 
@@ -19,14 +20,14 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         }
 
         [HttpGet("getAdvByStatus/{status}")]
-        public async Task<ActionResult> GetAdvByStatus(string status)
+        public async Task<ActionResult<IEnumerable<AdvResponseModel>>> GetAdvByStatus(string status)
         {
-            var adv = await _advService.GetAdvByStatusAsync(status);
+            var advs = await _advService.GetAdvByStatusAsync(status);
 
-            if (adv == null)
+            if (advs == null || !advs.Any())
                 return NotFound();
 
-            var response = new AdvResponseModel
+            var response = advs.Select(adv => new AdvResponseModel
             {
                 Id = adv.Id,
                 ShopId = adv.ShopId,
@@ -38,7 +39,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 EditedDate = adv.EditedDate,
                 ExpiredDate = adv.ExpiredDate,
                 Duration = adv.Duration,
-            };
+            });
 
             return Ok(response);
         }
@@ -50,6 +51,8 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
 
             if (advModel == null)
                 return NotFound();
+            if (status == null)
+                return BadRequest("Satus is required");
 
             try
             {

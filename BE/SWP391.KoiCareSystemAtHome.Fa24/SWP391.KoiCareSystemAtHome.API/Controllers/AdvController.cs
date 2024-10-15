@@ -66,6 +66,31 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
+        [HttpGet("getApprovedAdv")]
+        public async Task<ActionResult<AdvResponseModel>> GetApprovedAdv()
+        {
+            var advs = await _advService.GetApprovedAdvAsync();
+
+            if (advs == null || !advs.Any())
+                return NotFound();
+
+            var response = advs.Select(adv => new AdvResponseModel
+            {
+                Id = adv.Id,
+                ShopId = adv.ShopId,
+                Title = adv.Title,
+                Url = adv.Url,
+                ImageUrl = adv.ImageUrl,
+                AdvDate = adv.AdvDate,
+                Status = adv.Status,
+                EditedDate = adv.EditedDate,
+                ExpiredDate = adv.ExpiredDate,
+                Duration = adv.Duration,
+            });
+
+            return Ok(response);
+        }
+
         [HttpPost("createAdv")]
         public async Task<ActionResult> CreateAdv(AdvRequestModel request)
         {
@@ -79,11 +104,11 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                     Title = request.Title,
                     Url = request.Url,
                     ImageUrl = request.ImageUrl,
-                    AdvDate = request.AdvDate,
-                    Status = request.Status,
-                    EditedDate = request.EditedDate,
-                    ExpiredDate = request.ExpiredDate,
-                    Duration = request.Duration,
+                    //AdvDate = request.AdvDate,
+                    //Status = request.Status,
+                    //EditedDate = request.EditedDate,
+                    //ExpiredDate = request.ExpiredDate,
+                    //Duration = request.Duration,
                 };
 
                 int advId = await _advService.CreateAdvAsync(advModdel);
@@ -115,7 +140,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         }
 
         [HttpPut("updateAdv/{advId}")]
-        public async Task<ActionResult> UpdateAdv(int advId, AdvRequestModel advRequestModel)
+        public async Task<ActionResult> UpdateAdv(int advId, AdvUpdateRequestModel advRequestModel)
         {
             AdvModel advModel = await _advService.GetAdvByIdAsync(advId);
 
@@ -127,11 +152,11 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 advModel.Title = advRequestModel.Title;
                 advModel.Url = advRequestModel.Url;
                 advModel.ImageUrl = advRequestModel.ImageUrl;
-                advModel.AdvDate = advRequestModel.AdvDate;
-                advModel.Status = advRequestModel.Status;
-                advModel.EditedDate = advRequestModel.EditedDate;
-                advModel.ExpiredDate = advRequestModel.ExpiredDate;
-                advModel.Duration = advRequestModel.Duration;
+                //advModel.AdvDate = advRequestModel.AdvDate;
+                //advModel.Status = advRequestModel.Status;
+                //advModel.EditedDate = advRequestModel.EditedDate;
+                //advModel.ExpiredDate = advRequestModel.ExpiredDate;
+                //advModel.Duration = advRequestModel.Duration;
 
                 bool success = await _advService.UpdateAdvAsync(advId, advModel);
 

@@ -19,8 +19,13 @@ import Blog from "./component/Blog";
 import Shop from "./page/shop";
 import ShopOverview from "./component/ShopOverview";
 import ShopPost from "./component/ShopPost";
+import { Typography } from "antd";
 // import ShopAds from "./component/ShopAds";
 // import ShopVipPackage from "./component/ShopVipPackage";
+import AdminSideBar from "./component/AdminSideBar";
+import Dashboard from "./component/DashBoard";
+import Admin from "./page/admin";
+import Posts from "./component/Posts";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -64,6 +69,16 @@ const App = () => {
         // { path: "Blog", element: <Blog /> },
       ],
     },
+    {
+      element: <Admin />,
+      children: [
+        { path: "DashBoard", element: <Dashboard /> },
+        // { path: "UserProfile", element: <UserProfile /> },
+        // { path: "TableList", element: <TableList /> },
+        // { path: "Typography", element: <Typography /> },
+        { path: "Posts", element: <Posts /> },
+      ]
+    }
   ]);
 
   return <RouterProvider router={router} />;

@@ -1,13 +1,16 @@
-
 import React from "react";
+import AdminSideBar from "../../component/AdminSideBar";
+import { Outlet } from "react-router-dom";
 
-const AdminDashboard = () => {
+const Admin = () => {
   return (
-    <div>
-      <h1 className="text-3xl font-semibold">Admin Dashboard</h1>
-      
+    <div className="flex h-max">
+      <AdminSideBar />
+      <div className="flex-1 h-full p-5 bg-gray-900">
+        <Outlet /> {/* This is where routed content will be displayed */}
+      </div>
     </div>
   );
 };
 
-export default AdminDashboard;
+export default Admin;

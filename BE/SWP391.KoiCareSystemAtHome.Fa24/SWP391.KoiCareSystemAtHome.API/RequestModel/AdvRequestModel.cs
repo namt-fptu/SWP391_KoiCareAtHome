@@ -10,15 +10,15 @@
 
         public string ImageUrl { get; set; } = null!;
 
-        public DateTime AdvDate { get; set; }
+        //public DateTime AdvDate { get; set; }
 
-        public string Status { get; set; } = null!;
+        //public string Status { get; set; } = null!;
 
-        public DateTime? EditedDate { get; set; }
+        //public DateTime? EditedDate { get; set; }
 
-        public DateTime ExpiredDate { get; set; }
+        //public DateTime ExpiredDate { get; set; }
 
-        public int Duration { get; set; }
+        //public int Duration { get; set; }
 
     }
 }
