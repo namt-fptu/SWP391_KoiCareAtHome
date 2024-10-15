@@ -3,7 +3,7 @@ import { Button, Modal, Form, Input, Card, Row, Col, Upload, message } from "ant
 import { UploadOutlined } from "@ant-design/icons";
 import { initializeApp } from "firebase/app";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import api from "../../config/axios"; // Import the Axios instance
+import api from "../../config/axios";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -24,13 +24,20 @@ const MyPond = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
   const [fileList, setFileList] = useState([]);
-  const ownerId = "yourOwnerId"; // This should be dynamically set based on the logged-in user.
 
-  // Fetch ponds from the API on component mount
+  // Retrieve pondOwnerId from sessionStorage
+  const pondOwnerId = sessionStorage.getItem("pondOwnerId");
+
   useEffect(() => {
+    if (!pondOwnerId) {
+      message.error("User not logged in. Unable to fetch ponds.");
+      return;
+    }
+
+    // Fetch ponds from the API based on the logged-in user's pondOwnerId
     const fetchPonds = async () => {
       try {
-        const response = await api.get(`Pond/ponds/${ownerId}`);
+        const response = await api.get(`Pond/ponds/${pondOwnerId}`);
         setPonds(response.data);
       } catch (error) {
         message.error("Failed to fetch pond data.");
@@ -38,7 +45,7 @@ const MyPond = () => {
     };
 
     fetchPonds();
-  }, [ownerId]);
+  }, [pondOwnerId]);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -51,13 +58,13 @@ const MyPond = () => {
   };
 
   const handleUpload = (file) => {
-    setFileList([file]); // Store the selected file in fileList
+    setFileList([file]);
     const reader = new FileReader();
     reader.onload = (e) => {
-      setImageUrl(e.target.result); // Set preview URL
+      setImageUrl(e.target.result);
     };
-    reader.readAsDataURL(file); // Convert file to base64 for immediate preview
-    return false; // Prevent antd's automatic upload
+    reader.readAsDataURL(file);
+    return false;
   };
 
   const uploadToFirebase = async (file) => {
@@ -88,12 +95,12 @@ const MyPond = () => {
         skimmerCount: Number(values.skimmerCount),
         pumpingCapacity: Number(values.pumpingCapacity),
         imageUrl: uploadedImageUrl,
+        pondOwnerId: Number(pondOwnerId), // Use pondOwnerId from sessionStorage
       };
 
       try {
-        // Send the pond data to the API to save it to the database
         const response = await api.post("Pond/createPond", pondData);
-        setPonds([...ponds, response.data]); // Update state with the newly created pond
+        setPonds([...ponds, response.data]); // Update ponds with the newly created one
         setIsModalVisible(false);
         message.success("Pond information added successfully!");
       } catch (error) {

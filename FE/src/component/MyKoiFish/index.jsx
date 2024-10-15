@@ -42,18 +42,24 @@ const MyKoiFish = () => {
 
   const { Option } = Select;
 
+  // Retrieve pondOwnerId from sessionStorage
+  const pondOwnerId = sessionStorage.getItem("pondOwnerId");
+
   // Fetch koi fish data on component mount
   useEffect(() => {
-    fetchKoiFishData();
+    if (!pondOwnerId) {
+      message.error("User not logged in. Unable to fetch ponds.");
+      return;
+    }
     fetchVarieties(); // Fetch varieties when component mounts
     fetchUserPonds(); // Fetch user's ponds when component mounts
-  }, []);
+  }, [pondOwnerId]);
 
   // Fetch koi fish belonging to a specific pond
   const fetchKoiFishData = async () => {
     if (pondId) { // Fetch only if pondId is set
       try {
-        const response = await api.get(`/api/KoiFish/koiFish/${pondId}`);
+        const response = await api.get(`KoiFish/koiFish/${pondId}`);
         setKois(response.data); // Assuming the response data is an array of koi fish
       } catch (error) {
         console.error("Error fetching koi fish data:", error);
@@ -73,9 +79,8 @@ const MyKoiFish = () => {
 
   // Fetch user's ponds from API
   const fetchUserPonds = async () => {
-    const ownerid = 1; // Assuming the default user ID is 1
     try {
-      const response = await api.get(`Pond/ponds/${ownerid}`); // Update with your endpoint for ponds
+      const response = await api.get(`Pond/ponds/${pondOwnerId}`); // Use pondOwnerId from sessionStorage
       setPonds(response.data); // Assuming the response data is an array of ponds
     } catch (error) {
       console.error("Error fetching ponds:", error);
@@ -138,7 +143,7 @@ const MyKoiFish = () => {
       };
 
       // Make API request to create Koi fish
-      await api.post("/api/KoiFish/createKoiFish", formattedValues);
+      await api.post("KoiFish/createKoiFish", formattedValues);
       message.success("Koi fish added successfully!");
       setIsModalVisible(false);
       fetchKoiFishData(); // Refresh the koi list after adding
@@ -233,14 +238,13 @@ const MyKoiFish = () => {
                 Add
               </Button>
               <Button type="default" onClick={handleCancel} style={{ marginLeft: "10px" }}>
-                Close
+                Cancel
               </Button>
             </Form.Item>
           </Form>
         </Modal>
 
-
-        {/* Display koi fish info */}
+        {/* Display Koi fish */}
         <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
           {kois.map((koi, index) => (
             <Col key={index} xs={24} sm={12} md={8} lg={6}>

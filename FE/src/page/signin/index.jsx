@@ -16,13 +16,13 @@ const Signin = () => {
         throw new Error("Token is undefined");
       }
 
-      const tokenParts = token.split('.');
+      const tokenParts = token.split(".");
       if (tokenParts.length !== 3) {
         throw new Error("Invalid token format");
       }
 
       const base64Url = tokenParts[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
       const decodedPayload = atob(base64);
       return JSON.parse(decodedPayload);
     } catch (error) {
@@ -33,53 +33,52 @@ const Signin = () => {
 
   const handleSignin = async (values) => {
     const { email, password } = values;
-
+  
     try {
       const response = await api.post(
         "Account/login",
         { email, password },
         { headers: { "Content-Type": "application/json" } }
       );
-
-      const data = response.data;
-      console.log("Login successful", data);
-
-      const token = data;
-
-      // Ensure the token exists before proceeding
+  
+      const token = response.data;
+      console.log("Login successful", token);
+  
       if (!token) {
         setErrorMessage("Login failed: No token returned from server.");
         return;
       }
-
-      try {
-        if (staySignedIn) {
-          localStorage.setItem("authToken", token);
-        } else {
-          sessionStorage.setItem("authToken", token);
-        }
-      } catch (storageError) {
-        console.error("Error storing token:", storageError);
-        setErrorMessage("Error storing authentication token. Please try again.");
-        return;
-      }
-
-      // Decode the token to extract the role
+  
+      sessionStorage.setItem("authToken", token);
+      
       const decodedToken = decodeJWT(token);
       if (!decodedToken) {
         setErrorMessage("Invalid token. Please try again.");
         return;
       }
-
+  
       const userRole = decodedToken.role || decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-
-      // Navigate based on the role
+      const pondOwnerId = decodedToken.nameidentifier || decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+  
+      if (pondOwnerId) {
+        try {
+          sessionStorage.setItem("pondOwnerId", pondOwnerId);
+        } catch (storageError) {
+          console.error("Error storing pond owner ID:", storageError);
+          setErrorMessage("Error storing pond owner ID. Please try again.");
+          return;
+        }
+      } else {
+        setErrorMessage("Failed to retrieve pond owner ID from token.");
+        return;
+      }
+  
       if (userRole === "Admin") {
         navigate("/admin");
       } else if (userRole === "PondOwner") {
         navigate("/overview");
       } else if (userRole === "Shop") {
-        navigate("/shop");
+        navigate("/ShopOverview");
       } else {
         setErrorMessage("Unknown user role.");
       }
