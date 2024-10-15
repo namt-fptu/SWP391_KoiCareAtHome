@@ -117,15 +117,15 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return true;
         }
 
-        public async Task<AdvModel> GetAdvByStatusAsync(string status)
+        public async Task<IEnumerable<AdvModel>> GetAdvByStatusAsync(string status)
         {
             var advs = await _unitOfWork.Advs.GetAsync();
-            var adv = advs.FirstOrDefault(a => a.Status == status);
+            var advFilltered = advs.Where(a => a.Status == status);
 
-            if (adv == null)
-                return null;
+            if (advFilltered == null || !advFilltered.Any())
+                return Enumerable.Empty<AdvModel>();
 
-            var advModel = new AdvModel
+            var advModels = advFilltered.Select(adv => new AdvModel
             {
                 Id = adv.Id,
                 ShopId = adv.ShopId,
@@ -137,8 +137,8 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                 EditedDate = adv.EditedDate,
                 ExpiredDate = adv.ExpiredDate,
                 Duration = adv.Duration,
-            };
-            return advModel;
+            });
+            return advModels;
         }
 
     }
