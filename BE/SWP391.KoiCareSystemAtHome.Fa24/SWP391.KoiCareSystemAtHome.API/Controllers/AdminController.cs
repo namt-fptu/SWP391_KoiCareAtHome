@@ -22,6 +22,8 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         [HttpGet("getAdvByStatus/{status}")]
         public async Task<ActionResult<IEnumerable<AdvResponseModel>>> GetAdvByStatus(string status)
         {
+            await _advService.CheckExpriedAdvAsync();
+
             var advs = await _advService.GetAdvByStatusAsync(status);
 
             if (advs == null || !advs.Any())
@@ -44,45 +46,88 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpPut("updateAdv/{advId}")]
-        public async Task<ActionResult> UpdateAdvStatus(int advId, string status)
+        [HttpPut("aproveAdv/{advId}")]
+        public async Task<ActionResult> ApproveAdv(int advId, string status)
         {
-            AdvModel advModel = await _advService.GetAdvByIdAsync(advId);
+            await _advService.CheckExpriedAdvAsync();
+
+            var advs = await _advService.GetAdvByStatusAsync("Processing");
+
+            if (advs == null || !advs.Any())
+                return NotFound();
+
+            var advModel = advs.FirstOrDefault(a => a.Id == advId);
 
             if (advModel == null)
                 return NotFound();
-            if (status == null)
-                return BadRequest("Satus is required");
 
             try
             {
-                advModel.Status = status;
-
-                bool success = await _advService.UpdateAdvAsync(advId, advModel);
-
-                if (!success)
-                    return NotFound();
-
-                var adv = await _advService.GetAdvByIdAsync(advId);
-
-                if (adv == null)
-                    return NotFound();
-
-                var response = new AdvResponseModel
+                if (status.Equals("Approved"))
                 {
-                    Id = adv.Id,
-                    ShopId = adv.ShopId,
-                    Title = adv.Title,
-                    Url = adv.Url,
-                    ImageUrl = adv.ImageUrl,
-                    AdvDate = adv.AdvDate,
-                    Status = adv.Status,
-                    EditedDate = adv.EditedDate,
-                    ExpiredDate = adv.ExpiredDate,
-                    Duration = adv.Duration,
-                };
+                    advModel.Status = status;
+                    advModel.ExpiredDate = DateTime.Now.AddDays(advModel.Duration);
 
-                return Ok(response);
+                    bool success = await _advService.UpdateAdvAsync(advId, advModel);
+
+                    if (!success)
+                        return NotFound();
+
+                    var adv = await _advService.GetAdvByIdAsync(advId);
+
+                    if (adv == null)
+                        return NotFound();
+
+                    var response = new AdvResponseModel
+                    {
+                        Id = adv.Id,
+                        ShopId = adv.ShopId,
+                        Title = adv.Title,
+                        Url = adv.Url,
+                        ImageUrl = adv.ImageUrl,
+                        AdvDate = adv.AdvDate,
+                        Status = adv.Status,
+                        EditedDate = adv.EditedDate,
+                        ExpiredDate = adv.ExpiredDate,
+                        Duration = adv.Duration,
+                    };
+
+                    return Ok(response);
+                }
+                else if (status.Equals("Rejected"))
+                {
+                    advModel.Status = status;
+
+                    bool success = await _advService.UpdateAdvAsync(advId, advModel);
+
+                    if (!success)
+                        return NotFound();
+
+                    var adv = await _advService.GetAdvByIdAsync(advId);
+
+                    if (adv == null)
+                        return NotFound();
+
+                    var response = new AdvResponseModel
+                    {
+                        Id = adv.Id,
+                        ShopId = adv.ShopId,
+                        Title = adv.Title,
+                        Url = adv.Url,
+                        ImageUrl = adv.ImageUrl,
+                        AdvDate = adv.AdvDate,
+                        Status = adv.Status,
+                        EditedDate = adv.EditedDate,
+                        ExpiredDate = adv.ExpiredDate,
+                        Duration = adv.Duration,
+                    };
+
+                    return Ok(response);
+                }
+                else
+                {
+                    return BadRequest("Invalid status!");
+                }
             }
             catch (Exception ex)
             {
