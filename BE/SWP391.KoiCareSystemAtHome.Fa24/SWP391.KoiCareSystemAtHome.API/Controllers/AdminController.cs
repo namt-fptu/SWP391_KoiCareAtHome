@@ -51,6 +51,8 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
 
             if (advModel == null)
                 return NotFound();
+            if (status == null)
+                return BadRequest("Satus is required");
 
             try
             {

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using SWP391.KoiCareSystemAtHome.Repository;
 using SWP391.KoiCareSystemAtHome.Service.BusinessModels;
 using SWP391.KoiCareSystemAtHome.Repository.Models;
+using System.Data.SqlTypes;
 
 namespace SWP391.KoiCareSystemAtHome.Service.Services
 {
@@ -82,11 +83,11 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                 Title = advModel.Title,
                 Url = advModel.Url,
                 ImageUrl = advModel.ImageUrl,
-                AdvDate = advModel.AdvDate,
-                Status = advModel.Status,
-                EditedDate = advModel.EditedDate,
-                ExpiredDate = advModel.ExpiredDate,
-                Duration = advModel.Duration,
+                AdvDate = DateTime.Now,
+                Status = "Expired",
+                EditedDate = DateTime.Now,
+                ExpiredDate = (DateTime)SqlDateTime.MinValue,
+                Duration = 0,
             };
 
             await _unitOfWork.Advs.InsertAsync(advEntity);
@@ -106,11 +107,11 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             advToUpdate.Title = advModel.Title;
             advToUpdate.Url = advModel.Url;
             advToUpdate.ImageUrl = advModel.ImageUrl;
-            advToUpdate.AdvDate = advModel.AdvDate;
-            advToUpdate.Status = advModel.Status;
-            advToUpdate.EditedDate = advModel.EditedDate;
-            advToUpdate.ExpiredDate = advModel.ExpiredDate;
-            advToUpdate.Duration = advModel.Duration;
+            //advToUpdate.AdvDate = advModel.AdvDate;
+            //advToUpdate.Status = advModel.Status;
+            advToUpdate.EditedDate = DateTime.Now;
+            //advToUpdate.ExpiredDate = advModel.ExpiredDate;
+            //advToUpdate.Duration = advModel.Duration;
 
             _unitOfWork.Advs.UpdateAsync(advToUpdate);
             await _unitOfWork.SaveAsync();
@@ -139,6 +140,35 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                 Duration = adv.Duration,
             });
             return advModels;
+        }
+
+        public async Task<IEnumerable<AdvModel>> GetApprovedAdvAsync()
+        {
+            var advs = await _unitOfWork.Advs.GetAsync();
+            var advFilltered = advs.Where(a => a.Status == "Approved");
+
+            if (advFilltered == null || !advFilltered.Any())
+                return Enumerable.Empty<AdvModel>();
+
+            var advModels = advFilltered.Select(adv => new AdvModel
+            {
+                Id = adv.Id,
+                ShopId = adv.ShopId,
+                Title = adv.Title,
+                Url = adv.Url,
+                ImageUrl = adv.ImageUrl,
+                AdvDate = adv.AdvDate,
+                Status = adv.Status,
+                EditedDate = adv.EditedDate,
+                ExpiredDate = adv.ExpiredDate,
+                Duration = adv.Duration,
+            });
+            return advModels;
+        }
+
+        private void CheckExpriedAdv()
+        {
+
         }
 
     }
