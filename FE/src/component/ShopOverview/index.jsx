@@ -40,32 +40,17 @@ const ShopOverview = () => {
             My Vip Package
           </button>
         </Link>
-        {/* <Link to="/SaltCalculator">
-          <button className="bg-blue-600 rounded-md text-white p-4 hover:bg-blue-700 w-full">
-            Salt Calculator
-          </button>
-        </Link>
-        <Link to="/Blog">
-          <button className="bg-blue-600 rounded-md text-white p-4 hover:bg-blue-700 w-full">
-            Blog
-          </button>
-        </Link>
-        <Link to="/Statistics">
-          <button className="bg-blue-600 rounded-md text-white p-4 hover:bg-blue-700 w-full">
-            Statistics
-          </button>
-        </Link> */}
+       
         <Link to="/AboutKoi">
           <button className="bg-blue-600 rounded-md text-white p-4 hover:bg-blue-700 w-full">
             About Koi
           </button>
         </Link>
       </div>
-
       <div className="flex flex-col justify-between mb-5 mt-14">
         <h2 className="text-white text-3xl font-bold">Overview Account</h2>
         <div className="grid grid-cols-2 gap-4 p-6 mt-8">
-          {/* Posts Card */}
+          
           <Card className="shadow-md p-4">
             <p className="text-lg font-semibold mb-2">Active Posts</p>
             <p className="text-4xl font-bold">{data.posts}</p>
@@ -74,7 +59,7 @@ const ShopOverview = () => {
             </a>
           </Card>
 
-          {/* Products Card */}
+          
           <Card className="shadow-md p-4">
             <p className="text-lg font-semibold mb-2">Products</p>
             <p className="text-4xl font-bold">{data.products}</p>
