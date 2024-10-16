@@ -40,16 +40,16 @@ const MyKoiFish = () => {
 
   const { Option } = Select;
   
-  const pondOwnerId = sessionStorage.getItem("pondOwnerId");
+  const id = sessionStorage.getItem("id");
 
   useEffect(() => {
-    if (!pondOwnerId) {
+    if (!id) {
       message.error("User not logged in. Unable to fetch ponds.");
       return;
     }
     fetchVarieties();
     fetchUserPonds();
-  }, [pondOwnerId]);
+  }, [id]);
 
   const fetchVarieties = async () => {
     try {
@@ -62,7 +62,7 @@ const MyKoiFish = () => {
 
   const fetchUserPonds = async () => {
     try {
-      const response = await api.get(`Pond/ponds/${pondOwnerId}`); 
+      const response = await api.get(`Pond/ponds/${id}`); 
       setPonds(response.data); 
     } catch (error) {
       console.error("Error fetching ponds:", error);
@@ -223,7 +223,7 @@ const MyKoiFish = () => {
 
         <Modal
           title="Input Koi Fish Information"
-          visible={isModalVisible}
+          open={isModalVisible}
           onCancel={handleCancel}
           footer={null}
         >
