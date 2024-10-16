@@ -239,7 +239,7 @@ const MyKoiFish = () => {
 
         <Modal
           title="Input Koi Fish Information"
-          visible={isModalVisible}
+          open={isModalVisible}
           onCancel={handleCancel}
           footer={null}
         >

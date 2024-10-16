@@ -8,17 +8,18 @@ import {
   Row,
   Col,
   Select,
+  DatePicker,
   message,
-} from "antd"; // Import Select
+} from "antd";
 import api from "../../config/axios";
+import moment from "moment"; // If needed for date formatting
 
 const WaterParameter = () => {
   const [waterParameters, setWaterParameters] = useState([]);
-  const [existingParameters, setExistingParameters] = useState([]); // State for existing parameters
-  const [ponds, setPonds] = useState([]); // State for ponds
+  const [existingParameters, setExistingParameters] = useState([]);
+  const [ponds, setPonds] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedPond, setSelectedPond] = useState(null); // State for selected pond
-
+  const [selectedPond, setSelectedPond] = useState(null);
   const { Option } = Select;
 
   useEffect(() => {
@@ -39,33 +40,42 @@ const WaterParameter = () => {
     }
   };
 
-  const fetchWaterParameters = async (pondId) => {
+  const checkPondsForWaterParameters = async (pondId) => {
     try {
-      const response = await api.get(`WaterParameter/parameters/${pondId}`); // Adjust the endpoint accordingly
-      setExistingParameters(response.data); // Set existing parameters
+      const response = await api.get(`WaterReport/waterReport/${pondId}`);
+      setExistingParameters(response.data);
     } catch (error) {
-      console.error("Error fetching water parameters:", error);
-      message.error("Failed to fetch water parameters.");
+      if (error.response && error.response.status === 404) {
+        setExistingParameters([]);
+        message.info("No water parameters found for this pond.");
+      } else {
+        console.error("Error fetching water parameters:", error);
+        message.error("Failed to fetch water parameters.");
+      }
     }
   };
 
   const handlePondChange = (value) => {
     setSelectedPond(value);
-    fetchWaterParameters(value); // Fetch water parameters for the selected pond
   };
 
   const showModal = () => {
+    if (!selectedPond) {
+      message.error("Please select a pond first!");
+      return;
+    }
+    checkPondsForWaterParameters(selectedPond);
     setIsModalVisible(true);
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
-    setSelectedPond(null); // Reset selected pond when modal is closed
+    setSelectedPond(null);
   };
 
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
     const newParameter = {
-      pond: selectedPond,
+      pondId: selectedPond,
       salt: values.salt,
       nitrite: values.nitrite,
       nitrate: values.nitrate,
@@ -75,18 +85,19 @@ const WaterParameter = () => {
       temperature: values.temperature,
       ph: values.ph,
       co2: values.co2,
+      date: values.date ? values.date.toISOString() : new Date().toISOString(), // Format the selected date or use current date
     };
 
-    // Update state
-    setWaterParameters((prev) => {
-      const existingParameters = prev.filter(
-        (param) => param.pond !== selectedPond
-      );
-      return [...existingParameters, newParameter]; // Update existing or add new
-    });
+    try {
+      await api.post(`WaterReport/createWaterReport`, newParameter);
+      message.success("Water parameters added successfully!");
 
-    message.success("Water parameters added successfully!");
-    setIsModalVisible(false);
+      checkPondsForWaterParameters(selectedPond);
+      setIsModalVisible(false);
+    } catch (error) {
+      console.error("Error adding water parameters:", error);
+      message.error("Failed to add water parameters.");
+    }
   };
 
   return (
@@ -98,39 +109,46 @@ const WaterParameter = () => {
         Kiểm tra và theo dõi các thông số nước của hồ cá.
       </p>
       <div>
-        {/* Button to open modal */}
+        <Form.Item
+          name="pond"
+          rules={[{ required: true, message: "Please select a pond!" }]}
+        >
+          <Select
+            placeholder="Select a pond"
+            onChange={handlePondChange}
+            allowClear
+          >
+            {ponds.map((pond) => (
+              <Option key={pond.id} value={pond.id}>
+                {pond.name}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+
         <div className="flex flex-col items-center">
           <Button type="primary" onClick={showModal}>
-            Input
+            Input Water Parameters
           </Button>
         </div>
 
-        {/* Modal for input */}
         <Modal
           title="Input Water Parameters"
-          visible={isModalVisible}
+          open={isModalVisible}
           onCancel={handleCancel}
           footer={null}
         >
           <Form layout="vertical" onFinish={onFinish}>
+            {/* Date Picker Field */}
             <Form.Item
-              label="Select Pond"
-              name="pond"
-              rules={[{ required: true, message: "Please select a pond!" }]}
+              label="Date"
+              name="date"
+              rules={[{ required: true, message: "Please select a date!" }]}
             >
-              <Select
-                placeholder="Select a pond"
-                onChange={handlePondChange} // Update selected pond state and fetch parameters
-                allowClear
-              >
-                {ponds.map((pond) => (
-                  <Option key={pond.id} value={pond.id}>
-                    {pond.name}
-                  </Option>
-                ))}
-              </Select>
+              <DatePicker style={{ width: "100%" }} />
             </Form.Item>
 
+            {/* Other input fields */}
             <Form.Item
               label="Salt"
               name="salt"
@@ -138,7 +156,6 @@ const WaterParameter = () => {
             >
               <Input />
             </Form.Item>
-
             <Form.Item
               label="Nitrite (NO₂)"
               name="nitrite"
@@ -146,7 +163,6 @@ const WaterParameter = () => {
             >
               <Input />
             </Form.Item>
-
             <Form.Item
               label="Nitrate (NO₃)"
               name="nitrate"
@@ -154,7 +170,6 @@ const WaterParameter = () => {
             >
               <Input />
             </Form.Item>
-
             <Form.Item
               label="Ammonium (NH₄)"
               name="ammonium"
@@ -162,7 +177,6 @@ const WaterParameter = () => {
             >
               <Input />
             </Form.Item>
-
             <Form.Item
               label="Hardness (GH)"
               name="hardness"
@@ -170,7 +184,6 @@ const WaterParameter = () => {
             >
               <Input />
             </Form.Item>
-
             <Form.Item
               label="Oxygen (O₂)"
               name="oxygen"
@@ -178,7 +191,6 @@ const WaterParameter = () => {
             >
               <Input />
             </Form.Item>
-
             <Form.Item
               label="Temperature (℃)"
               name="temperature"
@@ -186,7 +198,6 @@ const WaterParameter = () => {
             >
               <Input />
             </Form.Item>
-
             <Form.Item
               label="pH-Value"
               name="ph"
@@ -194,7 +205,6 @@ const WaterParameter = () => {
             >
               <Input />
             </Form.Item>
-
             <Form.Item
               label="CO₂"
               name="co2"
@@ -218,20 +228,18 @@ const WaterParameter = () => {
           </Form>
         </Modal>
 
-        {/* Display existing water parameters after selecting a pond */}
-        {existingParameters.length > 0 && (
+        {existingParameters.length > 0 ? (
           <Row gutter={[200, 200]} style={{ marginTop: "20px" }}>
             {existingParameters.map((param, index) => (
               <Col key={index} xs={24} sm={12} md={8} lg={6}>
                 <Card
                   title={`Water Parameters for Pond: ${selectedPond}`}
-                  extra={
-                    <Button danger onClick={() => deleteWaterParameter(index)}>
-                      Delete
-                    </Button>
-                  }
                   style={{ width: 400, marginBottom: "20px" }}
                 >
+                  <p>
+                    <strong>Date:</strong>{" "}
+                    {moment(param.date).format("YYYY-MM-DD") || "-"}
+                  </p>
                   <p>
                     <strong>Salt:</strong> {param.salt || "-"}
                   </p>
@@ -263,6 +271,10 @@ const WaterParameter = () => {
               </Col>
             ))}
           </Row>
+        ) : (
+          <p style={{ color: "white" }}>
+            No water parameters available for this pond.
+          </p>
         )}
       </div>
     </div>
