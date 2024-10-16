@@ -12,6 +12,7 @@ import {
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { initializeApp } from "firebase/app";
+import { Select, InputNumber } from "antd";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 // import { getFirestore, addDoc, collection, getDocs } from "firebase/firestore";
 import api from "../../config/axios";
@@ -30,6 +31,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const storageImg = getStorage(app);
 const storageTxt = getStorage(app);
+const { Option } = Select;
 
 const ShopPost = () => {
   const [posts, setPosts] = useState([]);
@@ -38,6 +40,11 @@ const ShopPost = () => {
   const [imageUrl, setImageUrl] = useState(null);
   const [selectedPost, setSelectedPost] = useState(null);
   const [fileList, setFileList] = useState([]);
+  const [packages, setPackages] = useState([]); // Dữ liệu packages từ API
+  const [selectedPackage, setSelectedPackage] = useState(null); // Lưu packageId
+  const [amount, setAmount] = useState(0); // Lưu số tiền thanh toán
+  const [isExtendModalVisible, setIsExtendModalVisible] = useState(false); // State để điều khiển modal Extend
+  const [currentPostId, setCurrentPostId] = useState(null);
 
   // Retrieve pondOwnerId from sessionStorage
   const id = sessionStorage.getItem("id");
@@ -60,6 +67,54 @@ const ShopPost = () => {
 
     fetchPosts();
   }, [id]);
+
+  const fetchPackage = async () => {
+    try {
+      const response = await api.get("/PostPackage/getPackage");
+      return response.data;
+    } catch (error) {
+      message.error("Failed to fetch package options.");
+      return [];
+    }
+  };
+  const handleExtend = async (postId) => {
+    const packageData = await fetchPackage();
+    setPackages(packageData); // Lấy dữ liệu package từ API
+    setCurrentPostId(postId); // Lưu postId của bài cần gia hạn
+    setIsExtendModalVisible(true); // Hiển thị modal Extend
+  };
+
+  const handleExtendOk = async () => {
+    if (!selectedPackage || amount <= 0) {
+      message.error("Please select a package and enter a valid amount.");
+      return;
+    }
+    try {
+      console.log("Data sent to API:", {
+        postId: currentPostId,
+        packageId: selectedPackage,
+        amount,
+      });
+      const response = await api.post("/Payment/createPaymentURL", {
+        postId: currentPostId,
+        packageId: selectedPackage,
+        amount,
+      });
+
+      // Kiểm tra phản hồi trả về từ API
+      console.log("Payment URL response:", response);
+
+      // Nếu API trả về link thanh toán thành công
+      window.location.href = response.data.paymentUrl;
+    } catch (error) {
+      // In ra chi tiết lỗi từ server để kiểm tra
+      console.error("Error creating payment URL:", error);
+      message.error("Failed to create payment URL.");
+    }
+  };
+  const handleExtendCancel = () => {
+    setIsExtendModalVisible(false);
+  };
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -203,7 +258,7 @@ const ShopPost = () => {
               {imageUrl && (
                 <img
                   src={imageUrl}
-                  alt="Pond"
+                  alt="Post "
                   style={{ width: "100%", marginTop: "10px" }}
                 />
               )}
@@ -229,12 +284,12 @@ const ShopPost = () => {
             </Form.Item>
 
             {/* <Form.Item
-              label="Link"
-              name="link"
-              rules={[{ required: true, message: "Please input Link!" }]}
-            >
-              <Input />
-            </Form.Item> */}
+                label="Link"
+                name="link"
+                rules={[{ required: true, message: "Please input Link!" }]}
+              >
+                <Input />
+              </Form.Item> */}
 
             <Form.Item>
               <Button type="primary" htmlType="submit">
@@ -253,13 +308,22 @@ const ShopPost = () => {
               <Col key={index} xs={24} sm={12} md={8} lg={6}>
                 <Card
                   title={`Post: ${post.title}`}
-                  style={{ width: 400, marginBottom: "20px" }}
+                  style={{
+                    width: 400,
+                    marginBottom: "20px",
+                    border: "1px solid #f0f0f0",
+                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                  }}
                 >
                   {post.imageUrl && (
                     <img
                       src={post.imageUrl}
                       alt="Post"
-                      style={{ width: "100%", height: "auto" }}
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                        borderRadius: "8px",
+                      }}
                     />
                   )}
 
@@ -267,23 +331,44 @@ const ShopPost = () => {
                     style={{
                       display: "flex",
                       justifyContent: "space-between",
+                      marginTop: "10px",
                     }}
                   >
-                    <div>
-                      <p>
+                    <div style={{ width: "60%" }}>
+                      <p style={{ fontSize: "16px", fontWeight: "bold" }}>
                         <strong>Title:</strong> {post.title || "-"}
                       </p>
-                      <p>
+                      <p
+                        style={{
+                          fontSize: "14px",
+                          fontWeight: "bold",
+                          color: "#555",
+                        }}
+                      >
                         <strong>Content:</strong> {post.content || "-"}
                       </p>
                       <p>
-                        <strong>Created Date:</strong> {post.advDate || "-"}{" "}
-                        <br />
+                        <strong>Created Date:</strong> {post.advDate || "-"}
                       </p>
                     </div>
-                    <div>
+                    <div style={{ width: "40%" }}>
                       <p>
-                        <strong>Status:</strong> {post.status || "-"}
+                        <strong>Status:</strong>{" "}
+                        <span
+                          style={{
+                            color:
+                              post.status === "Expired"
+                                ? "gray"
+                                : post.status === "Approved"
+                                ? "green"
+                                : post.status === "Rejected"
+                                ? "red"
+                                : "black",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {post.status || "-"}
+                        </span>
                       </p>
                       <p>
                         <strong>Edited Date:</strong> <br />
@@ -294,16 +379,55 @@ const ShopPost = () => {
                         {post.expiredDate || "-"}
                       </p>
                       <p>
-                        <strong>Duration:</strong>
-                        {post.duration || "-"}
+                        <strong>Duration:</strong> {post.duration || "-"}
                       </p>
                     </div>
                   </div>
+                  {post.status === "Expired" && (
+                    <Button
+                      type="primary"
+                      onClick={() => handleExtend(post.id)}
+                    >
+                      Extend
+                    </Button>
+                  )}
                 </Card>
               </Col>
             ))}
           </Row>
         )}
+        {/* Modal Extend */}
+        <Modal
+          title="Extend Post"
+          visible={isExtendModalVisible}
+          onOk={handleExtendOk}
+          onCancel={handleExtendCancel}
+          okText="Pay"
+        >
+          <Form layout="vertical">
+            <Form.Item label="Select Package">
+              <Select
+                placeholder="Select a package"
+                onChange={(value) => setSelectedPackage(value)}
+              >
+                {packages.map((pkg) => (
+                  <Option key={pkg.id} value={pkg.id}>
+                    {pkg.name} - {pkg.price}$
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+
+            <Form.Item label="Amount">
+              <InputNumber
+                min={1}
+                value={amount}
+                onChange={(value) => setAmount(value)}
+                style={{ width: "100%" }}
+              />
+            </Form.Item>
+          </Form>
+        </Modal>
       </div>
     </div>
   );

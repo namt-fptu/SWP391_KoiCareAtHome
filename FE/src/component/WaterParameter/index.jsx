@@ -1,6 +1,15 @@
-// eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from "react";
-import { Button, Modal, Form, Input, Card, Row, Col, Select, message } from "antd"; // Import Select
+import {
+  Button,
+  Modal,
+  Form,
+  Input,
+  Card,
+  Row,
+  Col,
+  Select,
+  message,
+} from "antd"; // Import Select
 import api from "../../config/axios";
 
 const WaterParameter = () => {
@@ -17,13 +26,13 @@ const WaterParameter = () => {
   }, []);
 
   const fetchUserPonds = async () => {
-    const pondOwnerId = sessionStorage.getItem("pondOwnerId");
-    if (!pondOwnerId) {
+    const id = sessionStorage.getItem("id");
+    if (!id) {
       message.error("User not logged in. Unable to fetch ponds.");
       return;
     }
     try {
-      const response = await api.get(`Pond/ponds/${pondOwnerId}`);
+      const response = await api.get(`Pond/ponds/${id}`);
       setPonds(response.data);
     } catch (error) {
       console.error("Error fetching ponds:", error);
@@ -70,10 +79,12 @@ const WaterParameter = () => {
 
     // Update state
     setWaterParameters((prev) => {
-      const existingParameters = prev.filter(param => param.pond !== selectedPond);
+      const existingParameters = prev.filter(
+        (param) => param.pond !== selectedPond
+      );
       return [...existingParameters, newParameter]; // Update existing or add new
     });
-    
+
     message.success("Water parameters added successfully!");
     setIsModalVisible(false);
   };
@@ -93,7 +104,7 @@ const WaterParameter = () => {
             Input
           </Button>
         </div>
-        
+
         {/* Modal for input */}
         <Modal
           title="Input Water Parameters"
@@ -112,7 +123,7 @@ const WaterParameter = () => {
                 onChange={handlePondChange} // Update selected pond state and fetch parameters
                 allowClear
               >
-                {ponds.map(pond => (
+                {ponds.map((pond) => (
                   <Option key={pond.id} value={pond.id}>
                     {pond.name}
                   </Option>
@@ -214,18 +225,40 @@ const WaterParameter = () => {
               <Col key={index} xs={24} sm={12} md={8} lg={6}>
                 <Card
                   title={`Water Parameters for Pond: ${selectedPond}`}
-                  extra={<Button danger onClick={() => deleteWaterParameter(index)}>Delete</Button>}
+                  extra={
+                    <Button danger onClick={() => deleteWaterParameter(index)}>
+                      Delete
+                    </Button>
+                  }
                   style={{ width: 400, marginBottom: "20px" }}
                 >
-                  <p><strong>Salt:</strong> {param.salt || "-"}</p>
-                  <p><strong>Nitrite (NO₂):</strong> {param.nitrite || "-"}</p>
-                  <p><strong>Nitrate (NO₃):</strong> {param.nitrate || "-"}</p>
-                  <p><strong>Ammonium (NH₄):</strong> {param.ammonium || "-"}</p>
-                  <p><strong>Hardness (GH):</strong> {param.hardness || "-"}</p>
-                  <p><strong>Oxygen (O₂):</strong> {param.oxygen || "-"}</p>
-                  <p><strong>Temperature:</strong> {param.temperature || "-"}</p>
-                  <p><strong>pH Value:</strong> {param.ph || "-"}</p>
-                  <p><strong>CO₂:</strong> {param.co2 || "-"}</p>
+                  <p>
+                    <strong>Salt:</strong> {param.salt || "-"}
+                  </p>
+                  <p>
+                    <strong>Nitrite (NO₂):</strong> {param.nitrite || "-"}
+                  </p>
+                  <p>
+                    <strong>Nitrate (NO₃):</strong> {param.nitrate || "-"}
+                  </p>
+                  <p>
+                    <strong>Ammonium (NH₄):</strong> {param.ammonium || "-"}
+                  </p>
+                  <p>
+                    <strong>Hardness (GH):</strong> {param.hardness || "-"}
+                  </p>
+                  <p>
+                    <strong>Oxygen (O₂):</strong> {param.oxygen || "-"}
+                  </p>
+                  <p>
+                    <strong>Temperature:</strong> {param.temperature || "-"}
+                  </p>
+                  <p>
+                    <strong>pH Value:</strong> {param.ph || "-"}
+                  </p>
+                  <p>
+                    <strong>CO₂:</strong> {param.co2 || "-"}
+                  </p>
                 </Card>
               </Col>
             ))}

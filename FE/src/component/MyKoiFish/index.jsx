@@ -13,7 +13,12 @@ import {
   message,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
 import { initializeApp } from "firebase/app";
 import api from "../../config/axios"; // Axios instance configuration
 
@@ -39,22 +44,22 @@ const MyKoiFish = () => {
   const [ponds, setPonds] = useState([]);
 
   const { Option } = Select;
-  
-  const pondOwnerId = sessionStorage.getItem("pondOwnerId");
+
+  const id = sessionStorage.getItem("id");
 
   useEffect(() => {
-    if (!pondOwnerId) {
+    if (!id) {
       message.error("User not logged in. Unable to fetch ponds.");
       return;
     }
     fetchVarieties();
     fetchUserPonds();
-  }, [pondOwnerId]);
+  }, [id]);
 
   const fetchVarieties = async () => {
     try {
-      const response = await api.get('KoiVariety/variety'); 
-      setVarieties(response.data); 
+      const response = await api.get("KoiVariety/variety");
+      setVarieties(response.data);
     } catch (error) {
       console.error("Error fetching varieties:", error);
     }
@@ -62,8 +67,8 @@ const MyKoiFish = () => {
 
   const fetchUserPonds = async () => {
     try {
-      const response = await api.get(`Pond/ponds/${pondOwnerId}`); 
-      setPonds(response.data); 
+      const response = await api.get(`Pond/ponds/${id}`);
+      setPonds(response.data);
     } catch (error) {
       console.error("Error fetching ponds:", error);
     }
@@ -109,8 +114,7 @@ const MyKoiFish = () => {
 
       uploadTask.on(
         "state_changed",
-        (snapshot) => {
-        },
+        (snapshot) => {},
         (error) => {
           message.error(`Upload failed: ${error.message}`);
           reject(error);
@@ -146,7 +150,7 @@ const MyKoiFish = () => {
       await api.post("KoiFish/createKoiFish", formattedValues);
       message.success("Koi fish added successfully!");
       setIsModalVisible(false);
-      fetchKoiForPond(pondId); 
+      fetchKoiForPond(pondId);
     } catch (error) {
       console.error("Error adding koi fish:", error);
       message.error("Failed to add koi fish.");
@@ -175,47 +179,59 @@ const MyKoiFish = () => {
         {pondId && (
           <>
             <Row gutter={16}>
-  {kois.length > 0 ? (
-    kois.map((koi, index) => {
-      // Calculate koi age based on DOB
-      const dob = koi.dob ? new Date(koi.dob) : null;
-      const age = dob
-        ? `${new Date().getFullYear() - dob.getFullYear()} years`
-        : "Unknown";
+              {kois.length > 0 ? (
+                kois.map((koi, index) => {
+                  // Calculate koi age based on DOB
+                  const dob = koi.dob ? new Date(koi.dob) : null;
+                  const age = dob
+                    ? `${new Date().getFullYear() - dob.getFullYear()} years`
+                    : "Unknown";
 
-      return (
-        <Col span={8} key={index}>
-          <Card
-            title={`Pond: ${ponds.find((pond) => pond.id === pondId)?.name}`}
-            bordered={true}
-            style={{ textAlign: "center" }}
-          >
-            {/* Koi Image */}
-            <img
-              src={koi.imageUrl || "default-koi-image-url"} // Replace with your default koi image URL if needed
-              alt={koi.koiName}
-              style={{
-                width: "100%",
-                height: "200px",
-                objectFit: "cover",
-                marginBottom: "10px",
-              }}
-            />
+                  return (
+                    <Col span={8} key={index}>
+                      <Card
+                        title={`Pond: ${
+                          ponds.find((pond) => pond.id === pondId)?.name
+                        }`}
+                        bordered={true}
+                        style={{ textAlign: "center" }}
+                      >
+                        {/* Koi Image */}
+                        <img
+                          src={koi.imageUrl || "default-koi-image-url"} // Replace with your default koi image URL if needed
+                          alt={koi.koiName}
+                          style={{
+                            width: "100%",
+                            height: "200px",
+                            objectFit: "cover",
+                            marginBottom: "10px",
+                          }}
+                        />
 
-            {/* Koi Information */}
-            <p><strong>Name:</strong> {koi.koiName}</p>
-            <p><strong>Age:</strong> {age}</p>
-            <p><strong>Variety:</strong> {koi.koiVariety}</p>
-          </Card>
-        </Col>
-      );
-    })
-  ) : (
-    <p style={{ color: "white" }}>No koi fish in this pond</p>
-  )}
-</Row>
+                        {/* Koi Information */}
+                        <p>
+                          <strong>Name:</strong> {koi.koiName}
+                        </p>
+                        <p>
+                          <strong>Age:</strong> {age}
+                        </p>
+                        <p>
+                          <strong>Variety:</strong> {koi.koiVariety}
+                        </p>
+                      </Card>
+                    </Col>
+                  );
+                })
+              ) : (
+                <p style={{ color: "white" }}>No koi fish in this pond</p>
+              )}
+            </Row>
 
-            <Button type="primary" onClick={showModal} style={{ marginTop: "20px" }}>
+            <Button
+              type="primary"
+              onClick={showModal}
+              style={{ marginTop: "20px" }}
+            >
               Add Koi Fish
             </Button>
           </>
@@ -247,14 +263,28 @@ const MyKoiFish = () => {
               >
                 <Button icon={<UploadOutlined />}>Select Image</Button>
               </Upload>
-              {imageUrl && <img src={imageUrl} alt="Koi" style={{ width: "100%", marginTop: "10px" }} />}
+              {imageUrl && (
+                <img
+                  src={imageUrl}
+                  alt="Koi"
+                  style={{ width: "100%", marginTop: "10px" }}
+                />
+              )}
             </Form.Item>
 
-            <Form.Item label="Name" name="name" rules={[{ required: true, message: "Please input Name!" }]}>
+            <Form.Item
+              label="Name"
+              name="name"
+              rules={[{ required: true, message: "Please input Name!" }]}
+            >
               <Input />
             </Form.Item>
 
-            <Form.Item label="Variety" name="variety" rules={[{ required: true, message: "Please select Variety!" }]}>
+            <Form.Item
+              label="Variety"
+              name="variety"
+              rules={[{ required: true, message: "Please select Variety!" }]}
+            >
               <Select placeholder="">
                 {varieties.map((variety, index) => (
                   <Option key={index} value={variety.variety}>
@@ -264,18 +294,30 @@ const MyKoiFish = () => {
               </Select>
             </Form.Item>
 
-            <Form.Item label="In pond since" name="dob" rules={[{ required: true }]}>
+            <Form.Item
+              label="In pond since"
+              name="dob"
+              rules={[{ required: true }]}
+            >
               <DatePicker onChange={handleDateChange} />
             </Form.Item>
 
-            <Form.Item label="Sex" name="sex" rules={[{ required: true, message: "Please input sex!" }]}>
+            <Form.Item
+              label="Sex"
+              name="sex"
+              rules={[{ required: true, message: "Please input sex!" }]}
+            >
               <Select>
                 <Option value="Male">Male</Option>
                 <Option value="Female">Female</Option>
               </Select>
             </Form.Item>
 
-            <Form.Item label="Price" name="price" rules={[{ required: true, message: "Please input price!" }]}>
+            <Form.Item
+              label="Price"
+              name="price"
+              rules={[{ required: true, message: "Please input price!" }]}
+            >
               <Input type="number" />
             </Form.Item>
 
