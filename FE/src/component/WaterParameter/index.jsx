@@ -1,11 +1,49 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState } from "react";
-import { Button, Modal, Form, Input, Card, Row, Col } from "antd";
+import React, { useState, useEffect } from "react";
+import { Button, Modal, Form, Input, Card, Row, Col, Select, message } from "antd"; // Import Select
+import api from "../../config/axios";
 
 const WaterParameter = () => {
   const [waterParameters, setWaterParameters] = useState([]);
+  const [existingParameters, setExistingParameters] = useState([]); // State for existing parameters
+  const [ponds, setPonds] = useState([]); // State for ponds
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isInfoVisible, setIsInfoVisible] = useState(false);
+  const [selectedPond, setSelectedPond] = useState(null); // State for selected pond
+
+  const { Option } = Select;
+
+  useEffect(() => {
+    fetchUserPonds();
+  }, []);
+
+  const fetchUserPonds = async () => {
+    const pondOwnerId = sessionStorage.getItem("pondOwnerId");
+    if (!pondOwnerId) {
+      message.error("User not logged in. Unable to fetch ponds.");
+      return;
+    }
+    try {
+      const response = await api.get(`Pond/ponds/${pondOwnerId}`);
+      setPonds(response.data);
+    } catch (error) {
+      console.error("Error fetching ponds:", error);
+    }
+  };
+
+  const fetchWaterParameters = async (pondId) => {
+    try {
+      const response = await api.get(`WaterParameter/parameters/${pondId}`); // Adjust the endpoint accordingly
+      setExistingParameters(response.data); // Set existing parameters
+    } catch (error) {
+      console.error("Error fetching water parameters:", error);
+      message.error("Failed to fetch water parameters.");
+    }
+  };
+
+  const handlePondChange = (value) => {
+    setSelectedPond(value);
+    fetchWaterParameters(value); // Fetch water parameters for the selected pond
+  };
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -13,19 +51,31 @@ const WaterParameter = () => {
 
   const handleCancel = () => {
     setIsModalVisible(false);
-  };
-
-  //delete WaterParameter
-  const deleteWaterParameter = (index) => {
-    const newWaterParameters = waterParameters.filter((_, i) => i !== index);
-    setWaterParameters(newWaterParameters);
+    setSelectedPond(null); // Reset selected pond when modal is closed
   };
 
   const onFinish = (values) => {
-    console.log("Form values:", values);
-    setWaterParameters([...waterParameters, values]);
-    setIsModalVisible(false); // Close modal after submit
-    setIsInfoVisible(true); // Show info after input
+    const newParameter = {
+      pond: selectedPond,
+      salt: values.salt,
+      nitrite: values.nitrite,
+      nitrate: values.nitrate,
+      ammonium: values.ammonium,
+      hardness: values.hardness,
+      oxygen: values.oxygen,
+      temperature: values.temperature,
+      ph: values.ph,
+      co2: values.co2,
+    };
+
+    // Update state
+    setWaterParameters((prev) => {
+      const existingParameters = prev.filter(param => param.pond !== selectedPond);
+      return [...existingParameters, newParameter]; // Update existing or add new
+    });
+    
+    message.success("Water parameters added successfully!");
+    setIsModalVisible(false);
   };
 
   return (
@@ -37,26 +87,37 @@ const WaterParameter = () => {
         Kiểm tra và theo dõi các thông số nước của hồ cá.
       </p>
       <div>
-        {/* Nút để mở popup */}
+        {/* Button to open modal */}
         <div className="flex flex-col items-center">
-          <Button className="" type="primary" onClick={showModal}>
+          <Button type="primary" onClick={showModal}>
             Input
           </Button>
         </div>
-        {/* Form trong Modal */}
+        
+        {/* Modal for input */}
         <Modal
           title="Input Water Parameters"
           visible={isModalVisible}
-          onCancel={handleCancel} // Nút close
-          footer={null} // Tùy chỉnh để không có nút mặc định ở dưới modal
+          onCancel={handleCancel}
+          footer={null}
         >
           <Form layout="vertical" onFinish={onFinish}>
             <Form.Item
-              label="Pond"
+              label="Select Pond"
               name="pond"
-              rules={[{ required: true, message: "Please input Pond!" }]}
+              rules={[{ required: true, message: "Please select a pond!" }]}
             >
-              <Input />
+              <Select
+                placeholder="Select a pond"
+                onChange={handlePondChange} // Update selected pond state and fetch parameters
+                allowClear
+              >
+                {ponds.map(pond => (
+                  <Option key={pond.id} value={pond.id}>
+                    {pond.name}
+                  </Option>
+                ))}
+              </Select>
             </Form.Item>
 
             <Form.Item
@@ -84,14 +145,6 @@ const WaterParameter = () => {
             </Form.Item>
 
             <Form.Item
-              label="Phosphate (PO₄)"
-              name="phosphate"
-              rules={[{ required: true, message: "Please input Phosphate!" }]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
               label="Ammonium (NH₄)"
               name="ammonium"
               rules={[{ required: true, message: "Please input Ammonium!" }]}
@@ -108,17 +161,7 @@ const WaterParameter = () => {
             </Form.Item>
 
             <Form.Item
-              label="Outdoor temp (℃)"
-              name="outdoorTemp"
-              rules={[
-                { required: true, message: "Please input Outdoor temp!" },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              label="Oxygen (O₂):"
+              label="Oxygen (O₂)"
               name="oxygen"
               rules={[{ required: true, message: "Please input Oxygen!" }]}
             >
@@ -142,37 +185,9 @@ const WaterParameter = () => {
             </Form.Item>
 
             <Form.Item
-              label="Carbon. hard. (KH):"
-              name="kh"
-              rules={[
-                { required: true, message: "Please input Carbon. hard.!" },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
               label="CO₂"
               name="co2"
               rules={[{ required: true, message: "Please input CO₂!" }]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              label="Total chlorines"
-              name="totalchlorines"
-              rules={[
-                { required: true, message: "Please input Total chlorines!" },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              label="Amount fed"
-              name="amountFed"
-              rules={[{ required: true, message: "Please input Amount fed:!" }]}
             >
               <Input />
             </Form.Item>
@@ -192,77 +207,25 @@ const WaterParameter = () => {
           </Form>
         </Modal>
 
-        {/*show info form after input*/}
-
-        {isInfoVisible && (
+        {/* Display existing water parameters after selecting a pond */}
+        {existingParameters.length > 0 && (
           <Row gutter={[200, 200]} style={{ marginTop: "20px" }}>
-            {waterParameters.map((waterParameter, index) => (
+            {existingParameters.map((param, index) => (
               <Col key={index} xs={24} sm={12} md={8} lg={6}>
                 <Card
-                  key={index}
-                  title={`Water Parameters for Pond: ${waterParameter.pond}`}
-                  extra={
-                    <Button danger onClick={() => deleteWaterParameter(index)}>
-                      Delete
-                    </Button>
-                  }
+                  title={`Water Parameters for Pond: ${selectedPond}`}
+                  extra={<Button danger onClick={() => deleteWaterParameter(index)}>Delete</Button>}
                   style={{ width: 400, marginBottom: "20px" }}
                 >
-                  <p>
-                    <strong>Pond:</strong> {waterParameter.pond || "-"}
-                  </p>
-                  <p>
-                    <strong>Salt:</strong> {waterParameter.salt || "-"}
-                  </p>
-                  <p>
-                    <strong>Nitrite (NO₂):</strong>{" "}
-                    {waterParameter.nitrite || "-"}
-                  </p>
-                  <p>
-                    <strong>Nitrate (NO₃):</strong>{" "}
-                    {waterParameter.nitrate || "-"}
-                  </p>
-                  <p>
-                    <strong>Phosphate (PO₄):</strong>{" "}
-                    {waterParameter.phosphate || "-"}
-                  </p>
-                  <p>
-                    <strong>Ammonium (NH₄):</strong>{" "}
-                    {waterParameter.ammonium || "-"}
-                  </p>
-                  <p>
-                    <strong>Hardness (GH):</strong>{" "}
-                    {waterParameter.hardness || "-"}
-                  </p>
-                  <p>
-                    <strong>Outdoor Temp:</strong>{" "}
-                    {waterParameter.outdoorTemp || "-"}
-                  </p>
-                  <p>
-                    <strong>Oxygen (O₂):</strong> {waterParameter.oxygen || "-"}
-                  </p>
-                  <p>
-                    <strong>Temperature:</strong>{" "}
-                    {waterParameter.temperature || "-"}
-                  </p>
-                  <p>
-                    <strong>pH Value:</strong> {waterParameter.ph || "-"}
-                  </p>
-                  <p>
-                    <strong>Carbon Hardness (KH):</strong>{" "}
-                    {waterParameter.kh || "-"}
-                  </p>
-                  <p>
-                    <strong>CO₂:</strong> {waterParameter.co2 || "-"}
-                  </p>
-                  <p>
-                    <strong>Total Chlorines:</strong>{" "}
-                    {waterParameter.totalchlorines || "-"}
-                  </p>
-                  <p>
-                    <strong>Amount Fed:</strong>{" "}
-                    {waterParameter.amountFed || "-"}
-                  </p>
+                  <p><strong>Salt:</strong> {param.salt || "-"}</p>
+                  <p><strong>Nitrite (NO₂):</strong> {param.nitrite || "-"}</p>
+                  <p><strong>Nitrate (NO₃):</strong> {param.nitrate || "-"}</p>
+                  <p><strong>Ammonium (NH₄):</strong> {param.ammonium || "-"}</p>
+                  <p><strong>Hardness (GH):</strong> {param.hardness || "-"}</p>
+                  <p><strong>Oxygen (O₂):</strong> {param.oxygen || "-"}</p>
+                  <p><strong>Temperature:</strong> {param.temperature || "-"}</p>
+                  <p><strong>pH Value:</strong> {param.ph || "-"}</p>
+                  <p><strong>CO₂:</strong> {param.co2 || "-"}</p>
                 </Card>
               </Col>
             ))}

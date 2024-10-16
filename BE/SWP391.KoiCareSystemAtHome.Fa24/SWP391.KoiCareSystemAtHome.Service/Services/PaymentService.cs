@@ -86,7 +86,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return pamentModel;
         }
 
-        public async Task<bool> CreatePaymentAsync(PaymentModel paymentModel)
+        public async Task CreatePaymentAsync(PaymentModel paymentModel)
         {
             var entity = new Payment
             {
@@ -102,7 +102,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             await _unitOfWork.Payments.InsertAsync(entity);
             await _unitOfWork.SaveAsync();
 
-            return true;
+            return;
         }
 
     }

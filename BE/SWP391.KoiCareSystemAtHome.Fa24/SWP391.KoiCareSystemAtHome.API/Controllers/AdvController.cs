@@ -20,6 +20,8 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         [HttpGet("getAdvByShopId/{shopId}")]
         public async Task<ActionResult<IEnumerable<AdvResponseModel>>> GetAdvByShopId(int shopId)
         {
+            await _advService.CheckExpriedAdvAsync();
+
             var advs = await _advService.GetAdvByShopIdAsync(shopId);
 
             if (advs == null || !advs.Any())
@@ -44,6 +46,8 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         [HttpGet("GetAdvById/{advId}")]
         public async Task<ActionResult<AdvResponseModel>> GetAdvById(int advId)
         {
+            await _advService.CheckExpriedAdvAsync();
+
             var adv = await _advService.GetAdvByIdAsync(advId);
 
             if (adv == null)
@@ -69,6 +73,8 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         [HttpGet("getApprovedAdv")]
         public async Task<ActionResult<AdvResponseModel>> GetApprovedAdv()
         {
+            await _advService.CheckExpriedAdvAsync();
+
             var advs = await _advService.GetApprovedAdvAsync();
 
             if (advs == null || !advs.Any())
@@ -142,6 +148,8 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         [HttpPut("updateAdv/{advId}")]
         public async Task<ActionResult> UpdateAdv(int advId, AdvUpdateRequestModel advRequestModel)
         {
+            await _advService.CheckExpriedAdvAsync();
+
             AdvModel advModel = await _advService.GetAdvByIdAsync(advId);
 
             if (advModel == null)

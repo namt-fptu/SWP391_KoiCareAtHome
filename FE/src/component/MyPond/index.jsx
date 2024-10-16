@@ -30,10 +30,10 @@ const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
 const MyPond = () => {
-  const [ponds, setPonds] = useState([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [imageUrl, setImageUrl] = useState(null);
-  const [fileList, setFileList] = useState([]);
+  const [ponds, setPonds] = useState([]); // State for storing pond data
+  const [isModalVisible, setIsModalVisible] = useState(false); // State for modal visibility
+  const [imageUrl, setImageUrl] = useState(null); // State for storing uploaded image URL
+  const [fileList, setFileList] = useState([]); // State for storing uploaded files
 
   // Retrieve id from sessionStorage
   const id = sessionStorage.getItem("id");
@@ -63,8 +63,8 @@ const MyPond = () => {
 
   const handleCancel = () => {
     setIsModalVisible(false);
-    setFileList([]);
-    setImageUrl(null);
+    setFileList([]); // Reset file list
+    setImageUrl(null); // Reset image URL
   };
 
   const handleUpload = (file) => {
@@ -74,7 +74,7 @@ const MyPond = () => {
       setImageUrl(e.target.result);
     };
     reader.readAsDataURL(file);
-    return false;
+    return false; // Prevent automatic upload of antd
   };
 
   const uploadToFirebase = async (file) => {
@@ -121,16 +121,26 @@ const MyPond = () => {
     }
   };
 
+  const deletePond = async (index) => {
+    try {
+      const pondToDelete = ponds[index];
+      await api.delete(`Pond/${pondToDelete.id}`); // Call API to delete pond
+      const newPonds = ponds.filter((_, i) => i !== index);
+      setPonds(newPonds); // Update state after deletion
+      message.success("Pond deleted successfully!"); // Success message
+    } catch (error) {
+      message.error("Failed to delete pond. Please try again."); // Error message
+    }
+  };
+
   return (
     <div className="flex-container">
       <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
-        <h1 className="text-3xl font-bold mb-8 text-white p-8">My Pond</h1>
-        <p className="text-white p-8">
-          Thông tin chi tiết về hồ cá Koi của bạn.
-        </p>
+        <h1 className="text-3xl font-bold mb-8 text-white">My Pond</h1>
+        <p className="text-white">Thông tin chi tiết về hồ cá Koi của bạn.</p>
         <div>
           <div className="flex flex-col items-center">
-            <Button className="" type="primary" onClick={showModal}>
+            <Button type="primary" onClick={showModal}>
               Input
             </Button>
           </div>
@@ -242,6 +252,11 @@ const MyPond = () => {
                 <Col key={index} xs={24} sm={12} md={8} lg={6}>
                   <Card
                     title={`Pond: ${pond.name}`}
+                    extra={
+                      <Button danger onClick={() => deletePond(index)}>
+                        Delete
+                      </Button>
+                    }
                     style={{ width: 400, marginBottom: "20px" }}
                   >
                     {pond.imageUrl && (

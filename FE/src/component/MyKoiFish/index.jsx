@@ -17,7 +17,6 @@ import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/
 import { initializeApp } from "firebase/app";
 import api from "../../config/axios"; // Axios instance configuration
 
-// Firebase configuration (use your own Firebase config)
 const firebaseConfig = {
   apiKey: "AIzaSyBIcvSZRnSTBxw8yrLcq7AqLjqNhvaUQyk",
   authDomain: "swp391-76ab5.firebaseapp.com",
@@ -27,7 +26,6 @@ const firebaseConfig = {
   appId: "1:86962001326:web:936799b1e20348cbb8643f",
 };
 
-// Initialize Firebase app and storage
 const firebaseApp = initializeApp(firebaseConfig);
 const storage = getStorage(firebaseApp);
 
@@ -36,56 +34,61 @@ const MyKoiFish = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
-  const [pondId, setPondId] = useState(null); // Pond ID to be associated with koi fish
-  const [varieties, setVarieties] = useState([]); // State to store varieties
-  const [ponds, setPonds] = useState([]); // State to store ponds
+  const [pondId, setPondId] = useState(null);
+  const [varieties, setVarieties] = useState([]);
+  const [ponds, setPonds] = useState([]);
 
   const { Option } = Select;
-
-  // Retrieve pondOwnerId from sessionStorage
+  
   const pondOwnerId = sessionStorage.getItem("pondOwnerId");
 
-  // Fetch koi fish data on component mount
   useEffect(() => {
     if (!pondOwnerId) {
       message.error("User not logged in. Unable to fetch ponds.");
       return;
     }
-    fetchVarieties(); // Fetch varieties when component mounts
-    fetchUserPonds(); // Fetch user's ponds when component mounts
+    fetchVarieties();
+    fetchUserPonds();
   }, [pondOwnerId]);
 
-  // Fetch koi fish belonging to a specific pond
-  const fetchKoiFishData = async () => {
-    if (pondId) { // Fetch only if pondId is set
-      try {
-        const response = await api.get(`KoiFish/koiFish/${pondId}`);
-        setKois(response.data); // Assuming the response data is an array of koi fish
-      } catch (error) {
-        console.error("Error fetching koi fish data:", error);
-      }
-    }
-  };
-
-  // Fetch varieties from API
   const fetchVarieties = async () => {
     try {
-      const response = await api.get('KoiVariety/variety'); // Update with your endpoint for varieties
-      setVarieties(response.data); // Assuming the response data is an array of varieties
+      const response = await api.get('KoiVariety/variety'); 
+      setVarieties(response.data); 
     } catch (error) {
       console.error("Error fetching varieties:", error);
     }
   };
 
-  // Fetch user's ponds from API
   const fetchUserPonds = async () => {
     try {
-      const response = await api.get(`Pond/ponds/${pondOwnerId}`); // Use pondOwnerId from sessionStorage
-      setPonds(response.data); // Assuming the response data is an array of ponds
+      const response = await api.get(`Pond/ponds/${pondOwnerId}`); 
+      setPonds(response.data); 
     } catch (error) {
       console.error("Error fetching ponds:", error);
     }
   };
+
+  const fetchKoiForPond = async (pondId) => {
+    try {
+      const response = await api.get(`KoiFish/koiFish/${pondId}`);
+      setKois(response.data);
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        // Pond has no koi fish, set empty koi array
+        setKois([]);
+        console.warn("No koi fish found for this pond.");
+      } else {
+        console.error("Error fetching koi fish:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (pondId) {
+      fetchKoiForPond(pondId);
+    }
+  }, [pondId]);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -107,7 +110,6 @@ const MyKoiFish = () => {
       uploadTask.on(
         "state_changed",
         (snapshot) => {
-          // Optional: Handle progress if needed
         },
         (error) => {
           message.error(`Upload failed: ${error.message}`);
@@ -126,27 +128,25 @@ const MyKoiFish = () => {
 
   const onFinish = async (values) => {
     try {
-      // Ensure the image is uploaded before creating the Koi fish
       if (!imageUrl) {
         message.error("Please upload an image before adding the Koi fish.");
         return;
       }
 
       const formattedValues = {
-        pondId: pondId, // Selected pond ID
-        koiVariety: values.variety, // Selected variety
-        koiName: values.name, // Koi fish name
-        dob: selectedDate ? selectedDate.format("YYYY-MM-DDTHH:mm:ss") : null, // Date of birth
-        sex: values.sex, // Selected sex
-        price: values.price, // Price of the Koi fish
-        imageUrl: imageUrl, // URL from Firebase
+        pondId: pondId,
+        koiVariety: values.variety,
+        koiName: values.name,
+        dob: selectedDate ? selectedDate.format("YYYY-MM-DDTHH:mm:ss") : null,
+        sex: values.sex,
+        price: values.price,
+        imageUrl: imageUrl,
       };
 
-      // Make API request to create Koi fish
       await api.post("KoiFish/createKoiFish", formattedValues);
       message.success("Koi fish added successfully!");
       setIsModalVisible(false);
-      fetchKoiFishData(); // Refresh the koi list after adding
+      fetchKoiForPond(pondId); 
     } catch (error) {
       console.error("Error adding koi fish:", error);
       message.error("Failed to add koi fish.");
@@ -158,9 +158,68 @@ const MyKoiFish = () => {
       <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
         <h1 className="text-3xl font-bold mb-8 text-white p-8">My Koi Fish</h1>
 
-        <Button type="primary" onClick={showModal}>
-          Add Koi Fish
-        </Button>
+        <Select
+          placeholder="Select a pond to view koi fish"
+          onChange={(value) => {
+            setPondId(value);
+          }}
+          style={{ width: "100%", marginBottom: "20px" }}
+        >
+          {ponds.map((pond) => (
+            <Option key={pond.id} value={pond.id}>
+              {pond.name}
+            </Option>
+          ))}
+        </Select>
+
+        {pondId && (
+          <>
+            <Row gutter={16}>
+  {kois.length > 0 ? (
+    kois.map((koi, index) => {
+      // Calculate koi age based on DOB
+      const dob = koi.dob ? new Date(koi.dob) : null;
+      const age = dob
+        ? `${new Date().getFullYear() - dob.getFullYear()} years`
+        : "Unknown";
+
+      return (
+        <Col span={8} key={index}>
+          <Card
+            title={`Pond: ${ponds.find((pond) => pond.id === pondId)?.name}`}
+            bordered={true}
+            style={{ textAlign: "center" }}
+          >
+            {/* Koi Image */}
+            <img
+              src={koi.imageUrl || "default-koi-image-url"} // Replace with your default koi image URL if needed
+              alt={koi.koiName}
+              style={{
+                width: "100%",
+                height: "200px",
+                objectFit: "cover",
+                marginBottom: "10px",
+              }}
+            />
+
+            {/* Koi Information */}
+            <p><strong>Name:</strong> {koi.koiName}</p>
+            <p><strong>Age:</strong> {age}</p>
+            <p><strong>Variety:</strong> {koi.koiVariety}</p>
+          </Card>
+        </Col>
+      );
+    })
+  ) : (
+    <p style={{ color: "white" }}>No koi fish in this pond</p>
+  )}
+</Row>
+
+            <Button type="primary" onClick={showModal} style={{ marginTop: "20px" }}>
+              Add Koi Fish
+            </Button>
+          </>
+        )}
 
         <Modal
           title="Input Koi Fish Information"
@@ -169,21 +228,10 @@ const MyKoiFish = () => {
           footer={null}
         >
           <Form layout="vertical" onFinish={onFinish}>
-            {/* Pond selection from API */}
-            <Form.Item label="Select Pond" name="pond" rules={[{ required: true, message: "Please select a pond!" }]}>
-              <Select
-                placeholder="Select your pond"
-                onChange={(value) => setPondId(value)}
-              >
-                {ponds.map((pond) => (
-                  <Option key={pond.id} value={pond.id}>
-                    {pond.name} {/* Display pond name */}
-                  </Option>
-                ))}
-              </Select>
+            <Form.Item label="Selected Pond">
+              <Input value={pondId} disabled />
             </Form.Item>
 
-            {/* Upload component for image */}
             <Form.Item
               label="Upload Image"
               name="image"
@@ -206,30 +254,28 @@ const MyKoiFish = () => {
               <Input />
             </Form.Item>
 
-            {/* Variety selection from API */}
             <Form.Item label="Variety" name="variety" rules={[{ required: true, message: "Please select Variety!" }]}>
               <Select placeholder="">
                 {varieties.map((variety, index) => (
                   <Option key={index} value={variety.variety}>
-                    {variety.variety} - {variety.rarity} - {variety.color} {/* Display variety information */}
+                    {variety.variety} - {variety.rarity} - {variety.color}
                   </Option>
                 ))}
               </Select>
             </Form.Item>
 
-            <Form.Item label="In pond since" name="dob" rules={[{ required: true, message: "Please input date!" }]}>
+            <Form.Item label="In pond since" name="dob" rules={[{ required: true }]}>
               <DatePicker onChange={handleDateChange} />
-              {selectedDate && <p>{selectedDate.format("YYYY-MM-DD")}</p>}
             </Form.Item>
 
-            <Form.Item label="Sex" name="sex" rules={[{ required: true, message: "Please choose Sex!" }]}>
-              <Select placeholder="">
-                <Option value="male">Male</Option>
-                <Option value="female">Female</Option>
+            <Form.Item label="Sex" name="sex" rules={[{ required: true, message: "Please input sex!" }]}>
+              <Select>
+                <Option value="Male">Male</Option>
+                <Option value="Female">Female</Option>
               </Select>
             </Form.Item>
 
-            <Form.Item label="Price (VND)" name="price" rules={[{ required: true, message: "Please input Price!" }]}>
+            <Form.Item label="Price" name="price" rules={[{ required: true, message: "Please input price!" }]}>
               <Input type="number" />
             </Form.Item>
 
@@ -237,30 +283,9 @@ const MyKoiFish = () => {
               <Button type="primary" htmlType="submit">
                 Add
               </Button>
-              <Button type="default" onClick={handleCancel} style={{ marginLeft: "10px" }}>
-                Cancel
-              </Button>
             </Form.Item>
           </Form>
         </Modal>
-
-        {/* Display Koi fish */}
-        <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
-          {kois.map((koi, index) => (
-            <Col key={index} xs={24} sm={12} md={8} lg={6}>
-              <Card
-                title={`Koi Fish: ${koi.koiName}`}
-                style={{ width: 300 }}
-                cover={<img alt="Koi" src={koi.imageUrl} />}
-              >
-                <p><strong>Variety:</strong> {koi.koiVariety}</p>
-                <p><strong>Sex:</strong> {koi.sex}</p>
-                <p><strong>In pond since:</strong> {koi.dob}</p>
-                <p><strong>Price:</strong> {koi.price}</p>
-              </Card>
-            </Col>
-          ))}
-        </Row>
       </div>
     </div>
   );

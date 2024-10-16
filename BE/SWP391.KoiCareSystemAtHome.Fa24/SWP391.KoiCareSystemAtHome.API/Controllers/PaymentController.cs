@@ -13,14 +13,14 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         private readonly PaymentService _paymentService;
         private readonly VnPayService _vpnPayService;
         private readonly PostPackageService _postPackageService;
-        private readonly AdvService _advancedService;
+        private readonly AdvService _advService;
 
-        public PaymentController(PaymentService paymentService, VnPayService vpnPayService, PostPackageService postPackageService, AdvService advancedService)
+        public PaymentController(PaymentService paymentService, VnPayService vpnPayService, PostPackageService postPackageService, AdvService advService)
         {
             _paymentService = paymentService;
             _vpnPayService = vpnPayService;
             _postPackageService = postPackageService;
-            _advancedService = advancedService;
+            _advService = advService;
         }
 
         [HttpGet("getPaymentByAdvId/{advId}")]
@@ -100,12 +100,12 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            bool checkAdv = await _advancedService.CheckAdvExistAsync(model.PostId);
+            bool checkAdv = await _advService.CheckAdvExistAsync(model.PostId);
             bool checkPackage = await _postPackageService.CheckPostPackageExistAsync(model.PackageId);
 
             if (!checkAdv || !checkPackage)
             {
-                return BadRequest("Advertisement or package not found!");
+                return NotFound("Advertisement or package not found!");
             }
 
             string url = _vpnPayService.CreatePaymentUrl(model, HttpContext);
@@ -137,12 +137,23 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                     Token = response.Token,
                 };
 
-                bool success = false;
+                var advModel = new UpdateAdsModel
+                {
+                    PackageId = int.Parse(splitDescription[1]),
+                    PostId = int.Parse(splitDescription[0]),
+                    PayDate = DateTime.Now,
+                };
+
+                //bool success = false;
 
                 //Console.WriteLine(paymentModel.PackageId + " " + paymentModel.PostId );
 
                 if (response.Success)
-                    success = await _paymentService.CreatePaymentAsync(paymentModel);
+                {
+                    //success = await _paymentService.CreatePaymentAsync(paymentModel);
+                    await _paymentService.CreatePaymentAsync(paymentModel);
+                    await _advService.UpdateAdsPaymentAsync(advModel);
+                }
 
                 return Ok(response);
             }

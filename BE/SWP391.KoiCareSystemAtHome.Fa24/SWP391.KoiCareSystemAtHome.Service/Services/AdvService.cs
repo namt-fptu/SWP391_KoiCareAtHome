@@ -7,6 +7,7 @@ using SWP391.KoiCareSystemAtHome.Repository;
 using SWP391.KoiCareSystemAtHome.Service.BusinessModels;
 using SWP391.KoiCareSystemAtHome.Repository.Models;
 using System.Data.SqlTypes;
+using System.Runtime.Intrinsics.Arm;
 
 namespace SWP391.KoiCareSystemAtHome.Service.Services
 {
@@ -98,7 +99,6 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
 
         public async Task<bool> UpdateAdvAsync(int id, AdvModel advModel)
         {
-
             var advToUpdate = await _unitOfWork.Advs.GetByIdAsync(id);
 
             if (advToUpdate == null)
@@ -108,9 +108,9 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             advToUpdate.Url = advModel.Url;
             advToUpdate.ImageUrl = advModel.ImageUrl;
             //advToUpdate.AdvDate = advModel.AdvDate;
-            //advToUpdate.Status = advModel.Status;
+            advToUpdate.Status = advModel.Status;
             advToUpdate.EditedDate = DateTime.Now;
-            //advToUpdate.ExpiredDate = advModel.ExpiredDate;
+            advToUpdate.ExpiredDate = advModel.ExpiredDate;
             //advToUpdate.Duration = advModel.Duration;
 
             _unitOfWork.Advs.UpdateAsync(advToUpdate);
@@ -166,9 +166,35 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return advModels;
         }
 
-        private void CheckExpriedAdv()
+        public async Task CheckExpriedAdvAsync()
         {
+            var advs = await _unitOfWork.Advs.GetAsync();
+            if (advs == null || !advs.Any())
+                return;
 
+            foreach (var adv in advs)
+            {
+                if (adv.ExpiredDate <= DateTime.Now && adv.Status.Equals("Approved"))
+                {
+                    adv.Status = "Expired";
+
+                    _unitOfWork.Advs.UpdateAsync(adv);
+                }
+            }
+            await _unitOfWork.SaveAsync();
+        }
+
+        public async Task UpdateAdsPaymentAsync(UpdateAdsModel updateAdsModel)
+        {
+            var adv = await _unitOfWork.Advs.GetByIdAsync(updateAdsModel.PostId);
+
+            var package = await _unitOfWork.PostPackages.GetByIdAsync(updateAdsModel.PackageId);
+
+            adv.Status = "Processing";
+            adv.Duration = package.Duration;
+
+            _unitOfWork.Advs.UpdateAsync(adv);
+            await _unitOfWork.SaveAsync();
         }
 
     }
