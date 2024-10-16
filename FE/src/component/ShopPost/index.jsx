@@ -13,6 +13,7 @@ import {
 import { UploadOutlined } from "@ant-design/icons";
 import { initializeApp } from "firebase/app";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+// import { getFirestore, addDoc, collection, getDocs } from "firebase/firestore";
 import api from "../../config/axios";
 
 // Firebase configuration
@@ -27,13 +28,13 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const storage = getStorage(app);
+const storageImg = getStorage(app);
+const storageTxt = getStorage(app);
 
 const ShopPost = () => {
   const [posts, setPosts] = useState([]);
   const [value, setValue] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isInfoVisible, setIsInfoVisible] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
   const [selectedPost, setSelectedPost] = useState(null);
   const [fileList, setFileList] = useState([]);
@@ -50,7 +51,7 @@ const ShopPost = () => {
     // Fetch posts from the API based on the logged-in user's id
     const fetchPosts = async () => {
       try {
-        const response = await api.get(`Post/posts/${id}`);
+        const response = await api.get(`Adv/getAdvByShopId/${id}`);
         setPosts(response.data);
       } catch (error) {
         message.error("Failed to fetch post data.");
@@ -70,14 +71,14 @@ const ShopPost = () => {
     setImageUrl(null);
   };
 
-  const uploadToFirebase = async (file) => {
+  const uploadImgToFirebase = async (file) => {
     if (!file) return null;
-    const storageRef = ref(storage, `post-images/${file.name}`);
+    const storageRef = ref(storageImg, `post-images/${file.name}`);
 
     try {
       const snapshot = await uploadBytes(storageRef, file);
-      const downloadURL = await getDownloadURL(snapshot.ref);
-      return downloadURL;
+      const downloadImgURL = await getDownloadURL(snapshot.ref);
+      return downloadImgURL;
     } catch (error) {
       console.error("Error uploading image to Firebase: ", error);
       message.error("Image upload failed!");
@@ -85,7 +86,27 @@ const ShopPost = () => {
     }
   };
 
+  const uploadContentToFirebase = async (content) => {
+    if (!content) return null;
+
+    // Convert content to a Blob
+    const blob = new Blob([content], { type: "text/plain" });
+    const postIndex = posts.length + 1; // Xác định số thứ tự dựa vào số bài đăng hiện tại
+    const storageRef = ref(storageTxt, `post-content/${id}_${postIndex}.txt`);
+
+    try {
+      const snapshot = await uploadBytes(storageRef, blob);
+      const downloadTxtURL = await getDownloadURL(snapshot.ref);
+      return downloadTxtURL;
+    } catch (error) {
+      console.error("Error uploading content to Firebase: ", error);
+      message.error("Content upload failed!");
+      return null;
+    }
+  };
+
   const handleUpload = (file) => {
+    setFileList([file]);
     const reader = new FileReader();
     reader.onload = (e) => {
       setImageUrl(e.target.result);
@@ -100,17 +121,21 @@ const ShopPost = () => {
   };
 
   const onFinish = async (values) => {
-    const file = fileList[0];
-    const uploadedImageUrl = await uploadToFirebase(file);
+    // Kiểm tra nếu fileList không có file
+    if (fileList.length === 0) {
+      message.error("No file selected for upload.");
+      return; // Kết thúc hàm nếu không có file
+    }
+    const file = fileList[0]; // Lấy file đầu tiên trong danh sách
+    const uploadedImageUrl = await uploadImgToFirebase(file);
+    const uploadedTxtUrl = await uploadContentToFirebase(values.content);
 
-    if (uploadedImageUrl) {
+    if (uploadedImageUrl && uploadedTxtUrl) {
       const postData = {
         shopId: Number(id), // Use ShopId from sessionStorage
         title: values.title,
-        content: values.content,
+        url: uploadedTxtUrl,
         imageUrl: uploadedImageUrl,
-        advDate: new Date(),
-        status: "Processing",
       };
 
       try {
@@ -122,7 +147,7 @@ const ShopPost = () => {
         message.error("Failed to add post information.");
       }
     } else {
-      message.error("Failed to upload image.");
+      message.error("Failed to upload Post.");
     }
   };
 
@@ -134,12 +159,12 @@ const ShopPost = () => {
     setSelectedPost(null);
   };
 
-  const getShortContent = (content) => {
-    const maxLength = 100; // số ký tự tóm tắt
-    return content.length > maxLength
-      ? content.slice(0, maxLength) + "..."
-      : content;
-  };
+  // const getShortContent = (content) => {
+  //   const maxLength = 100; // số ký tự tóm tắt
+  //   return content.length > maxLength
+  //     ? content.slice(0, maxLength) + "..."
+  //     : content;
+  // };
 
   return (
     <div className="flex-container">
@@ -169,7 +194,9 @@ const ShopPost = () => {
                 listType="picture"
                 maxCount={1}
                 showUploadList={false}
+                fileList={fileList}
                 beforeUpload={handleUpload}
+                onRemove={() => setFileList([])}
               >
                 <Button icon={<UploadOutlined />}>Select Image</Button>
               </Upload>
@@ -220,67 +247,62 @@ const ShopPost = () => {
           </Form>
         </Modal>
 
-        {isInfoVisible && (
-          <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
+        {posts.length > 0 && (
+          <Row gutter={[200, 200]} style={{ marginTop: "20px" }}>
             {posts.map((post, index) => (
               <Col key={index} xs={24} sm={12} md={8} lg={6}>
                 <Card
                   title={`Post: ${post.title}`}
-                  extra={
-                    <Button danger onClick={() => deletePost(index)}>
-                      Delete
-                    </Button>
-                  }
                   style={{ width: 400, marginBottom: "20px" }}
                 >
                   {post.imageUrl && (
                     <img
                       src={post.imageUrl}
                       alt="Post"
-                      style={{ width: "100%" }}
+                      style={{ width: "100%", height: "auto" }}
                     />
                   )}
-                  <p className="break-words whitespace-pre-wrap overflow-hidden">
-                    <strong>Content:</strong> {getShortContent(post.content)}
-                  </p>
-                  <Button type="link" onClick={() => handleShowDetail(post)}>
-                    Detail
-                  </Button>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <div>
+                      <p>
+                        <strong>Title:</strong> {post.title || "-"}
+                      </p>
+                      <p>
+                        <strong>Content:</strong> {post.content || "-"}
+                      </p>
+                      <p>
+                        <strong>Created Date:</strong> {post.advDate || "-"}{" "}
+                        <br />
+                      </p>
+                    </div>
+                    <div>
+                      <p>
+                        <strong>Status:</strong> {post.status || "-"}
+                      </p>
+                      <p>
+                        <strong>Edited Date:</strong> <br />
+                        {post.editedDate || "-"}
+                      </p>
+                      <p>
+                        <strong>Expired Date:</strong> <br />
+                        {post.expiredDate || "-"}
+                      </p>
+                      <p>
+                        <strong>Duration:</strong>
+                        {post.duration || "-"}
+                      </p>
+                    </div>
+                  </div>
                 </Card>
               </Col>
             ))}
           </Row>
-        )}
-
-        {/* Popup hiển thị chi tiết */}
-        {selectedPost && (
-          <Modal
-            title="Full Content"
-            visible={!!selectedPost}
-            onCancel={handleDetailClose}
-            footer={[
-              <Button key="close" onClick={handleDetailClose}>
-                Close
-              </Button>,
-            ]}
-          >
-            {selectedPost.imageUrl && (
-              <img
-                src={selectedPost.imageUrl}
-                alt="Post"
-                style={{ width: "100%" }}
-              />
-            )}
-            <p>
-              <strong>Title:</strong> {selectedPost.title}
-            </p>
-            <p className="break-words whitespace-pre-wrap overflow-hidden">
-              <strong>Content:</strong> {selectedPost.content}
-            </p>
-            {/* <p>
-              <strong>Link:</strong> {selectedPost.link}
-            </p> */}
-          </Modal>
         )}
       </div>
     </div>

@@ -21,7 +21,7 @@ import ShopOverview from "./component/ShopOverview";
 import ShopPost from "./component/ShopPost";
 import { Typography } from "antd";
 // import ShopAds from "./component/ShopAds";
-// import ShopVipPackage from "./component/ShopVipPackage";
+import ShopVipPackage from "./component/ShopVipPackage";
 import AdminSideBar from "./component/AdminSideBar";
 import Dashboard from "./component/DashBoard";
 import Admin from "./page/admin";
@@ -61,7 +61,7 @@ const App = () => {
         { path: "ShopOverview", element: <ShopOverview /> },
         { path: "ShopPost", element: <ShopPost /> },
         // { path: "MyAdvertisements", element: <ShopAds /> },
-        // { path: "MyVipPackage", element: <ShopVipPackage /> },
+        { path: "ShopVipPackage", element: <ShopVipPackage /> },
         // { path: "SaltCalculator", element: <SaltCalculator /> },
         // { path: "MyPond", element: <MyPond /> },
         // { path: "FoodCalculator", element: <FoodCalculator /> },
@@ -77,8 +77,8 @@ const App = () => {
         // { path: "TableList", element: <TableList /> },
         // { path: "Typography", element: <Typography /> },
         { path: "Posts", element: <Posts /> },
-      ]
-    }
+      ],
+    },
   ]);
 
   return <RouterProvider router={router} />;

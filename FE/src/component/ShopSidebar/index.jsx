@@ -4,7 +4,7 @@ import logoimg from "./../../assets/logo koi care.png";
 import controlButton from "./../../assets/control.png";
 import shopPost from "./../../assets/Logo sidebar/ShopSidebar/post.png";
 import overviewIcon from "./../../assets/Logo sidebar/overview.png"; // Thêm icon cho Overview
-// import myPondIcon from "./../../assets/Logo sidebar/myPond.png"; // Thêm icon cho MyPond
+import myPondIcon from "./../../assets/Logo sidebar/myPond.png"; // Thêm icon cho MyPond
 import aboutKoiIcon from "./../../assets/Logo sidebar/aboutKoi.png"; // Thêm icon cho About Koi
 import logOutIcon from "./../../assets/Logo sidebar/logout.png"; // Thêm icon cho Log Out
 
@@ -100,14 +100,14 @@ const ShopSideBar = () => {
           </Link> */}
 
           {/* Shop's Vip Package */}
-          {/* <Link to="ShopVipPackage">
+          <Link to="ShopVipPackage">
             <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
               <img src={myPondIcon} alt="My Vip Package" />
               <span className={`${!open && "hidden"} origin-left duration-200`}>
                 My Vip Package
               </span>
             </li>
-          </Link> */}
+          </Link>
 
           {/* Salt Calculator */}
           {/* <Link to="SaltCalculator">
