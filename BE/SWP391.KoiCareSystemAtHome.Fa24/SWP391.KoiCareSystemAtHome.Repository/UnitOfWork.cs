@@ -19,6 +19,12 @@ namespace SWP391.KoiCareSystemAtHome.Repository
         private GenericRepository<KoiFish> _koiFish;
         private GenericRepository<KoiGrowthReport> _koiGrowthReport;
         private GenericRepository<Koivariety> _koivariety;
+        private GenericRepository<KoiGrowthStandard> _koiGrowthStandard;
+        private GenericRepository<WaterParameterStandard> _WaterParameterStandard;
+        private GenericRepository<Product> _product;
+        private GenericRepository<PostPackage> _postPackage;
+        private GenericRepository<Payment> _payment;
+        private GenericRepository<Adv> _adv;
 
         public UnitOfWork(Swp391koiCareSystemAtHomeContext context)
         {
@@ -102,6 +108,66 @@ namespace SWP391.KoiCareSystemAtHome.Repository
                 if (_koivariety == null)
                     _koivariety = new GenericRepository<Koivariety> (_context);
                 return _koivariety;
+            }
+        }
+
+        public GenericRepository<KoiGrowthStandard> KoiGrowthStandards
+        {
+            get
+            {
+                if (_koiGrowthStandard == null)
+                    _koiGrowthStandard = new GenericRepository<KoiGrowthStandard> (_context);
+                return _koiGrowthStandard;
+            }
+        }
+
+        public GenericRepository<WaterParameterStandard> WaterParameterStandards
+        {
+            get
+            {
+                if (_WaterParameterStandard == null)
+                    _WaterParameterStandard = new GenericRepository<WaterParameterStandard> (_context);
+                return _WaterParameterStandard;
+            }
+        }
+
+        public GenericRepository<Product> Products
+        {
+            get
+            {
+                if (_product == null)
+                    _product = new GenericRepository<Product>(_context);
+                return _product;
+            }
+        }
+
+        public GenericRepository<PostPackage> PostPackages
+        {
+            get
+            {
+                if (_postPackage == null)
+                    _postPackage = new GenericRepository<PostPackage>(_context);
+                return _postPackage;
+            }
+        }
+
+        public GenericRepository<Payment> Payments
+        {
+            get
+            {
+                if (_payment == null)
+                    _payment = new GenericRepository<Payment>(_context);
+                return _payment;
+            }
+        }
+
+        public GenericRepository<Adv> Advs
+        {
+            get
+            {
+                if (_adv == null)
+                    _adv = new GenericRepository<Adv>(_context);
+                return _adv;
             }
         }
 

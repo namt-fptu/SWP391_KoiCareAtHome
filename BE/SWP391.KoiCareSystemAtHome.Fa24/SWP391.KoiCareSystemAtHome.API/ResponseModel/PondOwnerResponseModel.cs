@@ -11,6 +11,7 @@
         public string? Phone { get; set; }
 
         public string Role { get; set; } = null!;
+
         public string Name { get; set; } = null!;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using SWP391.KoiCareSystemAtHome.Repository;
+using SWP391.KoiCareSystemAtHome.Repository.Models;
 using SWP391.KoiCareSystemAtHome.Service.BusinessModels;
 using System;
 using System.Collections.Generic;
@@ -17,31 +18,26 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<KoiVarietyModel>> GetKoiAllVarietyAsync()
+        public async Task<IEnumerable<KoiVarietyModel>> GetAllKoiVarietyAsync()
         {
             var koiVarietys = await _unitOfWork.KoiVarietys.GetAsync();
 
             if (!koiVarietys.Any()) 
                 return Enumerable.Empty<KoiVarietyModel>();
 
-            var koiVarietysModel = koiVarietys.Select(k => new KoiVarietyModel
+            var koiVarietyModels = koiVarietys.Select(k => new KoiVarietyModel
             {
                 Variety = k.Variety,
                 Color = k.Color,
                 Rarity = k.Rarity
             });
 
-            return koiVarietysModel;
+            return koiVarietyModels;
         }
 
         public async Task<KoiVarietyModel> GetKoiVarietyAsync(string variety)
         {
-            var koiVarietys = await _unitOfWork.KoiVarietys.GetAsync();
-
-            if (!koiVarietys.Any())
-                return null;
-
-            var koiVariety = koiVarietys.Where(k => k.Variety.ToLower().Equals(variety.ToLower())).FirstOrDefault();
+            var koiVariety = await _unitOfWork.KoiVarietys.GetByIdAsync(variety);
 
             if (koiVariety == null)
                 return null;
@@ -53,6 +49,37 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                 Rarity = koiVariety.Rarity
             };
             return koiVarietyModel;
+        }
+
+        public async Task<string> CreateKoiVarietyAsync(KoiVarietyModel koiVarietyModel)
+        {
+            var entity = new Koivariety
+            {
+                Variety = koiVarietyModel.Variety,
+                Rarity = koiVarietyModel.Rarity,
+                Color = koiVarietyModel.Color,
+            };
+
+            await _unitOfWork.KoiVarietys.InsertAsync(entity);
+            await _unitOfWork.SaveAsync();
+
+            return entity.Variety;
+        }
+
+        public async Task<bool> UpdateKoiVarietyAsync(string variety, KoiVarietyModel koiVarietyModel)
+        {
+            var koiVariety = await _unitOfWork.KoiVarietys.GetByIdAsync(variety);
+
+            if (koiVariety == null) 
+                return false;
+
+            koiVariety.Rarity = koiVarietyModel.Rarity;
+            koiVariety.Color = koiVarietyModel.Color;
+
+            _unitOfWork.KoiVarietys.UpdateAsync(koiVariety);
+            await _unitOfWork.SaveAsync();
+
+            return true;
         }
 
     }

@@ -6,6 +6,12 @@ using SWP391.KoiCareSystemAtHome.API.ResponseModel;
 using SWP391.KoiCareSystemAtHome.Service.Services;
 using SWP391.KoiCareSystemAtHome.Service.BusinessModels;
 using System.Diagnostics;
+using SWP391.KoiCareSystemAtHome.Repository.Models;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace SWP391.KoiCareSystemAtHome.API.Controllers
 {
@@ -16,23 +22,69 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         private readonly AccountService _accountService;
         private readonly PondOwnerService _pondOwnerService;
         private readonly ShopService _shopService;
+        private readonly IConfiguration _configuration;
 
-        public AccountController(AccountService accountService, PondOwnerService pondOwnerService, ShopService shopService)
+        public AccountController(AccountService accountService, PondOwnerService pondOwnerService, ShopService shopService, IConfiguration configuration)
         {
             _accountService = accountService;
             _pondOwnerService = pondOwnerService;
             _shopService = shopService;
+            _configuration = configuration;
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult> Login([FromBody] AuthenticateModel authenticate)
+        {
+            if (authenticate == null)
+                return BadRequest("Invalid client request.");
+
+            var account = await _accountService.Authenticate(authenticate);
+            if (account == null)
+                return NotFound();
+
+            AccountResponseModel responseModel = new()
+            {
+                Email = account.Email,
+                Id = account.Id,
+                Phone = account.Phone,
+                Role = account.Role,
+            };
+
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Email, responseModel.Email),
+                new Claim(ClaimTypes.Role, responseModel.Role),
+                new Claim(ClaimTypes.NameIdentifier, responseModel.Id.ToString()),
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+
+            var token = new JwtSecurityToken(
+                    claims: claims,
+                    expires: DateTime.Now.AddMinutes(15),
+                    signingCredentials: creds
+                );
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return Ok(jwt);
         }
 
         [HttpGet("accounts")]
         public async Task<ActionResult<IEnumerable<AccountResponseModel>>> GetAccounts()
         {
             var accounts = await _accountService.GetAcountAsync();
+
+            if (accounts == null || !accounts.Any()) 
+                return NotFound();
+
             var respone = accounts.Select(account => new AccountResponseModel
             {
                 Id = account.Id,
                 Email = account.Email,
-                Password = account.Password,
+                //Password = account.Password,
                 Phone = account.Phone,
                 Role = account.Role
             });
@@ -54,7 +106,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 {
                     PondOwnerId = account.Id,
                     Email = account.Email,
-                    Password = account.Password,
+                    //Password = account.Password,
                     Phone = account.Phone,
                     Role = account.Role,
                     Name = pondOwner.Name,
@@ -69,7 +121,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 {
                     ShopId = shop.ShopId,
                     Email = account.Email,
-                    Password = account.Password,
+                    //Password = account.Password,
                     Phone = account.Phone,
                     Role = account.Role,
                     Name = shop.Name,
@@ -82,7 +134,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             {
                 Id = account.Id,
                 Email = account.Email,
-                Password = account.Password,
+                //Password = account.Password,
                 Phone = account.Phone,
                 Role = account.Role
             };
@@ -95,70 +147,96 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             if (request == null)
                 return BadRequest("Account data required! ");
 
-            if ((request.Role.Equals("PondOwner") || request.Role.Equals("Shop")) && request.Name.IsNullOrEmpty())
+            if ((request.Role.Equals("PondOwner") || request.Role.Equals("Shop")) && string.IsNullOrEmpty(request.Name))
                 return BadRequest("Name is required!");
 
             if (request.Role.Equals("Shop") && request.ShopUrl.IsNullOrEmpty())
                 return BadRequest("Shop url is required");
 
-            AccountModel model = new()
+            try
             {
-                Email = request.Email,
-                Password = request.Password,
-                Phone = request.Phone,
-                Role = request.Role,
-            };
-
-            int tempId = await _accountService.CreateAccountAsync(model);
-            AccountModel tempAccountModel = await _accountService.GetAccountByIdAsync(tempId);
-
-            if (request.Role.Equals("PondOwner"))
-            {
-                PondOwnerModel pondOwnerModel = new()
+                AccountModel model = new()
                 {
-                    PondOwnerId = tempId,
-                    Name = request.Name
+                    Email = request.Email,
+                    Password = request.Password,
+                    Phone = request.Phone,
+                    Role = request.Role,
                 };
-                await _pondOwnerService.CreatePondOwnerAsync(pondOwnerModel);
-                
-                PondOwnerModel tempPondOwnerModel = await _pondOwnerService.GetPondOwnerByIdAsync(tempId);
-                PondOwnerResponseModel responsePondOwnerModel = new()
+
+                int tempId = await _accountService.CreateAccountAsync(model);
+                AccountModel tempAccountModel = await _accountService.GetAccountByIdAsync(tempId);
+
+                if (request.Role.Equals("PondOwner"))
                 {
-                    PondOwnerId = tempPondOwnerModel.PondOwnerId,
-                    Email = tempAccountModel.Email,
-                    Password = tempAccountModel.Password,
-                    Phone = tempAccountModel.Phone,
-                    Role = tempAccountModel.Role,
-                    Name = tempPondOwnerModel.Name
+                    PondOwnerModel pondOwnerModel = new()
+                    {
+                        PondOwnerId = tempId,
+                        Name = request.Name
+                    };
+                    await _pondOwnerService.CreatePondOwnerAsync(pondOwnerModel);
+
+                    PondOwnerModel tempPondOwnerModel = await _pondOwnerService.GetPondOwnerByIdAsync(tempId);
+                    PondOwnerResponseModel responsePondOwnerModel = new()
+                    {
+                        PondOwnerId = tempPondOwnerModel.PondOwnerId,
+                        Email = tempAccountModel.Email,
+                        Password = tempAccountModel.Password,
+                        Phone = tempAccountModel.Phone,
+                        Role = tempAccountModel.Role,
+                        Name = tempPondOwnerModel.Name
+                    };
+                    return Ok(responsePondOwnerModel);
+                }
+
+                if (request.Role.Equals("Shop"))
+                {
+                    ShopModel shopModel = new()
+                    {
+                        ShopId = tempId,
+                        Name = request.Name,
+                        ShopUrl = request.ShopUrl
+                    };
+                    await _shopService.CreateShopAsync(shopModel);
+
+                    ShopModel tempShopModel = await _shopService.GetShopModelByIdAsync(tempId);
+                    ShopResponseModel responseShopModel = new()
+                    {
+                        ShopId = tempShopModel.ShopId,
+                        Name = tempShopModel.Name,
+                        Email = tempAccountModel.Email,
+                        Password = tempAccountModel.Password,
+                        Phone = tempAccountModel.Phone,
+                        Role = tempAccountModel.Role,
+                        Url = tempShopModel.ShopUrl
+                    };
+                    return Ok(responseShopModel);
+                }
+
+                //return CreatedAtAction(nameof(GetAccountById), new { id = tempId }, model);
+                var account = await _accountService.GetAccountByIdAsync(tempId);
+
+                if (account == null)
+                    return NotFound();
+
+                AccountResponseModel responseModel = new()
+                {
+                    Id = account.Id,
+                    Email = account.Email,
+                    //Password = account.Password,
+                    Phone = account.Phone,
+                    Role = account.Role
                 };
-                return Ok(responsePondOwnerModel);
+                return Ok(responseModel);
             }
-
-            if (request.Role.Equals("Shop"))
+            catch (SqlException ex) when (ex.Number == 2627 || ex.Number == 2601) // Unique constraint violation
             {
-                ShopModel shopModel = new()
-                {
-                    ShopId = tempId,
-                    Name = request.Name,
-                    ShopUrl = request.ShopUrl
-                };
-                await _shopService.CreateShopAsync(shopModel);
-
-                ShopModel tempShopModel = await _shopService.GetShopModelByIdAsync(tempId);
-                ShopResponseModel responseShopModel = new()
-                {
-                    ShopId = tempShopModel.ShopId,
-                    Name = tempShopModel.Name,
-                    Email = tempAccountModel.Email,
-                    Password = tempAccountModel.Password,
-                    Phone = tempAccountModel.Phone,
-                    Role = tempAccountModel.Role,
-                    Url = tempShopModel.ShopUrl
-                };
-                return Ok(responseShopModel);
+                return Conflict("An account with the same email already exists.");
             }
-
-            return CreatedAtAction(nameof(GetAccountById), new { id = tempId }, model);
+            catch (Exception ex)
+            {
+                // Log the exception details for debugging
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while creating the account.");
+            }
         }
 
         [HttpPut("account/{id}")]   
@@ -169,6 +247,8 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             if (accountModel == null) 
                 return NotFound();
 
+            if (model.Phone.IsNullOrEmpty())
+                accountModel.Phone = null;
                 accountModel.Phone = model.Phone;
             if (!model.Email.IsNullOrEmpty())
                 accountModel.Email = model.Email;

@@ -6,3 +6,15 @@
 .top-menu-item {
   @apply cursor-pointer py-1 hover:text-gray-800 relative after:absolute after:bottom-0 after:left-0 after:bg-cyan-500 after:h-0.5 after:w-0 hover:after:w-full after:transition-all after:ease-in-out after:duration-300;
 }
+.sticky {
+  position: fixed;
+  top: 0; /* Giữ header luôn ở đầu trang */
+  z-index: 1000;
+  width: 100%;
+  top: 0;
+  left: 50%; /* Đưa thanh header về giữa */
+  transform: translateX(-52%); /* Căn giữa thanh header */
+  z-index: 1000;
+  width: 100%; /* Đảm bảo header có chiều rộng đúng */
+  padding: 10px 20px; /* Khoảng đệm cho nội dung bên trong */
+}
