@@ -8,7 +8,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.BusinessModels
 {
     public class AuthenticateModel
     {
-        public string email {  get; set; }
+        public string Email {  get; set; }
         public string Password { get; set; }
     }
 }

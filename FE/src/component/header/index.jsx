@@ -1,38 +1,47 @@
 import { Button } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Link as ScrollLink } from "react-scroll";
 import Logo from "../../assets/logo koi care.png";
 
 function Header() {
   const navigate = useNavigate();
   return (
     <div className="contents-wrapper max-w-screen-2xl text-base mx-auto px-8 bg-slate-950">
-      <header className="py-6 mx-10">
+      <header className="sticky top-0 py-6 mx-10 bg-slate-950 z-50">
         <nav className="flex flex-row justify-between items-center">
           <div className="logo basis-1/6 flex items-center text-center">
-            <Link to={"/"}>
-              <img src={Logo} alt="" width={60} />
-            </Link>
+            <RouterLink to={"/"}>
+              <img src={Logo} alt="Logo" width={60} />
+            </RouterLink>
             <span className="ml-2 text-lg text-white">KoiF</span>
           </div>
 
           <ul className="basis-4/6 flex items-center justify-center gap-8 text-sm text-gray-400">
             <li className="top-menu-item">
-              <a href="home">Home</a>
+              <ScrollLink to="home" smooth={true} duration={500}>
+                Home
+              </ScrollLink>
             </li>
             <li className="top-menu-item">
-              <a href="features">Features</a>
+              <ScrollLink to="features" smooth={true} duration={500}>
+                Features
+              </ScrollLink>
             </li>
             <li className="top-menu-item">
-              <a href="advertisements">Advertisements</a>
+              <ScrollLink to="advertisements" smooth={true} duration={500}>
+                Advertisements
+              </ScrollLink>
+            </li>
+            
+            <li className="top-menu-item">
+              <ScrollLink to="aboutus" smooth={true} duration={500}>
+                About us
+              </ScrollLink>
             </li>
             <li className="top-menu-item">
-              <a href="blogs">Blogs</a>
-            </li>
-            <li className="top-menu-item">
-              <a href="aboutus">About us</a>
-            </li>
-            <li className="top-menu-item">
-              <a href="#">Contact</a>
+              <ScrollLink to="footer" smooth={true} duration={500}>
+                Contact
+              </ScrollLink>
             </li>
           </ul>
 

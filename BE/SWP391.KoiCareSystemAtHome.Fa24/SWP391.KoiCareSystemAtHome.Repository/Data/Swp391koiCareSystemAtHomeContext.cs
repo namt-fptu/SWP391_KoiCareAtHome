@@ -71,13 +71,13 @@ public partial class Swp391koiCareSystemAtHomeContext : DbContext
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Account__3214EC2739D5630B");
+            entity.HasKey(e => e.Id).HasName("PK__Account__3214EC27C910D0F3");
 
             entity.ToTable("Account");
 
-            entity.HasIndex(e => e.Phone, "UQ__Account__5C7E359E86095102").IsUnique();
+            entity.HasIndex(e => e.Phone, "UQ__Account__5C7E359E976FC4EE").IsUnique();
 
-            entity.HasIndex(e => e.Email, "UQ__Account__A9D10534DB7A9F83").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__Account__A9D105342B640CEB").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Email)
@@ -96,17 +96,24 @@ public partial class Swp391koiCareSystemAtHomeContext : DbContext
 
         modelBuilder.Entity<Adv>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Adv__3214EC2784CA6CE3");
+            entity.HasKey(e => e.Id).HasName("PK__Adv__3214EC27515852DB");
 
             entity.ToTable("Adv");
 
-            entity.HasIndex(e => e.Url, "UQ__Adv__C5B10009426B6EED").IsUnique();
+            entity.HasIndex(e => e.Url, "UQ__Adv__C5B100096E447A07").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.AdvDate).HasColumnType("datetime");
             entity.Property(e => e.EditedDate).HasColumnType("datetime");
             entity.Property(e => e.ExpiredDate).HasColumnType("datetime");
+            entity.Property(e => e.ImageUrl)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("ImageURL");
             entity.Property(e => e.ShopId).HasColumnName("ShopID");
+            entity.Property(e => e.Status)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.Title)
                 .HasMaxLength(255)
                 .IsUnicode(false);
@@ -123,7 +130,7 @@ public partial class Swp391koiCareSystemAtHomeContext : DbContext
 
         modelBuilder.Entity<KoiFish>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__KoiFish__3214EC2759DFD814");
+            entity.HasKey(e => e.Id).HasName("PK__KoiFish__3214EC27AAE2C950");
 
             entity.ToTable("KoiFish");
 
@@ -142,7 +149,7 @@ public partial class Swp391koiCareSystemAtHomeContext : DbContext
             entity.Property(e => e.PondId).HasColumnName("PondID");
             entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
             entity.Property(e => e.Sex)
-                .HasMaxLength(5)
+                .HasMaxLength(10)
                 .IsUnicode(false);
 
             entity.HasOne(d => d.KoiVarietyNavigation).WithMany(p => p.KoiFishes)
@@ -158,7 +165,7 @@ public partial class Swp391koiCareSystemAtHomeContext : DbContext
 
         modelBuilder.Entity<KoiGrowthReport>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__KoiGrowt__3214EC27487BAB11");
+            entity.HasKey(e => e.Id).HasName("PK__KoiGrowt__3214EC2794867202");
 
             entity.ToTable("KoiGrowthReport");
 
@@ -176,7 +183,7 @@ public partial class Swp391koiCareSystemAtHomeContext : DbContext
 
         modelBuilder.Entity<KoiGrowthStandard>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__KoiGrowt__3214EC27D132C46D");
+            entity.HasKey(e => e.Id).HasName("PK__KoiGrowt__3214EC27A73BF082");
 
             entity.ToTable("KoiGrowthStandard");
 
@@ -197,7 +204,7 @@ public partial class Swp391koiCareSystemAtHomeContext : DbContext
 
         modelBuilder.Entity<Koivariety>(entity =>
         {
-            entity.HasKey(e => e.Variety).HasName("PK__Koivarie__4C45D0A18E4537A1");
+            entity.HasKey(e => e.Variety).HasName("PK__Koivarie__4C45D0A19147C717");
 
             entity.ToTable("Koivariety");
 
@@ -214,14 +221,22 @@ public partial class Swp391koiCareSystemAtHomeContext : DbContext
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Payment__3214EC2757702FB3");
+            entity.HasKey(e => e.Id).HasName("PK__Payment__3214EC2775520985");
 
             entity.ToTable("Payment");
 
             entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Description)
+                .HasMaxLength(255)
+                .IsUnicode(false);
             entity.Property(e => e.PackageId).HasColumnName("PackageID");
             entity.Property(e => e.PayDate).HasColumnType("datetime");
             entity.Property(e => e.PostId).HasColumnName("PostID");
+            entity.Property(e => e.Success).HasColumnName("success");
+            entity.Property(e => e.Token)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.TransactionId).HasColumnName("TransactionID");
 
             entity.HasOne(d => d.Package).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.PackageId)
@@ -236,13 +251,17 @@ public partial class Swp391koiCareSystemAtHomeContext : DbContext
 
         modelBuilder.Entity<Pond>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Pond__3214EC27F7976B3F");
+            entity.HasKey(e => e.Id).HasName("PK__Pond__3214EC272DC775FE");
 
             entity.ToTable("Pond");
 
-            entity.HasIndex(e => e.Name, "UQ__Pond__737584F63DD1CE1D").IsUnique();
+            entity.HasIndex(e => e.Name, "UQ__Pond__737584F653FA174B").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.ImageUrl)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("ImageURL");
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -256,7 +275,7 @@ public partial class Swp391koiCareSystemAtHomeContext : DbContext
 
         modelBuilder.Entity<PondOwner>(entity =>
         {
-            entity.HasKey(e => e.PondOwnerId).HasName("PK__PondOwne__61B8CCA83720F4ED");
+            entity.HasKey(e => e.PondOwnerId).HasName("PK__PondOwne__61B8CCA8A9D9AFB1");
 
             entity.ToTable("PondOwner", tb => tb.HasTrigger("trg_EnsurePondOwnerRole"));
 
@@ -275,15 +294,15 @@ public partial class Swp391koiCareSystemAtHomeContext : DbContext
 
         modelBuilder.Entity<PostPackage>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__PostPack__3214EC27CDD0718F");
+            entity.HasKey(e => e.Id).HasName("PK__PostPack__3214EC27F1D5B8E3");
 
             entity.ToTable("PostPackage");
 
-            entity.HasIndex(e => e.Price, "UQ__PostPack__6089BD099D7324AE").IsUnique();
+            entity.HasIndex(e => e.Price, "UQ__PostPack__6089BD098A0E2CD8").IsUnique();
 
-            entity.HasIndex(e => e.Name, "UQ__PostPack__737584F632FEF0FC").IsUnique();
+            entity.HasIndex(e => e.Name, "UQ__PostPack__737584F6A30FD2DE").IsUnique();
 
-            entity.HasIndex(e => e.Duration, "UQ__PostPack__AE1EFC916FB2BF04").IsUnique();
+            entity.HasIndex(e => e.Duration, "UQ__PostPack__AE1EFC9157EAA91B").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Name)
@@ -294,7 +313,7 @@ public partial class Swp391koiCareSystemAtHomeContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Product__3214EC27FD575844");
+            entity.HasKey(e => e.Id).HasName("PK__Product__3214EC27D9579DAC");
 
             entity.ToTable("Product");
 
@@ -302,14 +321,14 @@ public partial class Swp391koiCareSystemAtHomeContext : DbContext
             entity.Property(e => e.Description)
                 .HasMaxLength(255)
                 .IsUnicode(false);
-            entity.Property(e => e.ImageUrl)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("ImageURL");
             entity.Property(e => e.PostId).HasColumnName("PostID");
             entity.Property(e => e.Title)
                 .HasMaxLength(255)
                 .IsUnicode(false);
+            entity.Property(e => e.Url)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("URL");
 
             entity.HasOne(d => d.Post).WithMany(p => p.Products)
                 .HasForeignKey(d => d.PostId)
@@ -319,11 +338,11 @@ public partial class Swp391koiCareSystemAtHomeContext : DbContext
 
         modelBuilder.Entity<Shop>(entity =>
         {
-            entity.HasKey(e => e.ShopId).HasName("PK__Shop__67C55629D5D72566");
+            entity.HasKey(e => e.ShopId).HasName("PK__Shop__67C5562934D117C7");
 
             entity.ToTable("Shop", tb => tb.HasTrigger("trg_EnsureShopRole"));
 
-            entity.HasIndex(e => e.ShopUrl, "UQ__Shop__5DDD6C3A90F8A5DC").IsUnique();
+            entity.HasIndex(e => e.ShopUrl, "UQ__Shop__5DDD6C3ADBE8E6DA").IsUnique();
 
             entity.Property(e => e.ShopId)
                 .ValueGeneratedNever()
@@ -344,7 +363,7 @@ public partial class Swp391koiCareSystemAtHomeContext : DbContext
 
         modelBuilder.Entity<WaterParameterStandard>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__WaterPar__3214EC279B6EC3BB");
+            entity.HasKey(e => e.Id).HasName("PK__WaterPar__3214EC274E499AE5");
 
             entity.ToTable("WaterParameterStandard");
 
@@ -383,7 +402,7 @@ public partial class Swp391koiCareSystemAtHomeContext : DbContext
 
         modelBuilder.Entity<WaterReport>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__WaterRep__3214EC27A724D4CC");
+            entity.HasKey(e => e.Id).HasName("PK__WaterRep__3214EC2729865260");
 
             entity.ToTable("WaterReport");
 

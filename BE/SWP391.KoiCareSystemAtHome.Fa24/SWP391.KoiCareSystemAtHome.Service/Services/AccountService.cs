@@ -95,13 +95,13 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
         {
             var accounts = await _unitOfWork.Accounts.GetAsync();
 
-            var account = accounts.Where(x => x.Email.ToLower().Equals(authenticateModel.email.ToLower()) 
+            var account = accounts.Where(x => x.Email.ToLower().Equals(authenticateModel.Email.ToLower()) 
             && x.Password.Equals(authenticateModel.Password)).FirstOrDefault();
 
             if (account == null)
                 return null;
 
-            return new AccountModel
+            AccountModel accountModel =  new()
             {
                 Email = account.Email,
                 Password = account.Password,
@@ -109,6 +109,8 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                 Id = account.Id,
                 Role = account.Role
             };
+
+            return accountModel;
         }
 
     }

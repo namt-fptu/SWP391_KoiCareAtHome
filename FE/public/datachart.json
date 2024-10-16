@@ -1,0 +1,74 @@
+{
+  "KoiFishes": [
+    {
+      "name": "Nam",
+      "data": [
+        {
+          "month": "January",
+          "weight": 5,
+          "weightMin": 2,
+          "weightMax": 6
+        },
+        {
+          "month": "February",
+          "weight": 7,
+          "weightMin": 5,
+          "weightMax": 9
+        },
+        {
+          "month": "March",
+          "weight": 9,
+          "weightMin": 7,
+          "weightMax": 10
+        },
+        {
+          "month": "April",
+          "weight": 11,
+          "weightMin": 10,
+          "weightMax": 15
+        },
+        {
+          "month": "May",
+          "weight": 15,
+          "weightMin": 13,
+          "weightMax": 18
+        }
+      ]
+    },
+    {
+      "name": "Thu",
+      "data": [
+        {
+          "month": "January",
+          "weight": 4,
+          "weightMin": 1,
+          "weightMax": 5
+        },
+        {
+          "month": "February",
+          "weight": 6,
+          "weightMin": 4,
+          "weightMax": 8
+        },
+        {
+          "month": "March",
+          "weight": 12,
+          "weightMin": 6,
+          "weightMax": 9
+        },
+        {
+          "month": "April",
+          "weight": 10,
+          "weightMin": 9,
+          "weightMax": 14
+        },
+        {
+          "month": "May",
+          "weight": 14,
+          "weightMin": 12,
+          "weightMax": 17
+        }
+      ]
+    }
+  ]
+}

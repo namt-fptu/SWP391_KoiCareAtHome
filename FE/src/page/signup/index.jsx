@@ -70,9 +70,17 @@ const Signup = () => {
                     required: true,
                     message: "Please enter your Password !!",
                   },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (getFieldValue("password") != value)
+                        return Promise.reject(
+                          "Confirm Password must match with Password!!"
+                        );
+                    },
+                  }),
                 ]}
               >
-                <Input type="confirmPassword" placeholder="••••••••••••" />
+                <Input type="password" placeholder="••••••••••••" />
                 {/* <Space direction="vertical">
                   <Input.Password
                     placeholder="•••••••••••"
