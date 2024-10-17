@@ -30,16 +30,17 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             {
                 Id = r.Id,
                 KoiId = r.KoiId,
+                Stage = r.Stage,
                 Date = r.Date,
                 Length = r.Length,
-                Wetight = r.Wetight,
+                Weight = r.Weight,
             });
 
             return Ok(response);
         }
 
         [HttpGet("koiGrowthReportId/{reportId}")]
-        public async Task<ActionResult<KoiGrowthReportResponseModel>> GetKoiGrowReportById(int reportId)
+        public async Task<ActionResult<KoiGrowthReportResponseModel>> GetKoiGrowthReportById(int reportId)
         {
             var report = await _koiGrowthReportService.GetKoiGrowthReportByIdAsync(reportId);
 
@@ -50,9 +51,10 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             {
                 Id = report.Id,
                 KoiId = report.KoiId,
+                Stage = report.Stage,
                 Date = report.Date,
                 Length = report.Length,
-                Wetight = report.Wetight,
+                Weight = report.Weight,
             };
             return Ok(response);
         }
@@ -69,7 +71,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                     KoiId = request.KoiId,
                     Date = request.Date,
                     Length = request.Length,
-                    Wetight = request.Length
+                    Weight = request.Length
                 };
 
                 int koiReportId = await _koiGrowthReportService.CreateKoiGrowthReportAsync(model);
@@ -85,7 +87,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                     KoiId = report.KoiId,
                     Date = report.Date,
                     Length = report.Length,
-                    Wetight = report.Wetight,
+                    Weight = report.Weight,
                 };
                 return Ok(response);
             }
@@ -103,6 +105,26 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 return NotFound();
 
             return NoContent();
+        }
+
+        [HttpGet("getKoiStatistic/{koiId}")]
+        public async Task<ActionResult> GetKoiGrowthStatistics(int koiId)
+        {
+            var koiStatistic = await _koiGrowthReportService.GetKoiGrowthSatisticByKoiIdAsync(koiId);
+
+            if (koiStatistic == null || !koiStatistic.Any())
+                return NotFound();
+
+            var response = koiStatistic.Select(s => new KoiStatisticResponseModel
+            {
+                Stage = s.Stage,
+                Length = s.Length,
+                Weight = s.Weight,
+                StandardLength = s.StandardLength,
+                StandardWeigth = s.StandardWeigth,
+            });
+
+            return Ok(response);
         }
 
     }
