@@ -26,7 +26,7 @@ import AdminSideBar from "./component/AdminSideBar";
 import Dashboard from "./component/DashBoard";
 import Admin from "./page/admin";
 import Posts from "./component/Posts";
-
+import KoiReport from "./component/KoiReport";
 const App = () => {
   const router = createBrowserRouter([
     {
@@ -48,6 +48,7 @@ const App = () => {
         { path: "Statistics", element: <Statistics /> },
         { path: "AboutKoi", element: <AboutKoi /> },
         { path: "WaterParameter", element: <WaterParameter /> },
+        { path: "KoiReport", element: <KoiReport /> },
         { path: "SaltCalculator", element: <SaltCalculator /> },
         { path: "MyPond", element: <MyPond /> },
         { path: "FoodCalculator", element: <FoodCalculator /> },

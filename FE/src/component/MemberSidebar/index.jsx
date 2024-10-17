@@ -113,6 +113,17 @@ const MemberSideBar = () => {
             </li>
           </Link>
 
+          {/* Koi Report */}
+          <Link to="KoiReport">
+            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
+              <img src={waterParamIcon} alt="Water Parameter" />
+              <span className={`${!open && "hidden"} origin-left duration-200`}>
+              Koi Report
+              </span>
+            </li>
+          </Link>
+
+
           {/* Food Calculator */}
           <Link to="FoodCalculator">
             <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">

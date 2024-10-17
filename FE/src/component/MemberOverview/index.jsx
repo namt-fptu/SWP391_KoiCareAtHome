@@ -23,6 +23,12 @@ const MemberOverview = () => {
             Water Parameters
           </button>
         </Link>
+        
+        <Link to="/KoiReport">
+          <button className="bg-blue-600 rounded-md text-white p-4 hover:bg-blue-700 w-full">
+          Koi Report
+          </button>
+        </Link>
         <Link to="/FoodCalculator">
           <button className="bg-blue-600 rounded-md text-white p-4 hover:bg-blue-700 w-full">
             Food Calculator

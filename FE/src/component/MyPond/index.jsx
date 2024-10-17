@@ -270,9 +270,7 @@ const MyPond = () => {
                     )}
                     <p><strong>Volume:</strong> {pond.volume || "-"}</p>
                     <p><strong>Depth:</strong> {pond.depth || "-"}</p>
-                    <p>
-                          <strong>Drain Count:</strong> {pond.drainCount || "-"}
-                        </p>
+                    <p><strong>Drain Count:</strong> {pond.drainCount || "-"}</p>
                   </Card>
                 </Col>
               ))}
