@@ -132,5 +132,69 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return true;
         }
 
+        public async Task<IEnumerable<KoiStatisticModel>> GetKoiGrowthSatisticByKoiIdAsync(int id)
+        {
+            var koiGrowthReports = await _unitOfWork.KoiGrowthReports.GetAsync();
+            var reportOfKois = koiGrowthReports.Where(r => r.KoiId == id).ToList();
+
+            if (!reportOfKois.Any())
+                return Enumerable.Empty<KoiStatisticModel>();
+
+            var koiFish = await _unitOfWork.KoiFishs.GetByIdAsync(id);
+
+            if (koiFish?.Dob == null)
+                return Enumerable.Empty<KoiStatisticModel>();
+
+            var koiGrowthStandards = await _unitOfWork.KoiGrowthStandards.GetAsync();
+            var filteredKoiGrowthStandards = koiGrowthStandards
+                .Where(s => s.KoiVariety == "General")
+                .ToDictionary(s => s.Stage);
+
+            var koiGrowthReportModels = reportOfKois.Select(r =>
+            {
+                var dob = koiFish.Dob.Value;
+                var reportDate = r.Date;
+
+                int stageInMonths = ((reportDate.Year - dob.Year) * 12) + (reportDate.Month - dob.Month);
+                if (reportDate.Day < dob.Day)
+                {
+                    stageInMonths--;
+                }
+
+                return new KoiGrowthReportModel
+                {
+                    Id = r.Id,
+                    KoiId = r.KoiId,
+                    Stage = stageInMonths,
+                    Date = r.Date,
+                    Length = r.Length,
+                    Wetight = r.Wetight
+                };
+            });
+
+            var koiStatisticModels = koiGrowthReportModels.Select(s =>
+            {
+                var model = new KoiStatisticModel
+                {
+                    Stage = s.Stage,
+                    Length = s.Length,
+                    Wetight = s.Wetight,
+                    StandardLength = 0,
+                    StandardWeigth = 0
+                };
+
+                if (filteredKoiGrowthStandards.TryGetValue(s.Stage, out var koiGrowthStandard))
+                {
+                    model.StandardLength = koiGrowthStandard.StandardLength;
+                    model.StandardWeigth = koiGrowthStandard.StandardWeigth;
+                }
+
+                return model;
+            });
+
+            return koiStatisticModels;
+        }
+
+
     }
 }
