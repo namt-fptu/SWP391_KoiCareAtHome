@@ -10,6 +10,6 @@
 
         public decimal Length { get; set; }
 
-        public decimal Wetight { get; set; }
+        public decimal Weight { get; set; }
     }
 }
