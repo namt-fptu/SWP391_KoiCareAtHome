@@ -63,15 +63,15 @@ const Statistics = () => {
 
   const fetchKoiGrowthDataForFish = async (fishId) => {
     try {
-      const reportResponse = await api.get(`/KoiGrowthReport/koiGrowthReport/${fishId}`);
-      const standardResponse = await api.get("/KoiGrowthStandard/koiStandard");
-
+      // Fetch data from the correct API endpoint
+      const reportResponse = await api.get(`/KoiGrowthReport/getKoiStatistic/${fishId}`);
       console.log("Growth Report Data:", reportResponse.data); // Check the structure
-    console.log("Growth Standard Data:", standardResponse.data); // Check the structure
-
-      setGrowthReportData(reportResponse.data);
-      setGrowthStandardData(standardResponse.data);
-      updateUserData(reportResponse.data, standardResponse.data);
+  
+      // Assuming there's no need for a separate "standard" API call
+      const growthData = reportResponse.data;
+  
+      // Process the data and update the charts
+      updateUserData(growthData);
     } catch (error) {
       if (error.response && error.response.status === 404) {
         message.warning("No growth data found for the selected fish.");
@@ -105,46 +105,56 @@ const Statistics = () => {
     }
   };
 
-  const updateUserData = (growthReport, growthStandard) => {
-    const labels = growthReport.map(item => item.stage); // Ensure stages are mapped correctly
+  const updateUserData = (growthReport) => {
+    // Normalize data from API response
+    const correctedGrowthReport = growthReport.map(item => ({
+      length: item.length || 0, // Ensure length field exists
+      weight: item.weight || 0, // Ensure weight field exists
+      standardWeigth: item.standardWeigth || 0, // Ensure standardWeight is correct
+      standardLength: item.standardLength || 0, // Ensure standardLength is correct
+      stage: item.stage || 'N/A', // Label each point (optional)
+    }));
+  
+    // Generate labels based on the 'stage' field
+    const labels = correctedGrowthReport.map(item => item.stage);
   
     // Prepare length datasets
     const lengthDatasets = [
       {
         label: "Length",
-        data: growthReport.map(item => item.length), // Check if this data exists
+        data: correctedGrowthReport.map(item => item.length),
         backgroundColor: "rgba(255, 99, 132, 0.2)",
         borderColor: "rgba(255, 99, 132, 1)",
         borderWidth: 2,
       },
       {
         label: "Standard Length",
-        data: growthStandard.map(item => item.standardLength), // Check if this data exists
+        data: correctedGrowthReport.map(item => item.standardLength),
         backgroundColor: "rgba(75, 192, 192, 0.2)",
         borderColor: "rgba(75, 192, 192, 1)",
         borderWidth: 2,
       },
     ];
   
-    // Prepare weight datasets with checks for existence
+    // Prepare weight datasets
     const weightDatasets = [
       {
         label: "Weight",
-        data: growthReport.map(item => item.weight || 0), // Ensure it falls back to 0 if missing
+        data: correctedGrowthReport.map(item => item.weight),
         backgroundColor: "rgba(54, 162, 235, 0.2)",
         borderColor: "rgba(54, 162, 235, 1)",
         borderWidth: 2,
       },
       {
         label: "Standard Weight",
-        data: growthStandard.map(item => item.standardWeight || 0), // Ensure it falls back to 0 if missing
+        data: correctedGrowthReport.map(item => item.standardWeigth),
         backgroundColor: "rgba(153, 102, 255, 0.2)",
         borderColor: "rgba(153, 102, 255, 1)",
         borderWidth: 2,
       },
     ];
   
-    // Set state for length and weight data
+    // Update the chart states
     setLengthData({ labels, datasets: lengthDatasets });
     setWeightData({ labels, datasets: weightDatasets });
   };
