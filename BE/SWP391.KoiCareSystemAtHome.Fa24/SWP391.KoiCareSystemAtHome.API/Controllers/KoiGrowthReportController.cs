@@ -107,5 +107,25 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return NoContent();
         }
 
+        [HttpGet("getKoiStatistic/{koiId}")]
+        public async Task<ActionResult> GetKoiGrowthStatistics(int koiId)
+        {
+            var koiStatistic = await _koiGrowthReportService.GetKoiGrowthSatisticByKoiIdAsync(koiId);
+
+            if (koiStatistic == null || !koiStatistic.Any())
+                return NotFound();
+
+            var response = koiStatistic.Select(s => new KoiStatisticResponseModel
+            {
+                Stage = s.Stage,
+                Length = s.Length,
+                Wetight = s.Wetight,
+                StandardLength = s.StandardLength,
+                StandardWeigth = s.StandardWeigth,
+            });
+
+            return Ok(response);
+        }
+
     }
 }
