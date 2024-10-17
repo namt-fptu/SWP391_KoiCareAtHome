@@ -12,6 +12,8 @@ namespace SWP391.KoiCareSystemAtHome.Service.BusinessModels
 
         public int KoiId { get; set; }
 
+        public int Stage { get; set; }
+
         public DateTime Date { get; set; }
 
         public decimal Length { get; set; }
