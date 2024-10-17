@@ -16,6 +16,6 @@ namespace SWP391.KoiCareSystemAtHome.Service.BusinessModels
 
         public decimal Length { get; set; }
 
-        public decimal Wetight { get; set; }
+        public decimal Weight { get; set; }
     }
 }

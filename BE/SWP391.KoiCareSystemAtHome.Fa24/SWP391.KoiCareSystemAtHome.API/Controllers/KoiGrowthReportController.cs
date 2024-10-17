@@ -33,7 +33,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 Stage = r.Stage,
                 Date = r.Date,
                 Length = r.Length,
-                Wetight = r.Wetight,
+                Weight = r.Weight,
             });
 
             return Ok(response);
@@ -54,7 +54,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 Stage = report.Stage,
                 Date = report.Date,
                 Length = report.Length,
-                Wetight = report.Wetight,
+                Weight = report.Weight,
             };
             return Ok(response);
         }
@@ -71,7 +71,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                     KoiId = request.KoiId,
                     Date = request.Date,
                     Length = request.Length,
-                    Wetight = request.Length
+                    Weight = request.Length
                 };
 
                 int koiReportId = await _koiGrowthReportService.CreateKoiGrowthReportAsync(model);
@@ -87,7 +87,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                     KoiId = report.KoiId,
                     Date = report.Date,
                     Length = report.Length,
-                    Wetight = report.Wetight,
+                    Weight = report.Weight,
                 };
                 return Ok(response);
             }
@@ -119,7 +119,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             {
                 Stage = s.Stage,
                 Length = s.Length,
-                Wetight = s.Wetight,
+                Weight = s.Weight,
                 StandardLength = s.StandardLength,
                 StandardWeigth = s.StandardWeigth,
             });

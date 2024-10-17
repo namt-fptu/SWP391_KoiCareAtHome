@@ -51,7 +51,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                     Stage = stageInMonths,
                     Date = r.Date,
                     Length = r.Length,
-                    Wetight = r.Wetight,
+                    Weight = r.Wetight,
                 };
             });
 
@@ -91,7 +91,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                 Date = koiGrowReport.Date,
                 Stage = stageInMonths,
                 Length = koiGrowReport.Length,
-                Wetight = koiGrowReport.Wetight
+                Weight = koiGrowReport.Wetight
             };
 
             return koiGrowthReportModel;
@@ -168,7 +168,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                     Stage = stageInMonths,
                     Date = r.Date,
                     Length = r.Length,
-                    Wetight = r.Wetight
+                    Weight = r.Wetight
                 };
             });
 
@@ -178,7 +178,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                 {
                     Stage = s.Stage,
                     Length = s.Length,
-                    Wetight = s.Wetight,
+                    Weight = s.Weight,
                     StandardLength = 0,
                     StandardWeigth = 0
                 };
