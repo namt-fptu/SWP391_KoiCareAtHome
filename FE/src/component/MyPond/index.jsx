@@ -101,7 +101,7 @@ const MyPond = () => {
         name: values.name,
         depth: Number(values.depth),
         volume: Number(values.volume),
-        drainCount: Number(values.drainCount),
+        draimCount: Number(values.draimCount),
         skimmerCount: Number(values.skimmerCount),
         pumpingCapacity: Number(values.pumpingCapacity),
         imageUrl: uploadedImageUrl,
@@ -121,17 +121,17 @@ const MyPond = () => {
     }
   };
 
-  const deletePond = async (index) => {
-    try {
-      const pondToDelete = ponds[index];
-      await api.delete(`Pond/${pondToDelete.id}`); // Call API to delete pond
-      const newPonds = ponds.filter((_, i) => i !== index);
-      setPonds(newPonds); // Update state after deletion
-      message.success("Pond deleted successfully!"); // Success message
-    } catch (error) {
-      message.error("Failed to delete pond. Please try again."); // Error message
-    }
-  };
+  // const deletePond = async (index) => {
+  //   try {
+  //     const pondToDelete = ponds[index];
+  //     await api.delete(`Pond/${pondToDelete.id}`); // Call API to delete pond
+  //     const newPonds = ponds.filter((_, i) => i !== index);
+  //     setPonds(newPonds); // Update state after deletion
+  //     message.success("Pond deleted successfully!"); // Success message
+  //   } catch (error) {
+  //     message.error("Failed to delete pond. Please try again."); // Error message
+  //   }
+  // };
 
   return (
     <div className="flex-container">
@@ -203,7 +203,7 @@ const MyPond = () => {
 
               <Form.Item
                 label="Drain Count"
-                name="drainCount"
+                name="draimCount"
                 rules={[
                   { required: true, message: "Please input Drain Count!" },
                 ]}
@@ -247,56 +247,32 @@ const MyPond = () => {
           </Modal>
 
           {ponds.length > 0 && (
-            <Row gutter={[200, 200]} style={{ marginTop: "20px" }}>
+            <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
               {ponds.map((pond, index) => (
                 <Col key={index} xs={24} sm={12} md={8} lg={6}>
                   <Card
                     title={`Pond: ${pond.name}`}
-                    extra={
-                      <Button danger onClick={() => deletePond(index)}>
-                        Delete
-                      </Button>
-                    }
-                    style={{ width: 400, marginBottom: "20px" }}
+                    // extra={<Button danger onClick={() => deletePond(index)}>Delete</Button>}
+                    style={{ marginBottom: "20px", boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", borderRadius: "8px" }} // Added marginBottom, boxShadow, and borderRadius
+                    onClick={() => showModal(pond)} // Click handler to show details
                   >
                     {pond.imageUrl && (
                       <img
                         src={pond.imageUrl}
                         alt="Pond"
-                        style={{ width: "100%", height: "auto" }}
+                        style={{
+                          width: "100%", // Ensure image takes full width of the card
+                          height: "200px", // Fixed height for uniformity
+                          objectFit: "cover", // Cover the area while maintaining aspect ratio
+                          borderRadius: "8px 8px 0 0", // Rounded corners for the image
+                        }}
                       />
                     )}
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <div>
-                        <p>
-                          <strong>Name:</strong> {pond.name || "-"}
-                        </p>
-                        <p>
-                          <strong>Volume:</strong> {pond.volume || "-"}
-                        </p>
-                        <p>
-                          <strong>Depth:</strong> {pond.depth || "-"}
-                        </p>
-                      </div>
-                      <div>
-                        <p>
+                    <p><strong>Volume:</strong> {pond.volume || "-"}</p>
+                    <p><strong>Depth:</strong> {pond.depth || "-"}</p>
+                    <p>
                           <strong>Drain Count:</strong> {pond.drainCount || "-"}
                         </p>
-                        <p>
-                          <strong>Skimmer Count:</strong>{" "}
-                          {pond.skimmerCount || "-"}
-                        </p>
-                        <p>
-                          <strong>Pumping Capacity:</strong>{" "}
-                          {pond.pumpingCapacity || "-"}
-                        </p>
-                      </div>
-                    </div>
                   </Card>
                 </Col>
               ))}
