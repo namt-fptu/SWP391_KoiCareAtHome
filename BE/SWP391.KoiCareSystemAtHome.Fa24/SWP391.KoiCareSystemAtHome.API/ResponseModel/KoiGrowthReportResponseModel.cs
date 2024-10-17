@@ -6,6 +6,8 @@
 
         public int KoiId { get; set; }
 
+        public int Stage { get; set; }
+
         public DateTime Date { get; set; }
 
         public decimal Length { get; set; }

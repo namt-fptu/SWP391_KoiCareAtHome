@@ -30,6 +30,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             {
                 Id = r.Id,
                 KoiId = r.KoiId,
+                Stage = r.Stage,
                 Date = r.Date,
                 Length = r.Length,
                 Wetight = r.Wetight,
@@ -39,7 +40,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         }
 
         [HttpGet("koiGrowthReportId/{reportId}")]
-        public async Task<ActionResult<KoiGrowthReportResponseModel>> GetKoiGrowReportById(int reportId)
+        public async Task<ActionResult<KoiGrowthReportResponseModel>> GetKoiGrowthReportById(int reportId)
         {
             var report = await _koiGrowthReportService.GetKoiGrowthReportByIdAsync(reportId);
 
@@ -50,6 +51,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             {
                 Id = report.Id,
                 KoiId = report.KoiId,
+                Stage = report.Stage,
                 Date = report.Date,
                 Length = report.Length,
                 Wetight = report.Wetight,

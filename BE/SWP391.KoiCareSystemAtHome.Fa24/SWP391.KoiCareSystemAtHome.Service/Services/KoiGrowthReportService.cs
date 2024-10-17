@@ -21,22 +21,43 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
         public async Task<IEnumerable<KoiGrowthReportModel>> GetKoiGrowthReportByKoiIdAsync(int id)
         {
             var koiGrowthReports = await _unitOfWork.KoiGrowthReports.GetAsync();
+
             var reportOfKois = koiGrowthReports.Where(r => r.KoiId == id);
 
             if (reportOfKois == null || !reportOfKois.Any())
                 return Enumerable.Empty<KoiGrowthReportModel>();
 
-            var koiGrowthReportModels = reportOfKois.Select(r => new KoiGrowthReportModel
+            var koiFish = await _unitOfWork.KoiFishs.GetByIdAsync(id);
+
+            if (koiFish == null || koiFish.Dob == null)
+                return Enumerable.Empty<KoiGrowthReportModel>();
+
+            var koiGrowthReportModels = reportOfKois.Select(r =>
             {
-                Id = r.Id,
-                KoiId = r.KoiId,
-                Date = r.Date,
-                Length = r.Length,
-                Wetight = r.Length
+                var dob = koiFish.Dob.Value;
+                var reportDate = r.Date;
+
+                int stageInMonths = ((reportDate.Year - dob.Year) * 12) + reportDate.Month - dob.Month;
+
+                if (reportDate.Day < dob.Day)
+                {
+                    stageInMonths--;
+                }
+
+                return new KoiGrowthReportModel
+                {
+                    Id = r.Id,
+                    KoiId = r.KoiId,
+                    Stage = stageInMonths,
+                    Date = r.Date,
+                    Length = r.Length,
+                    Wetight = r.Wetight,
+                };
             });
 
             return koiGrowthReportModels;
         }
+
 
         public async Task<KoiGrowthReportModel> GetKoiGrowthReportByIdAsync(int reportId)
         {
@@ -47,17 +68,35 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             if (koiGrowReport == null)
                 return null;
 
+            var koiFish = await _unitOfWork.KoiFishs.GetByIdAsync(koiGrowReport.KoiId);
+
+            int stageInMonths = 0;
+            if (koiFish != null && koiFish.Dob != null)
+            {
+                var dob = koiFish.Dob.Value;
+                var reportDate = koiGrowReport.Date;
+
+                stageInMonths = ((reportDate.Year - dob.Year) * 12) + reportDate.Month - dob.Month;
+
+                if (reportDate.Day < dob.Day)
+                {
+                    stageInMonths--;
+                }
+            }
+
             var koiGrowthReportModel = new KoiGrowthReportModel
             {
                 Id = koiGrowReport.Id,
                 KoiId = koiGrowReport.KoiId,
                 Date = koiGrowReport.Date,
+                Stage = stageInMonths,
                 Length = koiGrowReport.Length,
-                Wetight = koiGrowReport.Length
+                Wetight = koiGrowReport.Wetight
             };
 
             return koiGrowthReportModel;
         }
+
 
         public async Task<int> CreateKoiGrowthReportAsync(KoiGrowthReportModel koiGrowthReportModel)
         {
