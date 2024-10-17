@@ -59,7 +59,30 @@ const ShopPost = () => {
     const fetchPosts = async () => {
       try {
         const response = await api.get(`Adv/getAdvByShopId/${id}`);
-        setPosts(response.data);
+        const postsData = response.data;
+
+        // Tải nội dung từ Firebase cho từng bài viết
+        const postsWithContent = await Promise.all(
+          postsData.map(async (post) => {
+            if (post.url) {
+              try {
+                const contentURL = await getDownloadURL(
+                  ref(storageTxt, post.url)
+                );
+                const contentResponse = await fetch(contentURL);
+                const contentText = await contentResponse.text();
+                return { ...post, content: contentText }; // Cập nhật content vào post
+              } catch (error) {
+                console.error("Failed to fetch content from Firebase", error);
+                console.log(post.url);
+                return { ...post, content: "Content could not be loaded" }; // Trường hợp lỗi
+              }
+            }
+            return post;
+          })
+        );
+
+        setPosts(postsWithContent);
       } catch (error) {
         message.error("Failed to fetch post data.");
       }
@@ -195,7 +218,7 @@ const ShopPost = () => {
 
       try {
         const response = await api.post("Adv/createAdv", postData);
-        setPosts([...posts, response.data]); // Update ponds with the newly created one
+        setPosts([...posts, response.data]); // Update posts with the newly created one
         setIsModalVisible(false);
         message.success("Post information added successfully!");
       } catch (error) {
@@ -303,30 +326,64 @@ const ShopPost = () => {
         </Modal>
 
         {posts.length > 0 && (
-          <Row gutter={[200, 200]} style={{ marginTop: "20px" }}>
+          <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
             {posts.map((post, index) => (
-              <Col key={index} xs={24} sm={12} md={8} lg={6}>
+              <Col key={index} xs={24} sm={12} md={8} lg={8} xl={8}>
                 <Card
-                  title={`Post: ${post.title}`}
                   style={{
-                    width: 400,
+                    width: "100%",
+                    height: 500, // Cố định chiều cao của khung
                     marginBottom: "20px",
                     border: "1px solid #f0f0f0",
                     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
                   }}
                 >
+                  {/* Title ở trên cùng */}
+                  <div style={{ flex: "none" }}>
+                    <p style={{ fontSize: "16px", fontWeight: "bold" }}>
+                      <strong>Title:</strong> {post.title || "-"}
+                    </p>
+                  </div>
+
+                  {/* Hình ảnh ở giữa */}
                   {post.imageUrl && (
                     <img
                       src={post.imageUrl}
                       alt="Post"
                       style={{
                         width: "100%",
-                        height: "auto",
+                        height: "200px", // Cố định chiều cao của hình ảnh
+                        objectFit: "cover", // Đảm bảo hình ảnh không bị méo
                         borderRadius: "8px",
+                        marginBottom: "10px",
                       }}
                     />
                   )}
 
+                  {/* Content ở dưới hình ảnh */}
+                  <div
+                    style={{
+                      flex: "1 1 auto",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    <p
+                      style={{
+                        fontSize: "14px",
+                        fontWeight: "bold",
+                        color: "#555",
+                      }}
+                    >
+                      <strong>Content:</strong> {post.content || "-"}
+                    </p>
+                  </div>
+
+                  {/* Các thông tin khác ở dưới cùng */}
                   <div
                     style={{
                       display: "flex",
@@ -335,20 +392,11 @@ const ShopPost = () => {
                     }}
                   >
                     <div style={{ width: "60%" }}>
-                      <p style={{ fontSize: "16px", fontWeight: "bold" }}>
-                        <strong>Title:</strong> {post.title || "-"}
-                      </p>
-                      <p
-                        style={{
-                          fontSize: "14px",
-                          fontWeight: "bold",
-                          color: "#555",
-                        }}
-                      >
-                        <strong>Content:</strong> {post.content || "-"}
-                      </p>
                       <p>
                         <strong>Created Date:</strong> {post.advDate || "-"}
+                      </p>
+                      <p>
+                        <strong>Duration:</strong> {post.duration || "-"}
                       </p>
                     </div>
                     <div style={{ width: "40%" }}>
@@ -378,15 +426,19 @@ const ShopPost = () => {
                         <strong>Expired Date:</strong> <br />
                         {post.expiredDate || "-"}
                       </p>
-                      <p>
-                        <strong>Duration:</strong> {post.duration || "-"}
-                      </p>
                     </div>
                   </div>
+
+                  <Button onClick={() => handleShowDetail(post)}>
+                    View Detail
+                  </Button>
+
+                  {/* Nút Extend nếu status là Expired */}
                   {post.status === "Expired" && (
                     <Button
                       type="primary"
                       onClick={() => handleExtend(post.id)}
+                      style={{ alignSelf: "flex-end" }}
                     >
                       Extend
                     </Button>
@@ -396,6 +448,22 @@ const ShopPost = () => {
             ))}
           </Row>
         )}
+
+        {/* Chi tiết bài viết */}
+        <Modal
+          title="Post Detail"
+          visible={!!selectedPost}
+          onCancel={handleDetailClose}
+          footer={null}
+        >
+          {selectedPost && (
+            <>
+              <h2>{selectedPost.title}</h2>
+              <p>{selectedPost.content}</p>
+            </>
+          )}
+        </Modal>
+
         {/* Modal Extend */}
         <Modal
           title="Extend Post"
