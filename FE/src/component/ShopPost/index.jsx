@@ -118,19 +118,25 @@ const ShopPost = () => {
         packageId: selectedPackage,
         amount,
       });
+
       const response = await api.post("/Payment/createPaymentURL", {
         postId: currentPostId,
         packageId: selectedPackage,
         amount,
+        orderType: "ShopPostExtension", // OrderType bạn cần xác định chính xác từ yêu cầu của hệ thống
+        orderDescription: `Extension for post ID: ${currentPostId}`, // Mô tả đơn hàng
       });
 
-      // Kiểm tra phản hồi trả về từ API
-      console.log("Payment URL response:", response);
+      console.log("Payment API response:", response);
 
-      // Nếu API trả về link thanh toán thành công
-      window.location.href = response.data.paymentUrl;
+      // if (response.data && response.data.paymentUrl) {
+      // Redirect to payment page
+      console.log("Full API response data:", response.data);
+      window.open(response.data, "_blank");
+      // } else {
+      //   message.error("Payment URL is missing or invalid.");
+      // }
     } catch (error) {
-      // In ra chi tiết lỗi từ server để kiểm tra
       console.error("Error creating payment URL:", error);
       message.error("Failed to create payment URL.");
     }
@@ -237,12 +243,12 @@ const ShopPost = () => {
     setSelectedPost(null);
   };
 
-  // const getShortContent = (content) => {
-  //   const maxLength = 100; // số ký tự tóm tắt
-  //   return content.length > maxLength
-  //     ? content.slice(0, maxLength) + "..."
-  //     : content;
-  // };
+  const getShortContent = (content) => {
+    const maxLength = 50; // số ký tự tóm tắt
+    return content.length > maxLength
+      ? content.slice(0, maxLength) + "..."
+      : content;
+  };
 
   return (
     <div className="flex-container">
@@ -379,7 +385,8 @@ const ShopPost = () => {
                         color: "#555",
                       }}
                     >
-                      <strong>Content:</strong> {post.content || "-"}
+                      <strong>Content:</strong>{" "}
+                      {getShortContent(post.content) || "-"}
                     </p>
                   </div>
 
@@ -459,6 +466,13 @@ const ShopPost = () => {
           {selectedPost && (
             <>
               <h2>{selectedPost.title}</h2>
+              {selectedPost.imageUrl && (
+                <img
+                  src={selectedPost.imageUrl}
+                  alt="Post"
+                  style={{ width: "100%", marginBottom: "20px" }}
+                />
+              )}
               <p>{selectedPost.content}</p>
             </>
           )}

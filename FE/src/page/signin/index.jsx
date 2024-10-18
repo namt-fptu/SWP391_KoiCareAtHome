@@ -82,7 +82,7 @@ const Signin = () => {
       }
 
       if (userRole === "Admin") {
-        navigate("/admin");
+        navigate("/DashBoard");
       } else if (userRole === "PondOwner") {
         navigate("/overview");
       } else if (userRole === "Shop") {
