@@ -83,18 +83,19 @@ const WaterParameter = () => {
       pondId: selectedPond,
       salt: values.salt,
       nitrite: values.nitrite,
-      nitrate: values.nitrate,
-      ammonium: values.ammonium,
+      nitrates: values.nitrates,
+      amonium: values.amonium,
       hardness: values.hardness,
-      oxygen: values.oxygen,
+      oxigen: values.oxigen,
       temperature: values.temperature,
-      ph: values.ph,
-      co2: values.co2,
+      phVaule: values.phVaule,
+      cabondioxide: values.cabondioxide,
       date: values.date ? values.date.toISOString() : new Date().toISOString(), // Format the selected date or use the current date
     };
 
     try {
       await api.post(`WaterReport/createWaterReport`, newReport);
+      
       message.success("Water parameters added successfully!");
       fetchWaterReports(selectedPond); // Refresh the list
       setIsModalVisible(false);
@@ -112,21 +113,22 @@ const WaterParameter = () => {
 
       {/* Pond Selection */}
       <Form.Item
-        name="pond"
-        rules={[{ required: true, message: "Please select a pond!" }]}
-      >
-        <Select
-          placeholder="Select a pond"
-          onChange={handlePondChange}
-          allowClear
-        >
-          {ponds.map((pond) => (
-            <Option key={pond.id} value={pond.id}>
-              {pond.name}
-            </Option>
-          ))}
-        </Select>
-      </Form.Item>
+  name="pond"
+  rules={[{ required: true, message: "Please select a pond!" }]}
+>
+  <Select
+    placeholder="Select a pond"
+    onChange={handlePondChange}
+    allowClear
+    width= "10%"
+  >
+    {ponds.map((pond) => (
+      <Option key={pond.id} value={pond.id}>
+        {pond.name}
+      </Option>
+    ))}
+  </Select>
+</Form.Item>
 
       {/* Button to Input Water Parameters */}
       <div className="flex flex-col items-center">
@@ -138,7 +140,7 @@ const WaterParameter = () => {
       {/* Modal for Adding Water Parameters */}
       <Modal
         title="Input Water Parameters"
-        visible={isModalVisible}
+        open={isModalVisible}
         onCancel={handleCancel}
         footer={null}
       >
@@ -169,14 +171,14 @@ const WaterParameter = () => {
           </Form.Item>
           <Form.Item
             label="Nitrate (NO₃)"
-            name="nitrate"
+            name="nitrates"
             rules={[{ required: true, message: "Please input Nitrate!" }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             label="Ammonium (NH₄)"
-            name="ammonium"
+            name="amonium"
             rules={[{ required: true, message: "Please input Ammonium!" }]}
           >
             <Input />
@@ -190,7 +192,7 @@ const WaterParameter = () => {
           </Form.Item>
           <Form.Item
             label="Oxygen (O₂)"
-            name="oxygen"
+            name="oxigen"
             rules={[{ required: true, message: "Please input Oxygen!" }]}
           >
             <Input />
@@ -204,14 +206,14 @@ const WaterParameter = () => {
           </Form.Item>
           <Form.Item
             label="pH-Value"
-            name="ph"
+            name="phVaule"
             rules={[{ required: true, message: "Please input pH-Value!" }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             label="CO₂"
-            name="co2"
+            name="cabondioxide"
             rules={[{ required: true, message: "Please input CO₂!" }]}
           >
             <Input />
@@ -253,25 +255,25 @@ const WaterParameter = () => {
                   <strong>Nitrite (NO₂):</strong> {report.nitrite}
                 </p>
                 <p>
-                  <strong>Nitrate (NO₃):</strong> {report.nitrate}
+                  <strong>Nitrate (NO₃):</strong> {report.nitrates}
                 </p>
                 <p>
-                  <strong>Ammonium (NH₄):</strong> {report.ammonium}
+                  <strong>Ammonium (NH₄):</strong> {report.amonium}
                 </p>
                 <p>
                   <strong>Hardness (GH):</strong> {report.hardness}
                 </p>
                 <p>
-                  <strong>Oxygen (O₂):</strong> {report.oxygen}
+                  <strong>Oxygen (O₂):</strong> {report.oxigen}
                 </p>
                 <p>
                   <strong>Temperature:</strong> {report.temperature}
                 </p>
                 <p>
-                  <strong>pH-Value:</strong> {report.ph}
+                  <strong>pH-Value:</strong> {report.phVaule}
                 </p>
                 <p>
-                  <strong>CO₂:</strong> {report.co2}
+                  <strong>CO₂:</strong> {report.cabondioxide}
                 </p>
               </Card>
             </Col>

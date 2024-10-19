@@ -137,11 +137,11 @@ const MyPond = () => {
     <div className="flex-container">
       <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
         <h1 className="text-3xl font-bold mb-8 text-white">My Pond</h1>
-        <p className="text-white">Thông tin chi tiết về hồ cá Koi của bạn.</p>
+        <p className="text-white">Information about your Pond.</p>
         <div>
           <div className="flex flex-col items-center">
             <Button type="primary" onClick={showModal}>
-              Input
+              Create New Pond
             </Button>
           </div>
 
@@ -254,7 +254,8 @@ const MyPond = () => {
                     title={`Pond: ${pond.name}`}
                     // extra={<Button danger onClick={() => deletePond(index)}>Delete</Button>}
                     style={{ marginBottom: "20px", boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", borderRadius: "8px" }} // Added marginBottom, boxShadow, and borderRadius
-                    onClick={() => showModal(pond)} // Click handler to show details
+                    onClick={() => showModal(pond)}
+                     // Click handler to show details
                   >
                     {pond.imageUrl && (
                       <img
