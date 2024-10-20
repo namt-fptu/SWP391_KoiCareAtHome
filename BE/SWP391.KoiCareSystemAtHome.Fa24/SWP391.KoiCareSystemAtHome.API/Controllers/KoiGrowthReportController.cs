@@ -107,6 +107,16 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return NoContent();
         }
 
+        [HttpDelete("deleteGrowthreportById/{id}")]
+        public async Task<ActionResult> DeleteKoiGrowthreportById(int id)
+        {
+            bool success = await _koiGrowthReportService.DeleteKoiGrowthReportByIdAsync(id);
+            if (!success)
+                return NotFound();
+
+            return NoContent();
+        }
+
         [HttpGet("getKoiStatistic/{koiId}")]
         public async Task<ActionResult> GetKoiGrowthStatistics(int koiId)
         {

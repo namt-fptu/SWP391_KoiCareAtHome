@@ -40,7 +40,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
 
             var account = await _accountService.Authenticate(authenticate);
             if (account == null)
-                return NotFound();
+                return NotFound("Invalid email or password.");
 
             AccountResponseModel responseModel = new()
             {
@@ -50,6 +50,13 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 Role = account.Role,
             };
 
+            string jwt = CreateToken(responseModel);
+
+            return Ok(jwt);
+        }
+
+        private string CreateToken(AccountResponseModel responseModel)
+        {
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, responseModel.Email),
@@ -63,16 +70,16 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
 
             var token = new JwtSecurityToken(
                     claims: claims,
-                    expires: DateTime.Now.AddMinutes(15),
+                    expires: DateTime.Now.AddDays(1),
                     signingCredentials: creds
                 );
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
-            return Ok(jwt);
+            return jwt;
         }
 
-        [HttpGet("accounts")]
+        [HttpGet("getAccounts")]
         public async Task<ActionResult<IEnumerable<AccountResponseModel>>> GetAccounts()
         {
             var accounts = await _accountService.GetAcountAsync();
@@ -91,7 +98,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(respone);
         }
 
-        [HttpGet("account/{id}")]
+        [HttpGet("getAccountById/{id}")]
         public async Task<ActionResult<AccountResponseModel>> GetAccountById(int id)
         {
             var account = await _accountService.GetAccountByIdAsync(id);
@@ -141,7 +148,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpPost("account")]
+        [HttpPost("createAccount")]
         public async Task<ActionResult> CreateAccount(AccountRequetModel request)
         {
             if (request == null)
@@ -239,7 +246,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
         }
 
-        [HttpPut("account/{id}")]   
+        [HttpPut("updateAccount/{id}")]   
         public async Task<IActionResult> UpdateAccount(int id, AccountUpdateRequestModel model)
         {
             AccountModel accountModel = await _accountService.GetAccountByIdAsync(id);
@@ -300,7 +307,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return NoContent();
         }
 
-        [HttpDelete("account/{id}")]
+        [HttpDelete("deleteAccount/{id}")]
         public async Task<IActionResult> DeleteAccount(int id)
         {
             var tempAccount = await _accountService.GetAccountByIdAsync(id);

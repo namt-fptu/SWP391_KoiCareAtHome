@@ -134,16 +134,16 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
         public async Task<bool> DeletePondByOwnerIdAsync(int ownerID)
         {
             var ponds = await _unitOfWork.Ponds.GetAsync();
-            if (!ponds.Any() || ponds == null)
+            if (ponds == null || !ponds.Any())
                 return false ;
 
             var fillteredPonds = ponds.Where(p => p.PondOwnerId == ownerID).ToList();
-            if (!fillteredPonds.Any() || fillteredPonds == null)
+            if (fillteredPonds == null || !fillteredPonds.Any())
                 return false;
 
             foreach (var entity in fillteredPonds)
             {
-                bool success = await DeletePondAsync(entity.PondOwnerId);
+                bool success = await DeletePondAsync(entity.Id);
                 //if (!success)
                 //    return false;
             }

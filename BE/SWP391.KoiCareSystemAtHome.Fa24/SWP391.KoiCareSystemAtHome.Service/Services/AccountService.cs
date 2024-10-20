@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
+using BCrypt.Net;
 
 namespace SWP391.KoiCareSystemAtHome.Service.Services
 {
@@ -34,9 +37,11 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
 
         public async Task<int> CreateAccountAsync(AccountModel accountModel)
         {
+            var passwordHash = BCrypt.Net.BCrypt.HashPassword(accountModel.Password);
+
             var accountEntity = new Account
             {
-                Password = accountModel.Password,
+                Password = passwordHash,
                 Phone = accountModel.Phone,
                 Role = accountModel.Role,
                 Email = accountModel.Email,
@@ -91,14 +96,13 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return true;
         }
 
-        public async Task<AccountModel> Authenticate(AuthenticateModel authenticateModel)
+        public async Task<AccountModel?> Authenticate(AuthenticateModel authenticateModel)
         {
             var accounts = await _unitOfWork.Accounts.GetAsync();
 
-            var account = accounts.Where(x => x.Email.ToLower().Equals(authenticateModel.Email.ToLower()) 
-            && x.Password.Equals(authenticateModel.Password)).FirstOrDefault();
+            var account = accounts.Where(x => x.Email.ToLower().Equals(authenticateModel.Email.ToLower())).FirstOrDefault();
 
-            if (account == null)
+            if (account == null || !BCrypt.Net.BCrypt.Verify(authenticateModel.Password, account.Password))
                 return null;
 
             AccountModel accountModel =  new()
