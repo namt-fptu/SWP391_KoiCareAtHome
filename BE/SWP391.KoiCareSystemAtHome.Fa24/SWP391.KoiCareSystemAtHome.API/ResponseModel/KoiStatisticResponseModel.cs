@@ -4,9 +4,13 @@
     {
         public int Stage { get; set; }
 
-        public decimal StandardLength { get; set; }
+        public decimal MaxLength { get; set; }
 
-        public decimal StandardWeigth { get; set; }
+        public decimal MinLength { get; set; }
+
+        public decimal MaxWeight { get; set; }
+
+        public decimal MinWeight { get; set; }
 
         public decimal Length { get; set; }
 

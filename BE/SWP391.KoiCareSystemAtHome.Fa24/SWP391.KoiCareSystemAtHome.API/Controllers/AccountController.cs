@@ -187,7 +187,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                     {
                         PondOwnerId = tempPondOwnerModel.PondOwnerId,
                         Email = tempAccountModel.Email,
-                        Password = tempAccountModel.Password,
+                        //Password = tempAccountModel.Password,
                         Phone = tempAccountModel.Phone,
                         Role = tempAccountModel.Role,
                         Name = tempPondOwnerModel.Name
@@ -211,7 +211,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                         ShopId = tempShopModel.ShopId,
                         Name = tempShopModel.Name,
                         Email = tempAccountModel.Email,
-                        Password = tempAccountModel.Password,
+                        //Password = tempAccountModel.Password,
                         Phone = tempAccountModel.Phone,
                         Role = tempAccountModel.Role,
                         Url = tempShopModel.ShopUrl

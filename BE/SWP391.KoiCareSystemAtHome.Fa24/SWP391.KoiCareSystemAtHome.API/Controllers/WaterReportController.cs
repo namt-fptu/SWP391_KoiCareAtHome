@@ -149,6 +149,48 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return NoContent();
         }
 
+        [HttpGet("getWaterStatistic/{pondId}")]
+        public async Task<ActionResult> GetWaterStatisticByPondId(int pondId)
+        {
+            var waterStatisticModels = await _waterReportService.GetWaterStatisticsByPondIdAsync(pondId);
+            if (waterStatisticModels == null || !waterStatisticModels.Any())
+                return NotFound();
+
+            var response = waterStatisticModels.Select(w => new WaterStatisticResponseModel
+            {
+                Date = w.Date,
+                MaxTemp = w.MaxTemp,
+                MinTemp = w.MinTemp,
+                MaxPh = w.MaxPh,
+                MinPh = w.MinPh,
+                MaxHardness = w.MaxHardness,
+                MinHardness = w.MinHardness,
+                MaxOxigen = w.MaxOxigen,
+                MinOxigen = w.MinOxigen,
+                MaxCabondioxide = w.MaxCabondioxide,
+                MinCabondioxide = w.MinCabondioxide,
+                MaxSalt = w.MaxSalt,
+                MinSalt = w.MinSalt,
+                MaxNitrates = w.MaxNitrates,
+                MinNitrates = w.MinNitrates,
+                MaxNitrite = w.MaxNitrite,
+                MinNitrite = w.MinNitrite,
+                MaxAmonium = w.MaxAmonium,
+                MinAmonium = w.MinAmonium,
+
+                Temperature = w.Temperature,
+                PhVaule = w.PhVaule,
+                Hardness = w.Hardness,
+                Oxigen = w.Oxigen,
+                Cabondioxide = w.Cabondioxide,
+                Salt = w.Salt,
+                Nitrates = w.Nitrates,
+                Nitrite = w.Nitrite,
+                Amonium = w.Amonium,
+            });
+
+            return Ok(response);
+        }
 
     }
 }

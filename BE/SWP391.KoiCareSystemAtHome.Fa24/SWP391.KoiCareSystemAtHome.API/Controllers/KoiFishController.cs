@@ -167,5 +167,13 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return NoContent();
         }
 
+        [HttpGet("getSumOfKoiWeight/{pondId}")]
+        public async Task<ActionResult> GetSumOfKoiWeight(int pondId)
+        {
+            decimal sum = await _koiFishService.GetTotalWeighOfKoisInPondAsync(pondId);
+
+            return Ok(sum);
+        }
+
     }
 }

@@ -32,8 +32,10 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 Id = g.Id,
                 KoiVariety = g.KoiVariety,
                 Stage = g.Stage,
-                StandardLength = g.StandardLength,
-                StandardWeigth = g.StandardWeigth,
+                MaxLength = g.MaxLength,
+                MinLength = g.MinLength,
+                MaxWeigth = g.MaxWeigth,
+                MinWeigth = g.MinWeigth,
                 MaxFeed = g.MaxFeed,
                 MinFeed = g.MinFeed
             });
@@ -54,8 +56,10 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 Id = koiGrowthStandard.Id,
                 KoiVariety = koiGrowthStandard.KoiVariety,
                 Stage = koiGrowthStandard.Stage,
-                StandardLength = koiGrowthStandard.StandardLength,
-                StandardWeigth = koiGrowthStandard.StandardWeigth,
+                MaxLength = koiGrowthStandard.MaxLength,
+                MinLength = koiGrowthStandard.MinLength,
+                MaxWeigth = koiGrowthStandard.MaxWeigth,
+                MinWeigth = koiGrowthStandard.MinWeigth,
                 MaxFeed = koiGrowthStandard.MaxFeed,
                 MinFeed = koiGrowthStandard.MinFeed
             };
@@ -74,8 +78,10 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 {
                     KoiVariety = request.KoiVariety,
                     Stage = request.Stage,
-                    StandardLength = request.StandardLength,
-                    StandardWeigth = request.StandardWeigth,
+                    MaxLength = request.MaxLength,
+                    MinLength = request.MinLength,
+                    MaxWeigth = request.MaxWeigth,
+                    MinWeigth = request.MinWeigth,
                     MaxFeed = request.MaxFeed,
                     MinFeed = request.MinFeed
                 };
@@ -92,8 +98,10 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                     Id = koiGrowthStandard.Id,
                     KoiVariety = koiGrowthStandard.KoiVariety,
                     Stage = koiGrowthStandard.Stage,
-                    StandardLength = koiGrowthStandard.StandardLength,
-                    StandardWeigth = koiGrowthStandard.StandardWeigth,
+                    MaxLength = koiGrowthStandard.MaxLength,
+                    MinLength = koiGrowthStandard.MinLength,
+                    MaxWeigth = koiGrowthStandard.MaxWeigth,
+                    MinWeigth = koiGrowthStandard.MinWeigth,
                     MaxFeed = koiGrowthStandard.MaxFeed,
                     MinFeed = koiGrowthStandard.MinFeed
                 };
@@ -118,8 +126,10 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             try
             {
                 koiGrowthStandardModel.Stage = koiGrowthStandardRequestModel.Stage;
-                koiGrowthStandardModel.StandardLength = koiGrowthStandardRequestModel.StandardLength;
-                koiGrowthStandardModel.StandardWeigth = koiGrowthStandardRequestModel.StandardWeigth;
+                koiGrowthStandardModel.MaxLength = koiGrowthStandardRequestModel.MaxLength;
+                koiGrowthStandardModel.MinLength = koiGrowthStandardRequestModel.MinLength;
+                koiGrowthStandardModel.MaxWeigth = koiGrowthStandardRequestModel.MaxWeigth;
+                koiGrowthStandardModel.MinWeigth = koiGrowthStandardRequestModel.MinWeigth;
                 koiGrowthStandardModel.MaxFeed = koiGrowthStandardRequestModel.MaxFeed;
                 koiGrowthStandardModel.MinFeed = koiGrowthStandardRequestModel.MinFeed;
 
@@ -138,8 +148,10 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                     Id = koiGrowthStandard.Id,
                     KoiVariety = koiGrowthStandard.KoiVariety,
                     Stage = koiGrowthStandard.Stage,
-                    StandardLength = koiGrowthStandard.StandardLength,
-                    StandardWeigth = koiGrowthStandard.StandardWeigth,
+                    MaxLength = koiGrowthStandard.MaxLength,
+                    MinLength = koiGrowthStandard.MinLength,
+                    MaxWeigth = koiGrowthStandard.MaxWeigth,
+                    MinWeigth = koiGrowthStandard.MinWeigth,
                     MaxFeed = koiGrowthStandard.MaxFeed,
                     MinFeed = koiGrowthStandard.MinFeed
                 };

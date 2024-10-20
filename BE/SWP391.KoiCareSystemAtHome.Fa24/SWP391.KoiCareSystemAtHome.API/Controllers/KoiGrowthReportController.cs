@@ -130,8 +130,10 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 Stage = s.Stage,
                 Length = s.Length,
                 Weight = s.Weight,
-                StandardLength = s.StandardLength,
-                StandardWeigth = s.StandardWeigth,
+                MaxLength = s.MaxLength,
+                MinLength = s.MinLength,
+                MaxWeight = s.MaxWeigth,
+                MinWeight = s.MinWeigth,
             });
 
             return Ok(response);

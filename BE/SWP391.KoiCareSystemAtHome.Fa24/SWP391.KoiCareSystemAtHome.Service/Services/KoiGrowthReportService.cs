@@ -137,7 +137,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             var koiGrowthReports = await _unitOfWork.KoiGrowthReports.GetAsync();
             var reportOfKois = koiGrowthReports.Where(r => r.KoiId == id).ToList();
 
-            if (!reportOfKois.Any())
+            if (reportOfKois == null || !reportOfKois.Any())
                 return Enumerable.Empty<KoiStatisticModel>();
 
             var koiFish = await _unitOfWork.KoiFishs.GetByIdAsync(id);
@@ -147,8 +147,15 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
 
             var koiGrowthStandards = await _unitOfWork.KoiGrowthStandards.GetAsync();
             var filteredKoiGrowthStandards = koiGrowthStandards
-                .Where(s => s.KoiVariety == "General")
+                .Where(s => (s.KoiVariety == koiFish.KoiVariety))
                 .ToDictionary(s => s.Stage);
+
+            if (!filteredKoiGrowthStandards.Any())
+            {
+                filteredKoiGrowthStandards = koiGrowthStandards
+                    .Where(s => s.KoiVariety == "General")
+                    .ToDictionary(s => s.Stage);
+            }
 
             var koiGrowthReportModels = reportOfKois.Select(r =>
             {
@@ -179,14 +186,18 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                     Stage = s.Stage,
                     Length = s.Length,
                     Weight = s.Weight,
-                    StandardLength = 0,
-                    StandardWeigth = 0
+                    MaxLength = 0,
+                    MinLength = 0,
+                    MaxWeigth = 0,
+                    MinWeigth = 0,
                 };
 
                 if (filteredKoiGrowthStandards.TryGetValue(s.Stage, out var koiGrowthStandard))
                 {
-                    model.StandardLength = koiGrowthStandard.StandardLength;
-                    model.StandardWeigth = koiGrowthStandard.StandardWeigth;
+                    model.MaxLength = koiGrowthStandard.MaxLength;
+                    model.MinLength = koiGrowthStandard.MinLength;
+                    model.MaxWeigth = koiGrowthStandard.MaxWeigth;
+                    model.MinWeigth = koiGrowthStandard.MinWeigth;
                 }
 
                 return model;
