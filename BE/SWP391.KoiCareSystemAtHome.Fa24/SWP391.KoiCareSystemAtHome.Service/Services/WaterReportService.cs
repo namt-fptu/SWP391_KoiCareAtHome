@@ -113,5 +113,19 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return true;
         }
 
+        public async Task<bool> DeleteWaterReportByIdAsync(int id)
+        {
+            var waterReports = await _unitOfWork.WaterReports.GetAsync();
+
+            var waterReport = waterReports.FirstOrDefault(p => p.Id == id);
+
+            if (waterReport == null)
+                return false;
+
+            _unitOfWork.WaterReports.DeleteAsync(waterReport);
+            await _unitOfWork.SaveAsync();
+            return true;
+        }
+
     }
 }
