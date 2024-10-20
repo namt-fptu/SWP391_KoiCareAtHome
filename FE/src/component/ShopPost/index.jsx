@@ -45,6 +45,7 @@ const ShopPost = () => {
   const [amount, setAmount] = useState(0); // Lưu số tiền thanh toán
   const [isExtendModalVisible, setIsExtendModalVisible] = useState(false); // State để điều khiển modal Extend
   const [currentPostId, setCurrentPostId] = useState(null);
+  const [shortContents, setShortContents] = useState({});
 
   // Retrieve pondOwnerId from sessionStorage
   const id = sessionStorage.getItem("id");
@@ -100,6 +101,22 @@ const ShopPost = () => {
       return [];
     }
   };
+
+  useEffect(() => {
+    const fetchShortContents = async () => {
+      const contents = {};
+      posts.forEach((post) => {
+        setTimeout(() => {
+          const shortContent = getShortContent(post.content);
+          contents[post.id] = shortContent;
+          setShortContents({ ...contents }); // Cập nhật lại shortContent sau khi có timeout
+        }, 3000); // Chờ 3 giây
+      });
+    };
+
+    fetchShortContents();
+  }, [posts]);
+
   const handleExtend = async (postId) => {
     const packageData = await fetchPackage();
     setPackages(packageData); // Lấy dữ liệu package từ API
@@ -245,9 +262,13 @@ const ShopPost = () => {
 
   const getShortContent = (content) => {
     const maxLength = 50; // số ký tự tóm tắt
-    return content.length > maxLength
-      ? content.slice(0, maxLength) + "..."
-      : content;
+    // Kiểm tra nếu content là một chuỗi hợp lệ
+    if (typeof content === "string") {
+      return content.length > maxLength
+        ? content.slice(0, maxLength) + "..."
+        : content;
+    }
+    return ""; // Nếu content không hợp lệ, trả về chuỗi rỗng
   };
 
   return (
@@ -386,7 +407,7 @@ const ShopPost = () => {
                       }}
                     >
                       <strong>Content:</strong>{" "}
-                      {getShortContent(post.content) || "-"}
+                      {shortContents[post.id] || "Loading content..."}
                     </p>
                   </div>
 
@@ -436,20 +457,27 @@ const ShopPost = () => {
                     </div>
                   </div>
 
-                  <Button onClick={() => handleShowDetail(post)}>
-                    View Detail
-                  </Button>
-
-                  {/* Nút Extend nếu status là Expired */}
-                  {post.status === "Expired" && (
-                    <Button
-                      type="primary"
-                      onClick={() => handleExtend(post.id)}
-                      style={{ alignSelf: "flex-end" }}
-                    >
-                      Extend
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      marginTop: "10px",
+                    }}
+                  >
+                    <Button onClick={() => handleShowDetail(post)}>
+                      View Detail
                     </Button>
-                  )}
+
+                    {/* Nút Extend nếu status là Expired */}
+                    {post.status === "Expired" && (
+                      <Button
+                        type="primary"
+                        onClick={() => handleExtend(post.id)}
+                      >
+                        Extend
+                      </Button>
+                    )}
+                  </div>
                 </Card>
               </Col>
             ))}
