@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace SWP391.KoiCareSystemAtHome.Service.BusinessModels
 {
-    public class WaterParameterStandardModel
+    public class WaterStatisticModel
     {
-        public int Id { get; set; }
-
-        public string KoiVariety { get; set; } = null!;
+        public DateTime Date { get; set; }
 
         public decimal MaxTemp { get; set; }
 
@@ -47,5 +45,26 @@ namespace SWP391.KoiCareSystemAtHome.Service.BusinessModels
         public decimal MaxAmonium { get; set; }
 
         public decimal MinAmonium { get; set; }
+
+        //---------------
+
+        public decimal Temperature { get; set; }
+
+        public decimal PhVaule { get; set; }
+
+        public decimal Hardness { get; set; }
+
+        public decimal Oxigen { get; set; }
+
+        public decimal Cabondioxide { get; set; }
+
+        public decimal Salt { get; set; }
+
+        public decimal? Nitrates { get; set; }
+
+        public decimal? Nitrite { get; set; }
+
+        public decimal? Amonium { get; set; }
+
     }
 }

@@ -29,7 +29,6 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             {
                 Id = p.Id,
                 KoiVariety = p.KoiVariety,
-                Stage = p.Stage,
                 MaxTemp = p.MaxTemp,
                 MinTemp = p.MinTemp,
                 MaxPh = p.MaxPh,
@@ -69,7 +68,6 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             {
                 Id = waterParameterStandard.Id,
                 KoiVariety = waterParameterStandard.KoiVariety,
-                Stage = waterParameterStandard.Stage,
                 MaxTemp = waterParameterStandard.MaxTemp,
                 MinTemp = waterParameterStandard.MinTemp,
                 MaxPh = waterParameterStandard.MaxPh,
@@ -99,7 +97,6 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             {
                 Id = waterParameterStandardModel.Id,
                 KoiVariety = waterParameterStandardModel.KoiVariety,
-                Stage = waterParameterStandardModel.Stage,
                 MaxTemp = waterParameterStandardModel.MaxTemp,
                 MinTemp = waterParameterStandardModel.MinTemp,
                 MaxPh = waterParameterStandardModel.MaxPh,

@@ -127,5 +127,55 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return true;
         }
 
+        public async Task<IEnumerable<WaterStatisticModel>> GetWaterStatisticsByPondIdAsync(int pondId)
+        {
+            var waterReports = await _unitOfWork.WaterReports.GetAsync();
+            var reportOfPond = waterReports.Where(r => r.PondId == pondId).ToList();
+
+            if (reportOfPond == null || !reportOfPond.Any())
+                return Enumerable.Empty<WaterStatisticModel>();
+
+            var waterReportStandards = await _unitOfWork.WaterParameterStandards.GetAsync();
+            var fillteredWaterReportStandard = waterReportStandards.FirstOrDefault(r => r.KoiVariety == "General");
+
+            if (fillteredWaterReportStandard == null)
+                return Enumerable.Empty<WaterStatisticModel>();
+
+            var waterSatisticModels = reportOfPond.Select(r => new WaterStatisticModel
+            {
+                Date = r.Date,
+                MaxTemp = fillteredWaterReportStandard.MaxTemp,
+                MinTemp = fillteredWaterReportStandard.MinTemp,
+                MaxPh = fillteredWaterReportStandard.MaxPh,
+                MinPh = fillteredWaterReportStandard.MinPh,
+                MaxHardness = fillteredWaterReportStandard.MaxHardness,
+                MinHardness = fillteredWaterReportStandard.MinHardness,
+                MaxOxigen = fillteredWaterReportStandard.MaxOxigen,
+                MinOxigen = fillteredWaterReportStandard.MinOxigen,
+                MaxCabondioxide = fillteredWaterReportStandard.MaxCabondioxide,
+                MinCabondioxide = fillteredWaterReportStandard.MinCabondioxide,
+                MaxSalt = fillteredWaterReportStandard.MaxSalt,
+                MinSalt = fillteredWaterReportStandard.MinSalt,
+                MaxNitrates = fillteredWaterReportStandard.MaxNitrates,
+                MinNitrates = fillteredWaterReportStandard.MinNitrates,
+                MaxNitrite = fillteredWaterReportStandard.MaxNitrite,
+                MinNitrite = fillteredWaterReportStandard.MinNitrite,
+                MaxAmonium = fillteredWaterReportStandard.MaxAmonium,
+                MinAmonium = fillteredWaterReportStandard.MinAmonium,
+
+                Temperature = r.Temperature,
+                PhVaule = r.PhVaule,
+                Hardness = r.Hardness,
+                Oxigen = r.Oxigen,
+                Cabondioxide = r.Cabondioxide,
+                Salt = r.Salt,
+                Nitrates = r.Nitrates,
+                Nitrite = r.Nitrite,
+                Amonium = r.Amonium,
+            }).OrderBy(w => w.Date).ToList();
+
+            return waterSatisticModels;
+        }
+
     }
 }

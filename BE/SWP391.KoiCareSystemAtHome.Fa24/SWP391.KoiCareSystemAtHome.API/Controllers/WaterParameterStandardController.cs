@@ -30,7 +30,6 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             {
                 Id = p.Id,
                 KoiVariety = p.KoiVariety,
-                Stage = p.Stage,
                 MaxTemp = p.MaxTemp,
                 MinTemp = p.MinTemp,
                 MaxPh = p.MaxPh,
@@ -65,7 +64,6 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             {
                 Id = waterParameterStandard.Id,
                 KoiVariety = waterParameterStandard.KoiVariety,
-                Stage = waterParameterStandard.Stage,
                 MaxTemp = waterParameterStandard.MaxTemp,
                 MinTemp = waterParameterStandard.MinTemp,
                 MaxPh = waterParameterStandard.MaxPh,
@@ -100,7 +98,6 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 WaterParameterStandardModel model = new()
                 {
                     KoiVariety = request.KoiVariety,
-                    Stage = request.Stage,
                     MaxTemp = request.MaxTemp,
                     MinTemp = request.MinTemp,
                     MaxPh = request.MaxPh,
@@ -131,7 +128,6 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 {
                     Id = waterParameterStandard.Id,
                     KoiVariety = waterParameterStandard.KoiVariety,
-                    Stage = waterParameterStandard.Stage,
                     MaxTemp = waterParameterStandard.MaxTemp,
                     MinTemp = waterParameterStandard.MinTemp,
                     MaxPh = waterParameterStandard.MaxPh,
@@ -201,7 +197,6 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 {
                     Id = waterStandard.Id,
                     KoiVariety = waterStandard.KoiVariety,
-                    Stage = waterStandard.Stage,
                     MaxTemp = waterStandard.MaxTemp,
                     MinTemp = waterStandard.MinTemp,
                     MaxPh = waterStandard.MaxPh,

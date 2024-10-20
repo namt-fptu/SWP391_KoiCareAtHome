@@ -144,20 +144,27 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return true;
         }
 
-        //public async Task<int> GetTotalWeighOfKoisInPondAsync(int pondId)
-        //{
-        //    var koiFishs = await _unitOfWork.KoiFishs.GetAsync();
-        //    var fishOfPond = koiFishs.Where(f => f.PondId == pondId);
+        public async Task<decimal> GetTotalWeighOfKoisInPondAsync(int pondId)
+        {
+            var koiFish = await _unitOfWork.KoiFishs.GetAsync();
+            var fishOfPond = koiFish.Where(f => f.PondId == pondId);
+            var fishReports = await _unitOfWork.KoiGrowthReports.GetAsync();
 
-        //    if (fishOfPond == null || !fishOfPond.Any())
-        //        return 0;
+            if (fishOfPond == null || !fishOfPond.Any())
+                return 0;
 
-        //    int totalWeigh = 0;
-        //    foreach (var entity in fishOfPond)
-        //    {
-        //        totalWeigh += entity.;
-        //    }
-        //}
+            decimal totalWeigh = 0;
+            foreach (var entity in fishOfPond)
+            {
+                var reportOfFish = fishReports.LastOrDefault(r => r.KoiId == entity.Id);
+                if (reportOfFish == null) 
+                    continue;
+
+                totalWeigh += reportOfFish.Wetight;
+            }
+
+            return totalWeigh;
+        }
 
     }
 }

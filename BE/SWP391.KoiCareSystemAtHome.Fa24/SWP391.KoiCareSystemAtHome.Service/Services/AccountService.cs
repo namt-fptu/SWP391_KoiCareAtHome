@@ -76,8 +76,10 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             if (accountToUpdate == null)
                 return false;
 
+            var passwordHash = BCrypt.Net.BCrypt.HashPassword(accountModel.Password);
+
             accountToUpdate.Email = accountModel.Email;
-            accountToUpdate.Password = accountModel.Password;
+            accountToUpdate.Password = passwordHash;
             accountToUpdate.Phone = accountModel.Phone;
             
             _unitOfWork.Accounts.UpdateAsync(accountToUpdate);
