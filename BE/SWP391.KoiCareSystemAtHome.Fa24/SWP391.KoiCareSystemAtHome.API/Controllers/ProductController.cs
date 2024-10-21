@@ -17,10 +17,10 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             _productService = productService;
         }
 
-        [HttpGet("getProductByPostId/{postId}")]
-        public async Task<ActionResult<IEnumerable<ProductResponseModel>>> GetProductByPostId(int postId)
+        [HttpGet("getProductByAdvId/{advId}")]
+        public async Task<ActionResult<IEnumerable<ProductResponseModel>>> GetProductByPostId(int advId)
         {
-            var products = await _productService.GetProductByPostIdAsync(postId);
+            var products = await _productService.GetProductByPostIdAsync(advId);
 
             if (products == null || !products.Any())
                 return NotFound();
@@ -67,6 +67,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             {
                 ProductModel productModel = new()
                 {
+                    PostId = request.PostId,
                     Title = request.Title,
                     Url = request.Url,
                     Description = request.Description,
@@ -96,7 +97,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
         }
 
-        [HttpPut("updateProduct/{productId}")]
+        [HttpPut("updateProductById/{productId}")]
         public async Task<ActionResult> UpdateProduct(int productId, ProductRequestModel request)
         {
             var product = await _productService.GetProductByIdAsync(productId);
@@ -139,10 +140,21 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
         }
 
-        [HttpDelete("deleteProduct/{productId}")]
+        [HttpDelete("deleteProductById/{productId}")]
         public async Task<ActionResult> DeleteProduct(int productId)
         {
-            bool success = await _productService.DeleteProductAsync(productId);
+            bool success = await _productService.DeleteProductByIdAsync(productId);
+
+            if (!success)
+                return NotFound();
+
+            return NoContent();
+        }
+
+        [HttpDelete("deleteProductByAdvId/{advId}")]
+        public async Task<ActionResult> DeleteProductByAdvId(int advId)
+        {
+            bool success = await _productService.DeleteProductByAdvAsync(advId);
 
             if (!success)
                 return NotFound();

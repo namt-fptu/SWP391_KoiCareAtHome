@@ -129,6 +129,61 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
         }
 
+        [HttpPut("updateWaterReport/{id}")]
+        public async Task<ActionResult> UpdateWaterReport(int id, WaterreportUpdateRequestModel reqest)
+        {
+            var waterreport = await _waterReportService.GetWarterReportByIdAsync(id);
+            if (waterreport == null)
+                return NotFound();
+
+            try
+            {
+                waterreport.Temperature = reqest.Temperature;
+                waterreport.PhVaule = reqest.PhVaule;
+                waterreport.Hardness = reqest.Hardness;
+                waterreport.Oxigen = reqest.Oxigen;
+                waterreport.Cabondioxide = reqest.Cabondioxide;
+                waterreport.Salt = reqest.Salt;
+                waterreport.Date = reqest.Date;
+                waterreport.Nitrates = reqest.Nitrates;
+                waterreport.Nitrite = reqest.Nitrite;
+                waterreport.Amonium = reqest.Amonium;
+
+                bool success = await _waterReportService.UpdateWaterReportAsync(id, waterreport);
+                if (!success)
+                {
+                    return NotFound();
+                }
+
+                var waterReport = await _waterReportService.GetWarterReportByIdAsync(id);
+
+                if (waterReport == null)
+                    return NotFound();
+
+                var response = new WaterReportResponseModel
+                {
+                    Id = waterReport.Id,
+                    PondId = waterReport.PondId,
+                    Temperature = waterReport.Temperature,
+                    PhVaule = waterReport.PhVaule,
+                    Hardness = waterReport.Hardness,
+                    Oxigen = waterReport.Oxigen,
+                    Cabondioxide = waterReport.Cabondioxide,
+                    Salt = waterReport.Salt,
+                    Date = waterReport.Date,
+                    Nitrates = waterReport.Nitrates,
+                    Nitrite = waterReport.Nitrite,
+                    Amonium = waterReport.Amonium,
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the water report.");
+            }
+        }
+
         [HttpDelete("deleteWaterReports/{pondId}")]
         public async Task<ActionResult> DeleteWaterReport(int pondId)
         {

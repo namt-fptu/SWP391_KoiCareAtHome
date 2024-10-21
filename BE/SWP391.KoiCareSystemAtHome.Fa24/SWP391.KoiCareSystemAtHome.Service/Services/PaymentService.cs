@@ -105,5 +105,22 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return;
         }
 
+        public async Task DeletePaymentByAdvIdAsync(int advId)
+        {
+            var payments = await _unitOfWork.Payments.GetAsync();
+            var fillteredPayment = payments.Where(p => p.PostId == advId).ToList();
+
+            if (fillteredPayment == null || !fillteredPayment.Any()) 
+                return;
+
+            foreach (var payment in fillteredPayment)
+            {
+                _unitOfWork.Payments.DeleteAsync(payment);
+            }
+
+            await _unitOfWork.SaveAsync();
+            return;
+        }
+
     }
 }

@@ -14,10 +14,14 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
     public class AdvService
     {
         private readonly UnitOfWork _unitOfWork;
+        private readonly ProductService _productService;
+        private readonly PaymentService _paymentService;
 
-        public AdvService(UnitOfWork unitOfWork)
+        public AdvService(UnitOfWork unitOfWork, ProductService productService, PaymentService paymentService)
         {
             _unitOfWork = unitOfWork;
+            _productService = productService;
+            _paymentService = paymentService;
         }
         public async Task<IEnumerable<AdvModel>> GetAdvByShopIdAsync(int shopId)
         {
@@ -166,21 +170,6 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return advModels;
         }
 
-        public async Task<bool> CheckExpriedAdvAsync(int advId)
-        {
-            var adv = await _unitOfWork.Advs.GetByIdAsync(advId);
-            if (adv == null)
-                return false;
-
-            if (adv.ExpiredDate <= DateTime.Now && adv.Status.Equals("Approved"))
-            {
-                return false;
-            }
-
-            return true;
-
-        }
-
         public async Task UpdateAdsPaymentAsync(UpdateAdsModel updateAdsModel)
         {
             var adv = await _unitOfWork.Advs.GetByIdAsync(updateAdsModel.PostId);
@@ -192,6 +181,58 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
 
             _unitOfWork.Advs.UpdateAsync(adv);
             await _unitOfWork.SaveAsync();
+        }
+
+        public async Task<bool> DeleteAdsByIdAsync(int advId)
+        {
+            var adv = await _unitOfWork.Advs.GetByIdAsync(advId);
+
+            if (adv == null)
+                return false;
+
+            await _productService.DeleteProductForDeleteAdvAsync(advId);
+            await _paymentService.DeletePaymentByAdvIdAsync(advId);
+
+
+            _unitOfWork.Advs.DeleteAsync(adv);
+            await _unitOfWork.SaveAsync();
+
+            return true;
+        }
+
+        public async Task DeleteAdsForDeleteShopAsync(int advId)
+        {
+            var adv = await _unitOfWork.Advs.GetByIdAsync(advId);
+
+            if (adv == null)
+                return;
+
+            await _productService.DeleteProductForDeleteAdvAsync(advId);
+            await _paymentService.DeletePaymentByAdvIdAsync(advId);
+
+
+            _unitOfWork.Advs.DeleteAsync(adv);
+            await _unitOfWork.SaveAsync();
+
+            return;
+        }
+
+        public async Task DeleteAdvsByShopIdAsync(int shopId)
+        {
+            var advs = await _unitOfWork.Advs.GetAsync();
+            if (advs == null || !advs.Any()) 
+                return;
+
+            var fillterdAdvs = advs.Where(a => a.ShopId == shopId).ToList();
+            if (fillterdAdvs == null || !fillterdAdvs.Any())
+                return;
+
+            foreach (var adv in fillterdAdvs)
+            {
+                await DeleteAdsForDeleteShopAsync(adv.Id);
+            }
+
+            return;
         }
 
     }
