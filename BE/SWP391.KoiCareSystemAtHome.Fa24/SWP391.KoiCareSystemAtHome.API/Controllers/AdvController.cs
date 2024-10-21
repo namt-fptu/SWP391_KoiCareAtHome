@@ -77,12 +77,19 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             if (advs == null || !advs.Any())
                 return NotFound();
 
-            var fillteredAdvs = advs.Select(a => _advService.CheckExpriedAdvAsync(a.Id));
+            var validAdvs = new List<AdvModel>();
+            foreach (var adv in advs)
+            {
+                if ((adv.ExpiredDate <= DateTime.Now) && adv.Status.Equals("Approved"))
+                {
+                    validAdvs.Add(adv);
+                }
+            }
 
-            if (fillteredAdvs == null || !fillteredAdvs.Any())
+            if (!validAdvs.Any())
                 return NotFound();
 
-            var response = advs.Select(fillteredAdvs => new AdvResponseModel
+            var response = validAdvs.Select(fillteredAdvs => new AdvResponseModel
             {
                 Id = fillteredAdvs.Id,
                 ShopId = fillteredAdvs.ShopId,
