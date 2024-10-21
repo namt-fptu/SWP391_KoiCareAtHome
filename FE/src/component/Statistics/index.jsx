@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import LineChart from "../Chart";
 import api from "../../config/axios";
-import { message } from "antd";
+import { message,Row, Col  } from "antd";
 
 const Statistics = () => {
   const [lengthData, setLengthData] = useState({ labels: [], datasets: [] });
@@ -38,8 +38,13 @@ const Statistics = () => {
   const fetchKoiForPond = async (pondId) => {
     try {
       const response = await api.get(`KoiFish/koiFish/${pondId}`);
+      console.log("Pond Koi Fish Data:", response.data);
       if (response.data.length > 0) {
-        setAllFishData(response.data);
+        const fishDataWithVariety = response.data.map(fish => ({
+          ...fish,
+          koiVariety: fish.koiVariety // assuming koiVariety is part of the fish data
+        }));
+        setAllFishData(fishDataWithVariety);
       } else {
         setAllFishData([]);
         message.warning("No koi fish found in the selected pond.");
@@ -54,6 +59,7 @@ const Statistics = () => {
       }
     }
   };
+  
 
   useEffect(() => {
     if (selectedPond) {
@@ -61,17 +67,16 @@ const Statistics = () => {
     }
   }, [selectedPond]);
 
-  const fetchKoiGrowthDataForFish = async (fishId) => {
+  const fetchKoiGrowthDataForFish = async (fishId, koiVariety) => {
     try {
-      // Fetch data from the correct API endpoint
       const reportResponse = await api.get(`/KoiGrowthReport/getKoiStatistic/${fishId}`);
-      console.log("Growth Report Data:", reportResponse.data); // Check the structure
-  
-      // Assuming there's no need for a separate "standard" API call
       const growthData = reportResponse.data;
   
+      // Fetch the growth standard for the specific koiVariety
+      const growthStandard = await fetchKoiGrowthStandard(koiVariety);
+  
       // Process the data and update the charts
-      updateUserData(growthData);
+      updateUserData(growthData, growthStandard);
     } catch (error) {
       if (error.response && error.response.status === 404) {
         message.warning("No growth data found for the selected fish.");
@@ -81,6 +86,19 @@ const Statistics = () => {
       }
     }
   };
+    
+  const fetchKoiGrowthStandard = async (koiVariety) => {
+    try {
+      const response = await api.get(`/koiGrowthStandard/koiStandard`, {
+        params: { koiVariety } // pass koiVariety as a query parameter
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching Koi Growth Standard data", error);
+      return null;
+    }
+  };
+  
 
   const handlePondSelection = (event) => {
     const selectedPondId = event.target.value;
@@ -93,32 +111,57 @@ const Statistics = () => {
 
   const handleFishSelection = (event) => {
     const selectedFishId = event.target.value;
+    console.log('Selected Fish ID:', selectedFishId); // Debugging
+    console.log('All Fish Data:', allFishData); // Debugging
+  
+    // Ensure both the fish ID and selected ID are compared as the same type
+    const selectedFish = allFishData.find(fish => String(fish.id) === String(selectedFishId));
+  
+    if (!selectedFish) {
+      console.log('Available Fish IDs:', allFishData.map(fish => fish.id)); // Log available IDs
+      message.error("Fish not found. Ensure the selected ID is correct.");
+      return;
+    }
+  
     setSelectedFish(selectedFishId);
-
-    if (selectedFishId) {
+  
+    if (selectedFish.koiVariety) {
       fetchKoiGrowthDataForFish(selectedFishId);
     } else {
-      setGrowthReportData([]);
-      setGrowthStandardData([]);
-      setLengthData({ labels: [], datasets: [] });
-      setWeightData({ labels: [], datasets: [] });
+      message.warning("No koi variety information for this fish.");
     }
   };
 
-  const updateUserData = (growthReport) => {
-    // Normalize data from API response
-    const correctedGrowthReport = growthReport.map(item => ({
-      length: item.length || 0, // Ensure length field exists
-      weight: item.weight || 0, // Ensure weight field exists
-      standardWeigth: item.standardWeigth || 0, // Ensure standardWeight is correct
-      standardLength: item.standardLength || 0, // Ensure standardLength is correct
-      stage: item.stage || 'N/A', // Label each point (optional)
-    }));
+  const handleDataTypeChange = (type) => {
+    setSelectedDataType(type);
+  };
+
+  const updateUserData = (growthReport, growthStandard) => {
+    if (!growthStandard) {
+      console.error("No growth standard data available");
+      return;
+    }
   
-    // Generate labels based on the 'stage' field
+    // Corrected growth report to include standard values
+    const correctedGrowthReport = growthReport.map((item, index) => {
+      const standard = growthStandard[index] || {}; // Match with growth standard data
+      return {
+        length: item.length || 0,
+        weight: item.weight || 0,
+        standardWeight: standard.standardWeight || 0,
+        standardLength: standard.standardLength || 0,
+        minLength: standard.minLength || 0,
+        maxLength: standard.maxLength || 0,
+        minWeight: standard.minWeight || 0,
+        maxWeight: standard.maxWeight || 0,
+        stage: item.stage || 'N/A', // Ensure the stage is included
+      };
+    });
+  
+    // Use stages as labels
     const labels = correctedGrowthReport.map(item => item.stage);
   
-    // Prepare length datasets
+    // Prepare length datasets including min and max
     const lengthDatasets = [
       {
         label: "Length",
@@ -134,9 +177,23 @@ const Statistics = () => {
         borderColor: "rgba(75, 192, 192, 1)",
         borderWidth: 2,
       },
+      {
+        label: "Min Length",
+        data: correctedGrowthReport.map(item => item.minLength),
+        backgroundColor: "rgba(255, 206, 86, 0.2)",
+        borderColor: "rgba(255, 206, 86, 1)",
+        borderWidth: 2,
+      },
+      {
+        label: "Max Length",
+        data: correctedGrowthReport.map(item => item.maxLength),
+        backgroundColor: "rgba(153, 102, 255, 0.2)",
+        borderColor: "rgba(153, 102, 255, 1)",
+        borderWidth: 2,
+      },
     ];
   
-    // Prepare weight datasets
+    // Prepare weight datasets including min and max
     const weightDatasets = [
       {
         label: "Weight",
@@ -147,9 +204,23 @@ const Statistics = () => {
       },
       {
         label: "Standard Weight",
-        data: correctedGrowthReport.map(item => item.standardWeigth),
+        data: correctedGrowthReport.map(item => item.standardWeight),
         backgroundColor: "rgba(153, 102, 255, 0.2)",
         borderColor: "rgba(153, 102, 255, 1)",
+        borderWidth: 2,
+      },
+      {
+        label: "Min Weight",
+        data: correctedGrowthReport.map(item => item.minWeight),
+        backgroundColor: "rgba(75, 192, 192, 0.2)",
+        borderColor: "rgba(75, 192, 192, 1)",
+        borderWidth: 2,
+      },
+      {
+        label: "Max Weight",
+        data: correctedGrowthReport.map(item => item.maxWeight),
+        backgroundColor: "rgba(255, 99, 132, 0.2)",
+        borderColor: "rgba(255, 99, 132, 1)",
         borderWidth: 2,
       },
     ];
@@ -160,63 +231,62 @@ const Statistics = () => {
   };
   
 
-  const handleDataTypeChange = (type) => {
-    setSelectedDataType(type);
-  };
-
   return (
     <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen flex flex-col">
       <h1 className="text-3xl font-bold mb-4 text-white">Statistics</h1>
       <p className="text-white mb-8">
         Statistics about your fish tank and Koi fish.
       </p>
-
-      {/* Pond selection */}
-      <form className="max-w-sm mx-auto mb-8">
-        <label
-          htmlFor="pondSelect"
-          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-        >
-          Select Pond:
-        </label>
-        <select
-          id="pondSelect"
-          onChange={handlePondSelection}
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        >
-          <option value="">Choose Pond</option>
-          {ponds.map((pond) => (
-            <option key={pond.id} value={pond.id}>
-              {pond.name}
-            </option>
-          ))}
-        </select>
-      </form>
-
-      {/* Fish selection */}
-      {selectedPond && allFishData.length > 0 && (
-        <form className="max-w-sm mx-auto mb-8">
+  
+      {/* Pond and Fish selection */}
+      <Row gutter={16} className="max-w-sm mx-auto mb-8">
+        {/* Pond Selection */}
+        <Col span={12}>
           <label
-            htmlFor="fishSelect"
+            htmlFor="pondSelect"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
-            Select Fish:
+            Select Pond:
           </label>
           <select
-            id="fishSelect"
-            onChange={handleFishSelection}
+            id="pondSelect"
+            onChange={handlePondSelection}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
-            <option value="">Choose Koi</option>
-            {allFishData.map((fish) => (
-              <option key={fish.id} value={fish.id}>
-                {fish.koiName}
+            <option value="">Choose Pond</option>
+            {ponds.map((pond) => (
+              <option key={pond.id} value={pond.id}>
+                {pond.name}
               </option>
             ))}
           </select>
-        </form>
-      )}
-
+        </Col>
+  
+        {/* Fish Selection */}
+        {selectedPond && allFishData.length > 0 && (
+          <Col span={12}>
+            <label
+              htmlFor="fishSelect"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Select Fish:
+            </label>
+            <select
+              id="fishSelect"
+              onChange={handleFishSelection}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            >
+              <option value="">Choose Koi</option>
+              {allFishData.map((fish) => (
+                <option key={fish.id} value={fish.id}>
+                  {fish.koiName}
+                </option>
+              ))}
+            </select>
+          </Col>
+        )}
+      </Row>
+  
       {/* Data type selection with toggle buttons */}
       {selectedFish && (
         <div className="max-w-sm mx-auto mb-8">
@@ -239,7 +309,7 @@ const Statistics = () => {
           </div>
         </div>
       )}
-
+  
       <div className="flex flex-col items-center">
         {selectedFish ? (
           <>

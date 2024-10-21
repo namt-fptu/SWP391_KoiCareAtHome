@@ -116,18 +116,18 @@ const WaterParameter = () => {
   name="pond"
   rules={[{ required: true, message: "Please select a pond!" }]}
 >
-  <Select
-    placeholder="Select a pond"
-    onChange={handlePondChange}
-    allowClear
-    width= "10%"
-  >
-    {ponds.map((pond) => (
-      <Option key={pond.id} value={pond.id}>
-        {pond.name}
-      </Option>
-    ))}
-  </Select>
+<Select
+  placeholder="Select a pond"
+  onChange={handlePondChange}
+  allowClear
+  style={{ width: "10%" }}  // Apply inline styling for width
+>
+  {ponds.map((pond) => (
+    <Option key={pond.id} value={pond.id}>
+      {pond.name}
+    </Option>
+  ))}
+</Select>
 </Form.Item>
 
       {/* Button to Input Water Parameters */}
@@ -139,101 +139,140 @@ const WaterParameter = () => {
 
       {/* Modal for Adding Water Parameters */}
       <Modal
-        title="Input Water Parameters"
-        open={isModalVisible}
-        onCancel={handleCancel}
-        footer={null}
+  title="Input Water Parameters"
+  open={isModalVisible}
+  onCancel={handleCancel}
+  footer={null}
+>
+  <Form layout="vertical" onFinish={onFinish}>
+    <Row gutter={16}>
+      {/* Date Picker */}
+      <Col span={12}>
+        <Form.Item
+          label="Date"
+          name="date"
+          rules={[{ required: true, message: "Please select a date!" }]}
+        >
+          <DatePicker style={{ width: "100%" }} />
+        </Form.Item>
+      </Col>
+
+      {/* Salt Input */}
+      <Col span={12}>
+        <Form.Item
+          label="Salt"
+          name="salt"
+          rules={[{ required: true, message: "Please input Salt!" }]}
+        >
+          <Input />
+        </Form.Item>
+      </Col>
+
+      {/* Nitrite Input */}
+      <Col span={12}>
+        <Form.Item
+          label="Nitrite (NO₂)"
+          name="nitrite"
+          rules={[{ required: true, message: "Please input Nitrite!" }]}
+        >
+          <Input />
+        </Form.Item>
+      </Col>
+
+      {/* Nitrate Input */}
+      <Col span={12}>
+        <Form.Item
+          label="Nitrate (NO₃)"
+          name="nitrates"
+          rules={[{ required: true, message: "Please input Nitrate!" }]}
+        >
+          <Input />
+        </Form.Item>
+      </Col>
+
+      {/* Ammonium Input */}
+      <Col span={12}>
+        <Form.Item
+          label="Ammonium (NH₄)"
+          name="amonium"
+          rules={[{ required: true, message: "Please input Ammonium!" }]}
+        >
+          <Input />
+        </Form.Item>
+      </Col>
+
+      {/* Hardness Input */}
+      <Col span={12}>
+        <Form.Item
+          label="Hardness (GH)"
+          name="hardness"
+          rules={[{ required: true, message: "Please input Hardness!" }]}
+        >
+          <Input />
+        </Form.Item>
+      </Col>
+
+      {/* Oxygen Input */}
+      <Col span={12}>
+        <Form.Item
+          label="Oxygen (O₂)"
+          name="oxigen"
+          rules={[{ required: true, message: "Please input Oxygen!" }]}
+        >
+          <Input />
+        </Form.Item>
+      </Col>
+
+      {/* Temperature Input */}
+      <Col span={12}>
+        <Form.Item
+          label="Temperature (℃)"
+          name="temperature"
+          rules={[{ required: true, message: "Please input Temperature!" }]}
+        >
+          <Input />
+        </Form.Item>
+      </Col>
+
+      {/* pH-Value Input */}
+      <Col span={12}>
+        <Form.Item
+          label="pH-Value"
+          name="phVaule"
+          rules={[{ required: true, message: "Please input pH-Value!" }]}
+        >
+          <Input />
+        </Form.Item>
+      </Col>
+
+      {/* CO₂ Input */}
+      <Col span={12}>
+        <Form.Item
+          label="CO₂"
+          name="cabondioxide"
+          rules={[{ required: true, message: "Please input CO₂!" }]}
+        >
+          <Input />
+        </Form.Item>
+      </Col>
+    </Row>
+
+    {/* Submit Buttons */}
+    <Form.Item>
+      <Button type="primary" htmlType="submit">
+        Add
+      </Button>
+      <Button
+        type="default"
+        onClick={handleCancel}
+        style={{ marginLeft: "10px" }}
       >
-        <Form layout="vertical" onFinish={onFinish}>
-          {/* Date Picker */}
-          <Form.Item
-            label="Date"
-            name="date"
-            rules={[{ required: true, message: "Please select a date!" }]}
-          >
-            <DatePicker style={{ width: "100%" }} />
-          </Form.Item>
+        Close
+      </Button>
+    </Form.Item>
+  </Form>
+</Modal>
 
-          {/* Form Input Fields */}
-          <Form.Item
-            label="Salt"
-            name="salt"
-            rules={[{ required: true, message: "Please input Salt!" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Nitrite (NO₂)"
-            name="nitrite"
-            rules={[{ required: true, message: "Please input Nitrite!" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Nitrate (NO₃)"
-            name="nitrates"
-            rules={[{ required: true, message: "Please input Nitrate!" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Ammonium (NH₄)"
-            name="amonium"
-            rules={[{ required: true, message: "Please input Ammonium!" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Hardness (GH)"
-            name="hardness"
-            rules={[{ required: true, message: "Please input Hardness!" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Oxygen (O₂)"
-            name="oxigen"
-            rules={[{ required: true, message: "Please input Oxygen!" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Temperature (℃)"
-            name="temperature"
-            rules={[{ required: true, message: "Please input Temperature!" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="pH-Value"
-            name="phVaule"
-            rules={[{ required: true, message: "Please input pH-Value!" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="CO₂"
-            name="cabondioxide"
-            rules={[{ required: true, message: "Please input CO₂!" }]}
-          >
-            <Input />
-          </Form.Item>
-
-          {/* Submit Buttons */}
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              Add
-            </Button>
-            <Button
-              type="default"
-              onClick={handleCancel}
-              style={{ marginLeft: "10px" }}
-            >
-              Close
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
 
       {/* Display Water Reports */}
       {waterReports.length > 0 ? (

@@ -391,10 +391,7 @@ const MyKoiFish = () => {
               price: selectedKoi?.price,
             }}
           >
-            <Form.Item label="Selected Pond">
-              <Input value={pondId} disabled />
-            </Form.Item>
-
+            
             <Form.Item label="Upload Image" name="image">
               <Upload
                 listType="picture"
