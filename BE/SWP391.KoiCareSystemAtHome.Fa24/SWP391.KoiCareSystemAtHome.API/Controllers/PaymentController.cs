@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SWP391.KoiCareSystemAtHome.API.RequestModel;
 using SWP391.KoiCareSystemAtHome.API.ResponseModel;
 using SWP391.KoiCareSystemAtHome.Service.BusinessModels;
 using SWP391.KoiCareSystemAtHome.Service.Services;
@@ -14,13 +15,15 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         private readonly VnPayService _vpnPayService;
         private readonly PostPackageService _postPackageService;
         private readonly AdvService _advService;
+        private readonly PostPackageService _packageService;
 
-        public PaymentController(PaymentService paymentService, VnPayService vpnPayService, PostPackageService postPackageService, AdvService advService)
+        public PaymentController(PaymentService paymentService, VnPayService vpnPayService, PostPackageService postPackageService, AdvService advService, PostPackageService packageService)
         {
             _paymentService = paymentService;
             _vpnPayService = vpnPayService;
             _postPackageService = postPackageService;
             _advService = advService;
+            _packageService = packageService;
         }
 
         [HttpGet("getPaymentByAdvId/{advId}")]
@@ -93,12 +96,23 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         }
 
         [HttpPost("createPaymentURL")]
-        public async Task<ActionResult> CreatePaymentURL(PaymentInformationModel model)
+        public async Task<ActionResult> CreatePaymentURL(PaymentRequestModel request)
         {
+            var package = await _packageService.GetPostPackageByIdAsync(request.PackageId);
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+
+            PaymentInformationModel model = new()
+            {
+                Amount = package.Price,
+                OrderDescription = request.OrderDescription,
+                OrderType = request.OrderType,
+                PackageId = package.Id,
+                PostId = request.PostId,
+            };
 
             bool checkAdv = await _advService.CheckAdvExistAsync(model.PostId);
             bool checkPackage = await _postPackageService.CheckPostPackageExistAsync(model.PackageId);

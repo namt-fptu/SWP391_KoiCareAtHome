@@ -20,7 +20,6 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         [HttpGet("getAdvByShopId/{shopId}")]
         public async Task<ActionResult<IEnumerable<AdvResponseModel>>> GetAdvByShopId(int shopId)
         {
-            await _advService.CheckExpriedAdvAsync();
 
             var advs = await _advService.GetAdvByShopIdAsync(shopId);
 
@@ -46,7 +45,6 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         [HttpGet("GetAdvById/{advId}")]
         public async Task<ActionResult<AdvResponseModel>> GetAdvById(int advId)
         {
-            await _advService.CheckExpriedAdvAsync();
 
             var adv = await _advService.GetAdvByIdAsync(advId);
 
@@ -73,25 +71,29 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         [HttpGet("getApprovedAdv")]
         public async Task<ActionResult<AdvResponseModel>> GetApprovedAdv()
         {
-            await _advService.CheckExpriedAdvAsync();
 
             var advs = await _advService.GetApprovedAdvAsync();
 
             if (advs == null || !advs.Any())
                 return NotFound();
 
-            var response = advs.Select(adv => new AdvResponseModel
+            var fillteredAdvs = advs.Select(a => _advService.CheckExpriedAdvAsync(a.Id));
+
+            if (fillteredAdvs == null || !fillteredAdvs.Any())
+                return NotFound();
+
+            var response = advs.Select(fillteredAdvs => new AdvResponseModel
             {
-                Id = adv.Id,
-                ShopId = adv.ShopId,
-                Title = adv.Title,
-                Url = adv.Url,
-                ImageUrl = adv.ImageUrl,
-                AdvDate = adv.AdvDate,
-                Status = adv.Status,
-                EditedDate = adv.EditedDate,
-                ExpiredDate = adv.ExpiredDate,
-                Duration = adv.Duration,
+                Id = fillteredAdvs.Id,
+                ShopId = fillteredAdvs.ShopId,
+                Title = fillteredAdvs.Title,
+                Url = fillteredAdvs.Url,
+                ImageUrl = fillteredAdvs.ImageUrl,
+                AdvDate = fillteredAdvs.AdvDate,
+                Status = fillteredAdvs.Status,
+                EditedDate = fillteredAdvs.EditedDate,
+                ExpiredDate = fillteredAdvs.ExpiredDate,
+                Duration = fillteredAdvs.Duration,
             });
 
             return Ok(response);
@@ -148,7 +150,6 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         [HttpPut("updateAdv/{advId}")]
         public async Task<ActionResult> UpdateAdv(int advId, AdvUpdateRequestModel advRequestModel)
         {
-            await _advService.CheckExpriedAdvAsync();
 
             AdvModel advModel = await _advService.GetAdvByIdAsync(advId);
 

@@ -22,7 +22,6 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         [HttpGet("getAdvByStatus/{status}")]
         public async Task<ActionResult<IEnumerable<AdvResponseModel>>> GetAdvByStatus(string status)
         {
-            await _advService.CheckExpriedAdvAsync();
 
             var advs = await _advService.GetAdvByStatusAsync(status);
 
@@ -49,7 +48,6 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         [HttpPut("approveAdv/{advId}")]
         public async Task<ActionResult> ApproveAdv(int advId, string status)
         {
-            await _advService.CheckExpriedAdvAsync();
 
             var advs = await _advService.GetAdvByStatusAsync("Processing");
 

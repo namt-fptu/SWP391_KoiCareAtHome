@@ -9,7 +9,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.BusinessModels
     public class PaymentInformationModel
     {
         public string OrderType { get; set; }
-        public double Amount { get; set; }
+        public decimal Amount { get; set; }
         public string OrderDescription { get; set; }
         public int PostId { get; set; }
         public int PackageId {  get; set; }
