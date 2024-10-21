@@ -12,10 +12,12 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
     public class ShopService
     {
         private readonly UnitOfWork _unitOfWork;
+        private readonly AdvService _advService;
 
-        public ShopService(UnitOfWork unitOfWork)
+        public ShopService(UnitOfWork unitOfWork, AdvService advService)
         {
             _unitOfWork = unitOfWork;
+            _advService = advService;
         }
 
         public async Task<ShopModel> GetShopModelByIdAsync(int id)
@@ -71,15 +73,21 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
 
         public async Task<bool> DeleteShopAsync(int id)
         {
-            var shops = await _unitOfWork.Shops.GetAsync();
-            if (shops == null)
+            //var shops = await _unitOfWork.Shops.GetAsync();
+            //if (shops == null)
+            //    return false;
+
+            //var shopToUpdate = shops.Where(x => x.ShopId == id).FirstOrDefault();
+            //if (shopToUpdate == null)
+            //    return false;
+
+            var shopToDelete = await _unitOfWork.Shops.GetByIdAsync(id);
+            if (shopToDelete == null) 
                 return false;
 
-            var shopToUpdate = shops.Where(x => x.ShopId == id).FirstOrDefault();
-            if (shopToUpdate == null)
-                return false;
+            await _advService.DeleteAdvsByShopIdAsync(id);
 
-            _unitOfWork.Shops.DeleteAsync(shopToUpdate);
+            _unitOfWork.Shops.DeleteAsync(shopToDelete);
             await _unitOfWork.SaveAsync();
             return true;
         }

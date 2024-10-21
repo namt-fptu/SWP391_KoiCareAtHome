@@ -206,6 +206,15 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
         }
 
+        [HttpDelete("deleteAdvById/{advId}")]
+        public async Task<ActionResult> DeleteAdvById(int advId)
+        {
+            bool success = await _advService.DeleteAdsByIdAsync(advId);
+            if (!success)
+                return NotFound();
+
+            return NoContent();
+        }
 
     }
 }

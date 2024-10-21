@@ -93,7 +93,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return true;
         }
 
-        public async Task<bool> DeleteProductAsync(int productId)
+        public async Task<bool> DeleteProductByIdAsync(int productId)
         {
             var productToUpdate = await _unitOfWork.Products.GetByIdAsync(productId);
 
@@ -105,5 +105,40 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
 
             return true;
         }
+
+        public async Task<bool> DeleteProductByAdvAsync(int advId)
+        {
+            var products = await _unitOfWork.Products.GetAsync();
+            var fillterdProuct = products.Where(p => p.PostId == advId).ToList();
+
+            if (fillterdProuct == null || !fillterdProuct.Any())
+                return false;
+
+            foreach (var product in fillterdProuct)
+            {
+                _unitOfWork.Products.DeleteAsync(product);
+            }
+
+            await _unitOfWork.SaveAsync();
+            return true;
+        }
+
+        public async Task DeleteProductForDeleteAdvAsync(int advId)
+        {
+            var products = await _unitOfWork.Products.GetAsync();
+            var fillterdProuct = products.Where(p => p.PostId == advId).ToList();
+
+            if (fillterdProuct == null || !fillterdProuct.Any())
+                return;
+
+            foreach (var product in fillterdProuct)
+            {
+                _unitOfWork.Products.DeleteAsync(product);
+            }
+
+            await _unitOfWork.SaveAsync();
+            return;
+        }
+
     }
 }

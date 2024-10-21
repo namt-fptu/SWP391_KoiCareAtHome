@@ -70,13 +70,15 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
 
         public async Task<bool> DeletePondOwnerAsync(int id)
         {
-            var pondOwners = await _unitOfWork.PondOwners.GetAsync();
-            if (pondOwners == null)
-                return false;
+            //var pondOwners = await _unitOfWork.PondOwners.GetAsync();
+            //if (pondOwners == null)
+            //    return false;
 
-            var pondOwnerToDelete = pondOwners.Where(x => x.PondOwnerId == id).FirstOrDefault();
-            if (pondOwnerToDelete == null)
-                return false;
+            //var pondOwnerToDelete = pondOwners.Where(x => x.PondOwnerId == id).FirstOrDefault();
+            //if (pondOwnerToDelete == null)
+            //    return false;
+
+            var pondOwnerToDelete = await _unitOfWork.PondOwners.GetByIdAsync(id);
 
             bool success = await _pondService.DeletePondByOwnerIdAsync(id);
 

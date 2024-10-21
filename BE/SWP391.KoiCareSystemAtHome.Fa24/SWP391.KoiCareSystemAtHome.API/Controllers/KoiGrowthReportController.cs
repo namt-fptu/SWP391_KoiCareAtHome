@@ -97,6 +97,47 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
         }
 
+        [HttpPut("updateKoiGrowthreport/{id}")]
+        public async Task<ActionResult> UpdateKoiGrowthReport(int id, KoiGrowthReportUpdateModel reqest)
+        {
+            var koiGrowthReport = await _koiGrowthReportService.GetKoiGrowthReportByIdAsync(id);
+
+            if (koiGrowthReport == null)
+                return NotFound();
+
+            try
+            {
+                koiGrowthReport.Date = reqest.Date;
+                koiGrowthReport.Weight = reqest.Wetight;
+                koiGrowthReport.Length = reqest.Length;
+
+                bool success = await _koiGrowthReportService.UpdateKoiGrowReportAsync(id ,koiGrowthReport);
+                if (!success)
+                    return NotFound();
+
+                var report = await _koiGrowthReportService.GetKoiGrowthReportByIdAsync(id);
+
+                if (report == null)
+                    return NotFound();
+
+                var response = new KoiGrowthReportResponseModel
+                {
+                    Id = report.Id,
+                    KoiId = report.KoiId,
+                    Stage = report.Stage,
+                    Date = report.Date,
+                    Length = report.Length,
+                    Weight = report.Weight,
+                };
+                return Ok(response);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the koi growth report.");
+            }
+        }
+
         [HttpDelete("deleteGrowthreport/{koiId}")]
         public async Task<ActionResult> DeleteKoiGrowthreport(int koiId)
         {

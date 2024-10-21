@@ -58,7 +58,6 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return koiGrowthReportModels;
         }
 
-
         public async Task<KoiGrowthReportModel> GetKoiGrowthReportByIdAsync(int reportId)
         {
             var koiGrowthReports = await _unitOfWork.KoiGrowthReports.GetAsync();
@@ -97,7 +96,6 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return koiGrowthReportModel;
         }
 
-
         public async Task<int> CreateKoiGrowthReportAsync(KoiGrowthReportModel koiGrowthReportModel)
         {
             var entity = new KoiGrowthReport
@@ -112,6 +110,22 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             await _unitOfWork.SaveAsync();
 
             return entity.Id;
+        }
+
+        public async Task<bool> UpdateKoiGrowReportAsync(int reportId, KoiGrowthReportModel koiGrowthReportModel)
+        {
+            var report = await _unitOfWork.KoiGrowthReports.GetByIdAsync(reportId);
+            if (report == null) 
+                return false;
+
+            report.Date = koiGrowthReportModel.Date;
+            report.Length = koiGrowthReportModel.Length;
+            report.Wetight = koiGrowthReportModel.Weight;
+
+            _unitOfWork.KoiGrowthReports.UpdateAsync(report);
+            await _unitOfWork.SaveAsync();
+
+            return true;
         }
 
         public async Task<bool> DeleteKoiGrowthReportAsync(int koiId)
