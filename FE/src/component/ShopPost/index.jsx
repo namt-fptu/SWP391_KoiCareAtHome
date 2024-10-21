@@ -27,7 +27,6 @@ const firebaseConfig = {
   appId: "1:86962001326:web:936799b1e20348cbb8643f",
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const storageImg = getStorage(app);
 const storageTxt = getStorage(app);
@@ -46,7 +45,6 @@ const ShopPost = () => {
   const [isExtendModalVisible, setIsExtendModalVisible] = useState(false); // State để điều khiển modal Extend
   const [currentPostId, setCurrentPostId] = useState(null);
   const [shortContents, setShortContents] = useState({});
-
   // Retrieve pondOwnerId from sessionStorage
   const id = sessionStorage.getItem("id");
 
@@ -85,7 +83,7 @@ const ShopPost = () => {
 
         setPosts(postsWithContent);
       } catch (error) {
-        message.error("Failed to fetch post data.");
+        message.error("Failed to load posts. Please add a new post!!");
       }
     };
 
@@ -101,7 +99,6 @@ const ShopPost = () => {
       return [];
     }
   };
-
   useEffect(() => {
     const fetchShortContents = async () => {
       const contents = {};
@@ -116,7 +113,6 @@ const ShopPost = () => {
 
     fetchShortContents();
   }, [posts]);
-
   const handleExtend = async (postId) => {
     const packageData = await fetchPackage();
     setPackages(packageData); // Lấy dữ liệu package từ API
@@ -125,8 +121,8 @@ const ShopPost = () => {
   };
 
   const handleExtendOk = async () => {
-    if (!selectedPackage || amount <= 0) {
-      message.error("Please select a package and enter a valid amount.");
+    if (!selectedPackage) {
+      message.error("Please select a package.");
       return;
     }
     try {
@@ -139,20 +135,23 @@ const ShopPost = () => {
       const response = await api.post("/Payment/createPaymentURL", {
         postId: currentPostId,
         packageId: selectedPackage,
-        amount,
+        // amount,
         orderType: "ShopPostExtension", // OrderType bạn cần xác định chính xác từ yêu cầu của hệ thống
         orderDescription: `Extension for post ID: ${currentPostId}`, // Mô tả đơn hàng
       });
 
-      console.log("Payment API response:", response);
+      const paymentWindow = window.open(response.data, "_blank");
 
-      // if (response.data && response.data.paymentUrl) {
-      // Redirect to payment page
-      console.log("Full API response data:", response.data);
-      window.open(response.data, "_blank");
-      // } else {
-      //   message.error("Payment URL is missing or invalid.");
-      // }
+      // Theo dõi trạng thái của tab thanh toán
+      const interval = setInterval(() => {
+        if (paymentWindow.closed) {
+          clearInterval(interval);
+          message.success("Payment completed successfully!");
+
+          // Reload lại trang chính sau khi tab thanh toán đóng
+          window.location.reload();
+        }
+      }, 1000); // Kiểm tra trạng thái của tab mỗi giây
     } catch (error) {
       console.error("Error creating payment URL:", error);
       message.error("Failed to create payment URL.");
@@ -433,7 +432,7 @@ const ShopPost = () => {
                         <span
                           style={{
                             color:
-                              post.status === "Expired"
+                              post.status === "Drafted"
                                 ? "gray"
                                 : post.status === "Approved"
                                 ? "green"
@@ -469,7 +468,7 @@ const ShopPost = () => {
                     </Button>
 
                     {/* Nút Extend nếu status là Expired */}
-                    {post.status === "Expired" && (
+                    {post.status === "Drafted" && (
                       <Button
                         type="primary"
                         onClick={() => handleExtend(post.id)}
@@ -522,20 +521,20 @@ const ShopPost = () => {
               >
                 {packages.map((pkg) => (
                   <Option key={pkg.id} value={pkg.id}>
-                    {pkg.name} - {pkg.price}$
+                    {pkg.name} - {pkg.price}vnđ
                   </Option>
                 ))}
               </Select>
             </Form.Item>
 
-            <Form.Item label="Amount">
+            {/* <Form.Item label="Amount">
               <InputNumber
                 min={1}
                 value={amount}
                 onChange={(value) => setAmount(value)}
                 style={{ width: "100%" }}
               />
-            </Form.Item>
+            </Form.Item> */}
           </Form>
         </Modal>
       </div>

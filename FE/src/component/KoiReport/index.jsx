@@ -1,5 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form, Input, Card, Row, Col, Select, DatePicker, message, Modal } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  Card,
+  Row,
+  Col,
+  Select,
+  DatePicker,
+  message,
+  Modal,
+} from "antd";
+import {
+  UploadOutlined,
+  DeleteOutlined,
+  EditOutlined,
+} from "@ant-design/icons";
 import api from "../../config/axios"; // Axios instance configuration
 import moment from "moment";
 
@@ -10,6 +26,8 @@ const KoiReport = () => {
   const [selectedKoiId, setSelectedKoiId] = useState(null); // State to store selected Koi ID
   const [showForm, setShowForm] = useState(false); // Control form display state
   const [koiGrowthReports, setKoiGrowthReports] = useState([]); // Store Koi growth reports
+  // const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false); // State for update modal
+  // const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false); // State for delete modal
   const [form] = Form.useForm(); // Form instance
   const id = sessionStorage.getItem("id");
 
@@ -47,7 +65,9 @@ const KoiReport = () => {
   // Fetch all growth reports for the selected koi
   const fetchGrowthReports = async (koiId) => {
     try {
-      const response = await api.get(`/KoiGrowthReport/koiGrowthReport/${koiId}`);
+      const response = await api.get(
+        `/KoiGrowthReport/koiGrowthReport/${koiId}`
+      );
       setKoiGrowthReports(response.data); // Store fetched growth reports in state
     } catch (error) {
       console.error("Error fetching koi growth reports:", error);
@@ -63,7 +83,10 @@ const KoiReport = () => {
 
   const onFinish = async (values) => {
     const { length, weight, date } = values;
-    
+
+    const formattedDate = date
+      ? date.format("YYYY-MM-DD")
+      : new Date().toISOString();
     console.log("Selected Date:", formattedDate);
     console.log("Form Values:", { length, weight, date: formattedDate });
     const data = {
@@ -86,6 +109,41 @@ const KoiReport = () => {
       console.error("Error creating koi report:", error);
       message.error("Failed to create koi report.");
     }
+  };
+  const handleUpdate = (report) => {
+    form.setFieldsValue({
+      length: report.length,
+      weight: report.weight,
+      date: moment(report.date),
+    });
+
+    setSelectedKoiId(report.id); // Đặt ID báo cáo được chọn để cập nhật
+    setShowForm(true); // Hiển thị form cập nhật
+  };
+
+  // Hàm xóa báo cáo koi
+  const handleDelete = (reportId) => {
+    Modal.confirm({
+      title: "Are you sure you want to delete this report?",
+      content: "This action cannot be undone.",
+      okText: "Yes, Delete",
+      okType: "danger",
+      cancelText: "Cancel",
+      onOk: async () => {
+        try {
+          await api.delete(`/KoiGrowthReport/deleteGrowthreport/${reportId}`);
+          message.success("Koi report deleted successfully!");
+
+          // Cập nhật lại danh sách báo cáo sau khi xóa
+          setKoiGrowthReports(
+            koiGrowthReports.filter((report) => report.id !== reportId)
+          );
+        } catch (error) {
+          console.error("Error deleting koi report:", error);
+          message.error("Failed to delete koi report.");
+        }
+      },
+    });
   };
 
   return (
@@ -130,7 +188,9 @@ const KoiReport = () => {
                 ))}
               </Select>
             ) : (
-              <p style={{ color: "white", marginTop: "10px" }}>No Koi fish available.</p>
+              <p style={{ color: "white", marginTop: "10px" }}>
+                No Koi fish available.
+              </p>
             )}
           </>
         )}
@@ -156,9 +216,9 @@ const KoiReport = () => {
           }}
           footer={null} // No footer needed, we use the form button
         >
-          <Form 
-            form={form} 
-            onFinish={onFinish} 
+          <Form
+            form={form}
+            onFinish={onFinish}
             layout="vertical"
             style={{ marginBottom: "20px" }}
           >
@@ -183,14 +243,18 @@ const KoiReport = () => {
               label="Date"
               rules={[{ required: true, message: "Please select the date" }]}
             >
-              <DatePicker 
-                style={{ width: "100%" }} 
+              <DatePicker
+                style={{ width: "100%" }}
                 format="YYYY-MM-DD" // Ensure the format is displayed correctly
                 placeholder="Select a date" // Placeholder text
               />
             </Form.Item>
 
-            <Button type="primary" htmlType="submit" style={{ marginTop: "20px" }}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ marginTop: "20px" }}
+            >
               Submit Koi Report
             </Button>
           </Form>
@@ -212,18 +276,101 @@ const KoiReport = () => {
                       <strong>Length:</strong> {report.length} cm
                     </p>
                     <p>
-                      <strong>Weight:</strong> {report.weight} g
+                      <strong>Weight:</strong> {report.weight} kg
                     </p>
                     <p>
-                    <strong>Date:</strong>{" "}
-                    {moment(report.date).format("YYYY-MM-DD")}
+                      <strong>Date:</strong>{" "}
+                      {moment(report.date).format("YYYY-MM-DD")}
                     </p>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        marginTop: "10px",
+                      }}
+                    >
+                      <Button
+                        type="primary"
+                        icon={<EditOutlined />}
+                        onClick={() => handleUpdate(report)}
+                      >
+                        Update
+                      </Button>
+
+                      <Button
+                        type="danger"
+                        icon={<DeleteOutlined />}
+                        onClick={() => handleDelete(report.id)}
+                      >
+                        Delete
+                      </Button>
+                    </div>
                   </Card>
                 </Col>
               ))}
             </Row>
           </div>
         )}
+        <Modal
+          title={
+            selectedKoiId
+              ? "Update Koi Growth Report"
+              : "Create Koi Growth Report"
+          }
+          open={showForm}
+          onCancel={() => {
+            setShowForm(false);
+            form.resetFields(); // Reset form khi đóng modal
+          }}
+          footer={null} // Không cần footer, dùng nút submit trong form
+        >
+          <Form
+            form={form}
+            onFinish={onFinish}
+            layout="vertical"
+            initialValues={
+              selectedKoiId
+                ? koiGrowthReports.find((report) => report.id === selectedKoiId)
+                : {}
+            }
+          >
+            <Form.Item
+              name="length"
+              label="Length (cm)"
+              rules={[{ required: true, message: "Please enter the length" }]}
+            >
+              <Input type="number" placeholder="Enter Koi length in cm" />
+            </Form.Item>
+
+            <Form.Item
+              name="weight"
+              label="Weight (g)"
+              rules={[{ required: true, message: "Please enter the weight" }]}
+            >
+              <Input type="number" placeholder="Enter Koi weight in grams" />
+            </Form.Item>
+
+            <Form.Item
+              name="date"
+              label="Date"
+              rules={[{ required: true, message: "Please select the date" }]}
+            >
+              <DatePicker
+                style={{ width: "100%" }}
+                format="YYYY-MM-DD" // Định dạng đúng ngày
+                placeholder="Select a date"
+              />
+            </Form.Item>
+
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ marginTop: "20px" }}
+            >
+              {selectedKoiId ? "Update Report" : "Submit Report"}
+            </Button>
+          </Form>
+        </Modal>
       </div>
     </div>
   );
