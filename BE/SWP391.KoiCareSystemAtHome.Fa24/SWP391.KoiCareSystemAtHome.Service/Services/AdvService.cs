@@ -85,7 +85,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                 Url = advModel.Url,
                 ImageUrl = advModel.ImageUrl,
                 AdvDate = DateTime.Now,
-                Status = "Expired",
+                Status = "Drafted",
                 EditedDate = DateTime.Now,
                 ExpiredDate = (DateTime)SqlDateTime.MinValue,
                 Duration = 0,
@@ -166,22 +166,19 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return advModels;
         }
 
-        public async Task CheckExpriedAdvAsync()
+        public async Task<bool> CheckExpriedAdvAsync(int advId)
         {
-            var advs = await _unitOfWork.Advs.GetAsync();
-            if (advs == null || !advs.Any())
-                return;
+            var adv = await _unitOfWork.Advs.GetByIdAsync(advId);
+            if (adv == null)
+                return false;
 
-            foreach (var adv in advs)
+            if (adv.ExpiredDate <= DateTime.Now && adv.Status.Equals("Approved"))
             {
-                if (adv.ExpiredDate <= DateTime.Now && adv.Status.Equals("Approved"))
-                {
-                    adv.Status = "Expired";
-
-                    _unitOfWork.Advs.UpdateAsync(adv);
-                }
+                return false;
             }
-            await _unitOfWork.SaveAsync();
+
+            return true;
+
         }
 
         public async Task UpdateAdsPaymentAsync(UpdateAdsModel updateAdsModel)
