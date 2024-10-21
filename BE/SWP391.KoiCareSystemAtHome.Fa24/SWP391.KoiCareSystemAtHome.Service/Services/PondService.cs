@@ -135,7 +135,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
         {
             var ponds = await _unitOfWork.Ponds.GetAsync();
             if (ponds == null || !ponds.Any())
-                return false ;
+                return false;
 
             var fillteredPonds = ponds.Where(p => p.PondOwnerId == ownerID).ToList();
             if (fillteredPonds == null || !fillteredPonds.Any())

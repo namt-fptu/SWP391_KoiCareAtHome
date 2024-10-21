@@ -95,6 +95,30 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return waterReportEntity.Id;
         }
 
+        public async Task<bool> UpdateWaterReportAsync(int waterReportId, WaterReportModel waterReportModel)
+        {
+            var report = await _unitOfWork.WaterReports.GetByIdAsync(waterReportId);
+
+            if (report == null) 
+                return false;
+
+            report.Temperature = waterReportModel.Temperature;
+            report.PhVaule = waterReportModel.PhVaule;
+            report.Hardness = waterReportModel.Hardness;
+            report.Oxigen = waterReportModel.Oxigen;
+            report.Cabondioxide = waterReportModel.Cabondioxide;
+            report.Salt = waterReportModel.Salt;
+            report.Date = waterReportModel.Date;
+            report.Nitrates = waterReportModel.Nitrates;
+            report.Nitrite = waterReportModel.Nitrite;
+            report.Amonium = waterReportModel.Amonium;
+
+            _unitOfWork.WaterReports.UpdateAsync(report);
+            await _unitOfWork.SaveAsync();
+
+            return true;
+        }
+
         public async Task<bool> DeleteWaterReportAsync(int pondId)
         {
             var waterReports = await _unitOfWork.WaterReports.GetAsync();

@@ -9,8 +9,9 @@ import {
   Col,
   Upload,
   message,
+  Popconfirm,
 } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import { UploadOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { initializeApp } from "firebase/app";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import api from "../../config/axios";
@@ -30,12 +31,12 @@ const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
 const MyPond = () => {
-  const [ponds, setPonds] = useState([]); // State for storing pond data
-  const [isModalVisible, setIsModalVisible] = useState(false); // State for modal visibility
-  const [imageUrl, setImageUrl] = useState(null); // State for storing uploaded image URL
-  const [fileList, setFileList] = useState([]); // State for storing uploaded files
+  const [ponds, setPonds] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [imageUrl, setImageUrl] = useState(null);
+  const [fileList, setFileList] = useState([]);
+  const [editingPond, setEditingPond] = useState(null);
 
-  // Retrieve id from sessionStorage
   const id = sessionStorage.getItem("id");
 
   useEffect(() => {
@@ -44,7 +45,6 @@ const MyPond = () => {
       return;
     }
 
-    // Fetch ponds from the API based on the logged-in user's id
     const fetchPonds = async () => {
       try {
         const response = await api.get(`Pond/ponds/${id}`);
@@ -57,14 +57,20 @@ const MyPond = () => {
     fetchPonds();
   }, [id]);
 
-  const showModal = () => {
+  const showModal = (pond = null) => {
+    setEditingPond(pond);
+    if (pond) {
+      setImageUrl(pond.imageUrl);
+      setFileList([]);
+    }
     setIsModalVisible(true);
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
-    setFileList([]); // Reset file list
-    setImageUrl(null); // Reset image URL
+    setFileList([]);
+    setImageUrl(null);
+    setEditingPond(null);
   };
 
   const handleUpload = (file) => {
@@ -74,13 +80,12 @@ const MyPond = () => {
       setImageUrl(e.target.result);
     };
     reader.readAsDataURL(file);
-    return false; // Prevent automatic upload of antd
+    return false;
   };
 
   const uploadToFirebase = async (file) => {
-    if (!file) return null;
+    if (!file) return imageUrl;
     const storageRef = ref(storage, `pond-images/${file.name}`);
-
     try {
       const snapshot = await uploadBytes(storageRef, file);
       const downloadURL = await getDownloadURL(snapshot.ref);
@@ -105,33 +110,52 @@ const MyPond = () => {
         skimmerCount: Number(values.skimmerCount),
         pumpingCapacity: Number(values.pumpingCapacity),
         imageUrl: uploadedImageUrl,
-        pondOwnerId: Number(id), // Use pondOwnerId from sessionStorage
+        pondOwnerId: Number(id),
       };
 
       try {
-        const response = await api.post("Pond/createPond", pondData);
-        setPonds([...ponds, response.data]); // Update ponds with the newly created one
+        if (editingPond) {
+          await api.put(`Pond/updatePond/${editingPond.id}`, pondData);
+          setPonds((prev) =>
+            prev.map((pond) =>
+              pond.id === editingPond.id ? { ...pond, ...pondData } : pond
+            )
+          );
+          message.success("Pond updated successfully!");
+        } else {
+          const response = await api.post("Pond/createPond", pondData);
+          setPonds([...ponds, response.data]);
+          message.success("Pond added successfully!");
+        }
         setIsModalVisible(false);
-        message.success("Pond information added successfully!");
       } catch (error) {
-        message.error("Failed to add pond information.");
+        message.error(
+          editingPond
+            ? "Failed to update pond information."
+            : "Failed to add pond information."
+        );
       }
     } else {
       message.error("Failed to upload image.");
     }
   };
 
-  // const deletePond = async (index) => {
-  //   try {
-  //     const pondToDelete = ponds[index];
-  //     await api.delete(`Pond/${pondToDelete.id}`); // Call API to delete pond
-  //     const newPonds = ponds.filter((_, i) => i !== index);
-  //     setPonds(newPonds); // Update state after deletion
-  //     message.success("Pond deleted successfully!"); // Success message
-  //   } catch (error) {
-  //     message.error("Failed to delete pond. Please try again."); // Error message
-  //   }
-  // };
+  const deletePond = async (pondId) => {
+    try {
+      // Make the API call to delete the pond
+      await api.delete(`Pond/deletePond/${pondId}`);
+
+      // Update the ponds state by filtering out the deleted pond
+      setPonds((prevPonds) => prevPonds.filter((pond) => pond.id !== pondId));
+
+      // Show success message
+      message.success("Pond deleted successfully!");
+    } catch (error) {
+      // Show error message if delete fails
+      message.error("Failed to delete pond. Please try again.");
+    }
+  };
+
 
   return (
     <div className="flex-container">
@@ -140,22 +164,22 @@ const MyPond = () => {
         <p className="text-white">Information about your Pond.</p>
         <div>
           <div className="flex flex-col items-center">
-            <Button type="primary" onClick={showModal}>
+            <Button type="primary" onClick={() => showModal()}>
               Create New Pond
             </Button>
           </div>
 
           <Modal
-            title="Input Pond Information"
+            title={editingPond ? "Edit Pond Information" : "Input Pond Information"}
             open={isModalVisible}
             onCancel={handleCancel}
             footer={null}
           >
-            <Form layout="vertical" onFinish={onFinish}>
+            <Form layout="vertical" onFinish={onFinish} initialValues={editingPond}>
               <Form.Item
                 label="Upload Image"
                 name="image"
-                rules={[{ required: true, message: "Please upload an image!" }]}
+                rules={[{ required: !editingPond, message: "Please upload an image!" }]}
               >
                 <Upload
                   name="image"
@@ -204,9 +228,7 @@ const MyPond = () => {
               <Form.Item
                 label="Drain Count"
                 name="draimCount"
-                rules={[
-                  { required: true, message: "Please input Drain Count!" },
-                ]}
+                rules={[{ required: true, message: "Please input Drain Count!" }]}
               >
                 <Input />
               </Form.Item>
@@ -214,9 +236,7 @@ const MyPond = () => {
               <Form.Item
                 label="Skimmer Count"
                 name="skimmerCount"
-                rules={[
-                  { required: true, message: "Please input Skimmer Count!" },
-                ]}
+                rules={[{ required: true, message: "Please input Skimmer Count!" }]}
               >
                 <Input />
               </Form.Item>
@@ -224,16 +244,14 @@ const MyPond = () => {
               <Form.Item
                 label="Pumping Capacity"
                 name="pumpingCapacity"
-                rules={[
-                  { required: true, message: "Please input Pumping Capacity!" },
-                ]}
+                rules={[{ required: true, message: "Please input Pumping Capacity!" }]}
               >
                 <Input />
               </Form.Item>
 
               <Form.Item>
                 <Button type="primary" htmlType="submit">
-                  Add
+                  {editingPond ? "Update" : "Add"}
                 </Button>
                 <Button
                   type="default"
@@ -248,30 +266,41 @@ const MyPond = () => {
 
           {ponds.length > 0 && (
             <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
-              {ponds.map((pond, index) => (
-                <Col key={index} xs={24} sm={12} md={8} lg={6}>
+              {ponds.map((pond) => (
+                <Col key={pond.id} xs={24} sm={12} md={8} lg={6}>
                   <Card
-                    title={`Pond: ${pond.name}`}
-                    // extra={<Button danger onClick={() => deletePond(index)}>Delete</Button>}
-                    style={{ marginBottom: "20px", boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)", borderRadius: "8px" }} // Added marginBottom, boxShadow, and borderRadius
-                    onClick={() => showModal(pond)}
-                     // Click handler to show details
+                    hoverable
+                    cover={<img alt={pond.name} src={pond.imageUrl} />}
                   >
-                    {pond.imageUrl && (
-                      <img
-                        src={pond.imageUrl}
-                        alt="Pond"
-                        style={{
-                          width: "100%", // Ensure image takes full width of the card
-                          height: "200px", // Fixed height for uniformity
-                          objectFit: "cover", // Cover the area while maintaining aspect ratio
-                          borderRadius: "8px 8px 0 0", // Rounded corners for the image
-                        }}
-                      />
-                    )}
-                    <p><strong>Volume:</strong> {pond.volume || "-"}</p>
-                    <p><strong>Depth:</strong> {pond.depth || "-"}</p>
-                    <p><strong>Drain Count:</strong> {pond.drainCount || "-"}</p>
+                    <Card.Meta title={pond.name} />
+                    <p>Volume: {pond.volume} liters</p>
+                    <p>Depth: {pond.depth} meters</p>
+                    <p>Drain Count: {pond.draimCount}</p>
+                    <p>Skimmer Count: {pond.skimmerCount}</p>
+                    <p>Pumping Capacity: {pond.pumpingCapacity} L/min</p>
+                    <div className="card-buttons">
+                      {/* Update button */}
+                      <Button
+                        type="primary"
+                        icon={<EditOutlined />}
+                        onClick={() => showModal(pond)}
+                        style={{ marginRight: "10px" }}
+                      >
+                        Update
+                      </Button>
+                      {/* Delete button */}
+                      <Popconfirm
+                        title="Are you sure you want to delete this pond?"  // This text can be changed
+                        onConfirm={() => deletePond(pond.id)}
+                        okText="Yes"
+                        cancelText="Cancel"
+                      >
+                        <Button
+                          type="danger"
+                          icon={<DeleteOutlined />}
+                        />Delete
+                      </Popconfirm>
+                    </div>
                   </Card>
                 </Col>
               ))}
