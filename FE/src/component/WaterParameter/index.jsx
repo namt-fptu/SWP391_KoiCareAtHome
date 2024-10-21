@@ -320,7 +320,7 @@ const WaterParameter = () => {
         </Row>
       ) : (
         <p style={{ color: "white" }}>
-          No water parameters available for this pond.
+          
         </p>
       )}
     </div>

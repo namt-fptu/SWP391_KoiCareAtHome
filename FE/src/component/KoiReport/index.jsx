@@ -102,7 +102,7 @@ const KoiReport = () => {
             setShowForm(false); // Hide form when pond changes
             form.resetFields(); // Reset form when pond changes
           }}
-          style={{ width: "20%", marginBottom: "20px" }}
+          style={{ width: "10%", marginBottom: "20px" }}
         >
           {ponds.map((pond) => (
             <Select.Option key={pond.id} value={pond.id}>

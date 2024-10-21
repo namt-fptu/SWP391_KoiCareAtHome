@@ -121,17 +121,7 @@ const MyPond = () => {
     }
   };
 
-  // const deletePond = async (index) => {
-  //   try {
-  //     const pondToDelete = ponds[index];
-  //     await api.delete(`Pond/${pondToDelete.id}`); // Call API to delete pond
-  //     const newPonds = ponds.filter((_, i) => i !== index);
-  //     setPonds(newPonds); // Update state after deletion
-  //     message.success("Pond deleted successfully!"); // Success message
-  //   } catch (error) {
-  //     message.error("Failed to delete pond. Please try again."); // Error message
-  //   }
-  // };
+
 
   return (
     <div className="flex-container">
