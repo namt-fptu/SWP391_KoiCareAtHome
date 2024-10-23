@@ -125,7 +125,7 @@ const KoiReport = () => {
 
   // Handle form submission for new report creation
   const onFinishCreate = async (values) => {
-    const { length, weight, date } = values;
+    const { length, wetight, date } = values;
     const formattedDate = date
       ? date.format("YYYY-MM-DD")
       : new Date().toISOString();
@@ -133,7 +133,7 @@ const KoiReport = () => {
     const data = {
       koiId: selectedKoiId,
       length,
-      weight,
+      wetight,
       date: formattedDate,
     };
 
@@ -154,11 +154,11 @@ const KoiReport = () => {
 
   // Handle form submission for updating a report
   const onFinishUpdate = async (values) => {
-    const { length, weight, date } = values;
+    const { length, wetight, date } = values;
     const updatedData = {
       koiId: selectedKoiId,
       length,
-      weight,
+      wetight,
       date: date ? date.format("YYYY-MM-DD") : new Date().toISOString(),
     };
 
@@ -263,7 +263,7 @@ const KoiReport = () => {
             </Form.Item>
 
             <Form.Item
-              name="weight"
+              name="wetight"
               label="Weight (g)"
               rules={[{ required: true, message: "Please enter the weight" }]}
             >
@@ -311,7 +311,7 @@ const KoiReport = () => {
             </Form.Item>
 
             <Form.Item
-              name="weight"
+              name="wetight"
               label="Weight (g)"
               rules={[{ required: true, message: "Please enter the weight" }]}
             >
@@ -343,13 +343,36 @@ const KoiReport = () => {
                   title={`Report - ${moment(report.date).format(
                     "MMMM Do, YYYY"
                   )}`}
-                  actions={[
-                    <EditOutlined onClick={() => handleUpdate(report)} />,
-                    <DeleteOutlined onClick={() => handleDelete(report.id)} />,
-                  ]}
+                  // actions={[
+                  //   <EditOutlined onClick={() => handleUpdate(report)} />,
+                  //   <DeleteOutlined onClick={() => handleDelete(report.id)} />,
+                  // ]}
                 >
                   <p>Length: {report.length} cm</p>
                   <p>Weight: {report.weight} g</p>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      marginTop: "10px",
+                    }}
+                  >
+                    <Button
+                      type="primary"
+                      icon={<EditOutlined />}
+                      onClick={() => handleUpdate(report)}
+                    >
+                      Update
+                    </Button>
+
+                    <Button
+                      type="danger"
+                      icon={<DeleteOutlined />}
+                      onClick={() => handleDelete(report.id)}
+                    >
+                      Delete
+                    </Button>
+                  </div>
                 </Card>
               </Col>
             ))}

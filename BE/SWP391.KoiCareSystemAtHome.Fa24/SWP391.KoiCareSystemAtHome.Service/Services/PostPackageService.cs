@@ -55,6 +55,18 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return postpakageModel;
         }
 
+        public async Task<bool> DeletePostPackage(int id)
+        {
+            var package = await _unitOfWork.PostPackages.GetByIdAsync(id);
+            if (package == null)
+                return false;
+
+            _unitOfWork.PostPackages.DeleteAsync(package);
+            await _unitOfWork.SaveAsync();
+
+            return true;
+        }
+
         public async Task<bool> CheckPostPackageExistAsync(int id)
         {
             var postPackage = await _unitOfWork.PostPackages.GetByIdAsync(id);

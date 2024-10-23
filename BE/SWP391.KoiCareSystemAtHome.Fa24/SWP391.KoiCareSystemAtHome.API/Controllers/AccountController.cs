@@ -335,5 +335,14 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
 
             return NoContent();
         }
+
+        [HttpGet("countAccount")]
+        public async Task<ActionResult> CountAccount()
+        {
+            int count = await _accountService.CountUserAsync();
+
+            return Ok(count);
+        }
+
     }
 }

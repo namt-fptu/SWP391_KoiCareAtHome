@@ -103,7 +103,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                 KoiId = koiGrowthReportModel.KoiId,
                 Date = koiGrowthReportModel.Date,
                 Length = koiGrowthReportModel.Length,
-                Wetight = koiGrowthReportModel.Length
+                Wetight = koiGrowthReportModel.Weight,
             };
 
             await _unitOfWork.KoiGrowthReports.InsertAsync(entity);
