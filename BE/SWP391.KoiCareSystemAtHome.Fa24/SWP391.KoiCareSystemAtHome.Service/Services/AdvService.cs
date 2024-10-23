@@ -235,5 +235,15 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return;
         }
 
+        public async Task<int> CountAdvByStatusAsync(string status)
+        {
+            var advs = await _unitOfWork.Advs.GetAsync();
+
+            int count = 0;
+            count = advs.Count(a => a.Status == status);
+
+            return count;
+        }
+
     }
 }

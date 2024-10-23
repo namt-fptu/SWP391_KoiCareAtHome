@@ -216,5 +216,11 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return NoContent();
         }
 
+        [HttpGet("countAdsByStatus/{status}")]
+        public async Task<ActionResult> CountAdsByStatus(string status)
+        {
+            return Ok(await _advService.CountAdvByStatusAsync(status));
+        }
+
     }
 }

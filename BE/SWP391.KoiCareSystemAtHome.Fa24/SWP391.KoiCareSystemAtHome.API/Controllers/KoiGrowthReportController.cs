@@ -71,7 +71,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                     KoiId = request.KoiId,
                     Date = request.Date,
                     Length = request.Length,
-                    Weight = request.Wetight
+                    Weight = request.Wetight,
                 };
 
                 int koiReportId = await _koiGrowthReportService.CreateKoiGrowthReportAsync(model);
@@ -98,7 +98,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         }
 
         [HttpPut("updateKoiGrowthreport/{id}")]
-        public async Task<ActionResult> UpdateKoiGrowthReport(int id, KoiGrowthReportUpdateModel request)
+        public async Task<ActionResult> UpdateKoiGrowthReport(int id, KoiGrowthReportUpdateModel reqest)
         {
             var koiGrowthReport = await _koiGrowthReportService.GetKoiGrowthReportByIdAsync(id);
 
@@ -107,9 +107,9 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
 
             try
             {
-                koiGrowthReport.Date = request.Date;
-                koiGrowthReport.Weight = request.Wetight;
-                koiGrowthReport.Length = request.Length;
+                koiGrowthReport.Date = reqest.Date;
+                koiGrowthReport.Weight = reqest.Wetight;
+                koiGrowthReport.Length = reqest.Length;
 
                 bool success = await _koiGrowthReportService.UpdateKoiGrowReportAsync(id ,koiGrowthReport);
                 if (!success)
