@@ -1,6 +1,7 @@
 import Header from "../../component/header";
 import Footer from "../../component/footer";
 import VipPackage from "../../component/vipPackage";
+// import LandingAdvertisement from "../../component/LandingAdvertisement";
 import { Button } from "antd";
 import { useNavigate } from "react-router-dom";
 import landing1 from "../../assets/landing 1.png";

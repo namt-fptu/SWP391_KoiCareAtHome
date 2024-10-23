@@ -40,7 +40,7 @@ const ShopOverview = () => {
             My Vip Package
           </button>
         </Link>
-       
+
         <Link to="/AboutKoi">
           <button className="bg-blue-600 rounded-md text-white p-4 hover:bg-blue-700 w-full">
             About Koi
@@ -50,20 +50,18 @@ const ShopOverview = () => {
       <div className="flex flex-col justify-between mb-5 mt-14">
         <h2 className="text-white text-3xl font-bold">Overview Account</h2>
         <div className="grid grid-cols-2 gap-4 p-6 mt-8">
-          
           <Card className="shadow-md p-4">
             <p className="text-lg font-semibold mb-2">Active Posts</p>
             <p className="text-4xl font-bold">{data.posts}</p>
-            <a href="/posts" className="text-blue-500">
+            <a href="/ShopPost" className="text-blue-500">
               Post a new one
             </a>
           </Card>
 
-          
           <Card className="shadow-md p-4">
             <p className="text-lg font-semibold mb-2">Products</p>
             <p className="text-4xl font-bold">{data.products}</p>
-            <a href="/products" className="text-blue-500">
+            <a href="/ShopProduct" className="text-blue-500">
               Add products
             </a>
           </Card>

@@ -9,11 +9,25 @@ import {
   Col,
   Upload,
   message,
+  Dropdown,
+  Menu,
 } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import {
+  UploadOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  DownOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import { initializeApp } from "firebase/app";
 import { Select, InputNumber } from "antd";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
 // import { getFirestore, addDoc, collection, getDocs } from "firebase/firestore";
 import api from "../../config/axios";
 
@@ -43,6 +57,8 @@ const ShopPost = () => {
   const [selectedPackage, setSelectedPackage] = useState(null); // Lưu packageId
   const [amount, setAmount] = useState(0); // Lưu số tiền thanh toán
   const [isExtendModalVisible, setIsExtendModalVisible] = useState(false); // State để điều khiển modal Extend
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false); // State for delete modal
+  const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false); // State for update modal
   const [currentPostId, setCurrentPostId] = useState(null);
   const [shortContents, setShortContents] = useState({});
   // Retrieve pondOwnerId from sessionStorage
@@ -170,6 +186,128 @@ const ShopPost = () => {
     setFileList([]);
     setImageUrl(null);
   };
+  const showDeleteModal = (post) => {
+    setSelectedPost(post); // Set the selected post to delete
+    setIsDeleteModalVisible(true);
+  };
+
+  const handleDeleteCancel = () => {
+    setIsDeleteModalVisible(false); // Close delete modal
+    setSelectedPost(null); // Reset selected post
+  };
+  const handleDeletePost = async () => {
+    if (!selectedPost) return;
+
+    try {
+      // Xóa hình ảnh từ Firebase
+      const imageRef = ref(storageImg, selectedPost.imageUrl);
+      const contentRef = ref(storageTxt, selectedPost.url); // Cần chắc chắn dùng đúng đường dẫn tới file content
+
+      // Sử dụng Promise.all để chờ cả hai hành động xóa hoàn tất
+      await Promise.all([deleteObject(imageRef), deleteObject(contentRef)]);
+
+      // Sau khi xóa cả ảnh và content thành công, xóa bài viết trong cơ sở dữ liệu
+      await api.delete(`Adv/deleteAdvById/${selectedPost.id}`);
+
+      message.success("Post and related files deleted successfully.");
+
+      // Sau khi xóa thành công, làm mới lại danh sách bài viết
+      setPosts((prevPosts) =>
+        prevPosts.filter((post) => post.id !== selectedPost.id)
+      );
+
+      setIsDeleteModalVisible(false); // Đóng modal xóa
+      setSelectedPost(null); // Reset selected post
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      message.error("Failed to delete post or related files.");
+    }
+  };
+  const showUpdateModal = async (post) => {
+    setSelectedPost(post); // Set the selected post for update
+    setImageUrl(post.imageUrl); // Set the image URL of the selected post
+
+    try {
+      // Tải nội dung từ Firebase
+      const contentURL = await getDownloadURL(ref(storageTxt, post.url));
+      const contentResponse = await fetch(contentURL);
+      const contentText = await contentResponse.text();
+      setValue(contentText); // Set the content to state for the TextArea
+    } catch (error) {
+      console.error("Failed to load content from Firebase:", error);
+      setValue(""); // Reset content in case of error
+    }
+
+    setIsUpdateModalVisible(true); // Show update modal
+  };
+  const handleUpdateCancel = () => {
+    setIsModalVisible(false);
+    setIsUpdateModalVisible(false); // Close update modal
+    setImageUrl(null); // Reset imageUrl when closing modal
+    setSelectedPost(null); // Reset selected koi
+  };
+  const onUpdateFinish = async (values) => {
+    try {
+      let newImageUrl = selectedPost.imageUrl;
+
+      if (values.image && values.image.file) {
+        const oldImageRef = ref(storageImg, selectedPost.imageUrl);
+        await deleteObject(oldImageRef);
+        newImageUrl = await uploadImgToFirebase(values.image.file);
+        setImageUrl(newImageUrl);
+      }
+
+      // Cập nhật nội dung mới lên Firebase
+      const uploadedTxtUrl = await uploadContentToFirebase(values.content); // Gửi nội dung đã chỉnh sửa
+
+      // Prepare updated data
+      const updatedData = {
+        title: values.title,
+        url: uploadedTxtUrl, // Ensure this is set to the right URL after upload
+        imageUrl: newImageUrl, // Ensure this is updated correctly
+      };
+
+      await api.put(`Adv/updateAdv/${selectedPost.id}`, updatedData);
+
+      message.success("Post updated successfully!");
+      handleUpdateCancel(); // Close modal after submission
+
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post.id === selectedPost.id ? { ...post, ...updatedData } : post
+        )
+      );
+    } catch (error) {
+      console.error("Error updating post:", error);
+      message.error("Failed to update post.");
+    }
+  };
+  const handleMenuClick = (e, post) => {
+    if (e.key === "update") {
+      showUpdateModal(post);
+    } else if (e.key === "delete") {
+      showDeleteModal(post);
+    } else if (e.key === "extend") {
+      handleExtend(post.id);
+    }
+  };
+  const menu = (post) => (
+    <Menu onClick={(e) => handleMenuClick(e, post)}>
+      {post.status !== "Reject" && (
+        <Menu.Item key="update" icon={<EditOutlined />}>
+          Update
+        </Menu.Item>
+      )}
+      {post.status === "Drafted" && (
+        <Menu.Item key="extend" icon={<PlusOutlined />}>
+          Extend
+        </Menu.Item>
+      )}
+      <Menu.Item key="delete" icon={<DeleteOutlined />} danger>
+        Delete
+      </Menu.Item>
+    </Menu>
+  );
 
   const uploadImgToFirebase = async (file) => {
     if (!file) return null;
@@ -213,11 +351,6 @@ const ShopPost = () => {
     };
     reader.readAsDataURL(file);
     return false;
-  };
-
-  const deletePost = (index) => {
-    const newPosts = posts.filter((_, i) => i !== index);
-    setPosts(newPosts);
   };
 
   const onFinish = async (values) => {
@@ -467,15 +600,11 @@ const ShopPost = () => {
                       View Detail
                     </Button>
 
-                    {/* Nút Extend nếu status là Expired */}
-                    {post.status === "Drafted" && (
-                      <Button
-                        type="primary"
-                        onClick={() => handleExtend(post.id)}
-                      >
-                        Extend
+                    <Dropdown overlay={menu(post)} trigger={["click"]}>
+                      <Button>
+                        Actions <DownOutlined />
                       </Button>
-                    )}
+                    </Dropdown>
                   </div>
                 </Card>
               </Col>
@@ -535,6 +664,82 @@ const ShopPost = () => {
                 style={{ width: "100%" }}
               />
             </Form.Item> */}
+          </Form>
+        </Modal>
+
+        {/* Modal for delete confirmation */}
+        <Modal
+          title="Confirm Deletion"
+          visible={isDeleteModalVisible}
+          onOk={handleDeletePost}
+          onCancel={handleDeleteCancel}
+          okText="Delete"
+          okButtonProps={{ danger: true }}
+        >
+          <p>
+            Are you sure you want to <strong>delete</strong> this Post?
+          </p>
+        </Modal>
+        {/* Modal for updating post */}
+        <Modal
+          title="Update Post Information"
+          open={isUpdateModalVisible}
+          onCancel={handleUpdateCancel}
+          footer={null}
+        >
+          <Form
+            layout="vertical"
+            onFinish={onUpdateFinish}
+            initialValues={{
+              title: selectedPost?.title,
+              content: value, // Thêm trường nội dung (content)
+              // Các trường khác nếu cần
+            }}
+          >
+            <Form.Item label="Upload Image" name="image">
+              <Upload
+                listType="picture"
+                maxCount={1}
+                showUploadList={false}
+                customRequest={({ file, onSuccess }) => {
+                  handleUpload(file).then(onSuccess);
+                }}
+              >
+                <Button icon={<UploadOutlined />}>Select Image</Button>
+              </Upload>
+              {imageUrl && (
+                <img
+                  src={imageUrl}
+                  alt="Post"
+                  style={{ width: "100%", marginTop: "10px" }}
+                />
+              )}
+            </Form.Item>
+
+            <Form.Item
+              label="Title"
+              name="title"
+              rules={[{ required: true, message: "Please input Title!" }]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              label="Content"
+              name="content"
+              rules={[{ required: true, message: "Please input Content!" }]}
+            >
+              <Input.TextArea
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+              />
+            </Form.Item>
+
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                Update
+              </Button>
+            </Form.Item>
           </Form>
         </Modal>
       </div>

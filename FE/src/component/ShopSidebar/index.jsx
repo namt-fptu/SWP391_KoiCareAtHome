@@ -89,15 +89,15 @@ const ShopSideBar = () => {
             </li>
           </Link>
 
-          {/* Shop ads */}
-          {/* <Link to="ShopAds">
+          {/* Shop's Product */}
+          <Link to="ShopProduct">
             <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
-              <img src={myPondIcon} alt="My Advertisement" />
+              <img src={myPondIcon} alt="My Product" />
               <span className={`${!open && "hidden"} origin-left duration-200`}>
-                My Advertisement
+                My Product
               </span>
             </li>
-          </Link> */}
+          </Link>
 
           {/* Shop's Vip Package */}
           <Link to="ShopVipPackage">
