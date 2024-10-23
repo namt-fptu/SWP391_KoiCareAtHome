@@ -119,5 +119,14 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return accountModel;
         }
 
+        public async Task<int> CountUserAsync()
+        {
+            var accounts = await _unitOfWork.Accounts.GetAsync();
+
+            int count = accounts.Count(a => !a.Role.Equals("Admin"));
+
+            return count;
+        }
+
     }
 }
