@@ -1,6 +1,6 @@
 import React from 'react';
 
-const UserProfile = () => {
+const KoiGrowthStandard = () => {
     return (
         <div>
             <h1>Koi Varieties</h1>
@@ -10,4 +10,4 @@ const UserProfile = () => {
     );
 };
 
-export default UserProfile;
+export default KoiGrowthStandard;

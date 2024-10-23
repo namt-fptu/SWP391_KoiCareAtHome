@@ -21,12 +21,18 @@ import ShopOverview from "./component/ShopOverview";
 import ShopPost from "./component/ShopPost";
 import { Typography } from "antd";
 import ShopProduct from "./component/ShopProduct";
+import KoiVariety from "./component/KoiVariety";
+import KoiGrowthStandard from "./component/KoiGrowthStandard";
+import UserProfile from "./component/UserProfile";
+
+// import ShopAds from "./component/ShopAds";
 import ShopVipPackage from "./component/ShopVipPackage";
 import AdminSideBar from "./component/AdminSideBar";
 import Dashboard from "./component/DashBoard";
 import Admin from "./page/admin";
 import Posts from "./component/Posts";
 import KoiReport from "./component/KoiReport";
+import WaterParameterStandard from "./component/WaterParameterStandard";
 const App = () => {
   const router = createBrowserRouter([
     {
@@ -74,10 +80,11 @@ const App = () => {
       element: <Admin />,
       children: [
         { path: "DashBoard", element: <Dashboard /> },
-        // { path: "UserProfile", element: <UserProfile /> },
-        // { path: "TableList", element: <TableList /> },
-        // { path: "Typography", element: <Typography /> },
+        { path: "UserProfile", element: <UserProfile /> },
+        { path: "KoiVariety", element: <KoiVariety /> },
+        { path: "KoiGrowthStandard", element: <KoiGrowthStandard /> },
         { path: "Posts", element: <Posts /> },
+        { path: "WaterParameterStandard", element: <WaterParameterStandard /> },
       ],
     },
   ]);
