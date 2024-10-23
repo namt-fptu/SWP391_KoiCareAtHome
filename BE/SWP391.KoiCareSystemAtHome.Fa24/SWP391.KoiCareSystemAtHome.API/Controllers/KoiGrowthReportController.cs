@@ -71,7 +71,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                     KoiId = request.KoiId,
                     Date = request.Date,
                     Length = request.Length,
-                    Weight = request.Length
+                    Weight = request.Wetight
                 };
 
                 int koiReportId = await _koiGrowthReportService.CreateKoiGrowthReportAsync(model);
