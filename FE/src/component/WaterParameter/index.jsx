@@ -12,6 +12,7 @@ import {
   message,
 } from "antd";
 import api from "../../config/axios";
+import { UploadOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import moment from "moment"; // For date formatting
 
 const WaterParameter = () => {
@@ -59,7 +60,20 @@ const WaterParameter = () => {
       }
     }
   };
+  const handleDeleteReport = async (reportId) => {
+    try {
+      // Call API DELETE with the report ID
+      await api.delete(`/WaterReport/deleteWaterReportById/${reportId}`);
 
+      message.success("Water report deleted successfully!");
+
+      // Update the list of reports after deletion
+      fetchWaterReports(selectedPond);
+    } catch (error) {
+      console.error("Error deleting water report:", error);
+      message.error("Failed to delete water report.");
+    }
+  };
   // Handle pond selection
   const handlePondChange = (pondId) => {
     setSelectedPond(pondId);
@@ -105,6 +119,21 @@ const WaterParameter = () => {
       phVaule: values.phVaule,
       cabondioxide: values.cabondioxide,
       date: values.date ? values.date.toISOString() : new Date().toISOString(), // Format the selected date or use the current date
+    };
+
+    const handleDeleteReport = async (reportId) => {
+      try {
+        // Gọi API DELETE với ID của báo cáo
+        await api.delete(`/WaterReport/deleteWaterReportById/${reportId}`);
+
+        message.success("Water report deleted successfully!");
+
+        // Cập nhật lại danh sách báo cáo sau khi xóa
+        fetchWaterReports();
+      } catch (error) {
+        console.error("Error deleting water report:", error);
+        message.error("Failed to delete water report.");
+      }
     };
 
     try {
@@ -303,12 +332,23 @@ const WaterParameter = () => {
                 title={`Water Report for Pond: ${selectedPond}`}
                 style={{ width: "100%", marginBottom: "20px" }}
                 extra={
-                  <Button
-                    type="link"
-                    onClick={() => showModal(report)}
-                  >
-                    Update
-                  </Button>
+                  <>
+                    <Button
+                      type="primary"
+                      icon={<EditOutlined />}
+                      onClick={() => showModal(report)}
+                      style={{ marginRight: "10px" }}
+                    >
+                      Update
+                    </Button>
+                    <Button
+                      type="danger"
+                      icon={<DeleteOutlined />}
+                      onClick={() => handleDeleteReport(report.id)} // Pass report.id here
+                    >
+                      Delete
+                    </Button>
+                  </>
                 }
               >
                 <p>

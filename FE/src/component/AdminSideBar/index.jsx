@@ -76,22 +76,32 @@ const AdminSideBar = () => {
                         </li>
                     </Link>
 
-                    {/* Table List */}
-                    <Link to="TableList">
+                    {/* KoiVariety */}
+                    <Link to="KoiVariety">
                         <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-9">
                             <img src={tableListIcon} alt="Table List" />
                             <span className={`${!open && "hidden"} origin-left duration-200`}>
-                                Table List
+                                KoiVariety
                             </span>
                         </li>
                     </Link>
 
-                    {/* Typography */}
-                    <Link to="Typography">
+                    {/* KoiGrowthStandard */}
+                    <Link to="KoiGrowthStandard">
                         <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
                             <img src={typographyIcon} alt="Typography" />
                             <span className={`${!open && "hidden"} origin-left duration-200`}>
-                                Typography
+                                KoiGrowthStandard
+                            </span>
+                        </li>
+                    </Link>
+
+                    {/* waterParameterStandard */}
+                    <Link to="WaterParameterStandard">
+                        <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
+                            <img src={typographyIcon} alt="Typography" />
+                            <span className={`${!open && "hidden"} origin-left duration-200`}>
+                                WaterParameterStandard
                             </span>
                         </li>
                     </Link>
