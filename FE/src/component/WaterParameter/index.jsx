@@ -19,6 +19,8 @@ const WaterParameter = () => {
   const [ponds, setPonds] = useState([]);
   const [selectedPond, setSelectedPond] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [form] = Form.useForm();
+  const [editReport, setEditReport] = useState(null); // New state for editing a report
 
   const { Option } = Select;
 
@@ -65,11 +67,23 @@ const WaterParameter = () => {
   };
 
   // Show modal to input water parameters
-  const showModal = () => {
-    if (!selectedPond) {
+  const showModal = (report = null) => {
+    if (!selectedPond && !report) {
       message.error("Please select a pond first!");
       return;
     }
+
+    if (report) {
+      setEditReport(report); // Set the report for editing
+      form.setFieldsValue({
+        ...report,
+        date: moment(report.date),
+      });
+    } else {
+      setEditReport(null);
+      form.resetFields();
+    }
+
     setIsModalVisible(true);
   };
 
@@ -77,7 +91,7 @@ const WaterParameter = () => {
     setIsModalVisible(false);
   };
 
-  // Submit new water parameters
+  // Submit new water parameters or update existing ones
   const onFinish = async (values) => {
     const newReport = {
       pondId: selectedPond,
@@ -94,14 +108,21 @@ const WaterParameter = () => {
     };
 
     try {
-      await api.post(`WaterReport/createWaterReport`, newReport);
-      
-      message.success("Water parameters added successfully!");
+      if (editReport) {
+        // Update existing report
+        await api.put(`WaterReport/updateWaterReport/${editReport.id}`, newReport);
+        message.success("Water parameters updated successfully!");
+      } else {
+        // Create new report
+        await api.post(`WaterReport/createWaterReport`, newReport);
+        message.success("Water parameters added successfully!");
+      }
+
       fetchWaterReports(selectedPond); // Refresh the list
       setIsModalVisible(false);
     } catch (error) {
-      console.error("Error adding water parameters:", error);
-      message.error("Failed to add water parameters.");
+      console.error("Error saving water parameters:", error);
+      message.error("Failed to save water parameters.");
     }
   };
 
@@ -113,166 +134,165 @@ const WaterParameter = () => {
 
       {/* Pond Selection */}
       <Form.Item
-  name="pond"
-  rules={[{ required: true, message: "Please select a pond!" }]}
->
-<Select
-  placeholder="Select a pond"
-  onChange={handlePondChange}
-  allowClear
-  style={{ width: "10%" }}  // Apply inline styling for width
->
-  {ponds.map((pond) => (
-    <Option key={pond.id} value={pond.id}>
-      {pond.name}
-    </Option>
-  ))}
-</Select>
-</Form.Item>
+        name="pond"
+        rules={[{ required: true, message: "Please select a pond!" }]}
+      >
+        <Select
+          placeholder="Select a pond"
+          onChange={handlePondChange}
+          allowClear
+          style={{ width: "10%" }}  // Apply inline styling for width
+        >
+          {ponds.map((pond) => (
+            <Option key={pond.id} value={pond.id}>
+              {pond.name}
+            </Option>
+          ))}
+        </Select>
+      </Form.Item>
 
       {/* Button to Input Water Parameters */}
       <div className="flex flex-col items-center">
-        <Button type="primary" onClick={showModal}>
+        <Button type="primary" onClick={() => showModal()}>
           Input Water Parameters
         </Button>
       </div>
 
-      {/* Modal for Adding Water Parameters */}
+      {/* Modal for Adding or Updating Water Parameters */}
       <Modal
-  title="Input Water Parameters"
-  open={isModalVisible}
-  onCancel={handleCancel}
-  footer={null}
->
-  <Form layout="vertical" onFinish={onFinish}>
-    <Row gutter={16}>
-      {/* Date Picker */}
-      <Col span={12}>
-        <Form.Item
-          label="Date"
-          name="date"
-          rules={[{ required: true, message: "Please select a date!" }]}
-        >
-          <DatePicker style={{ width: "100%" }} />
-        </Form.Item>
-      </Col>
-
-      {/* Salt Input */}
-      <Col span={12}>
-        <Form.Item
-          label="Salt"
-          name="salt"
-          rules={[{ required: true, message: "Please input Salt!" }]}
-        >
-          <Input />
-        </Form.Item>
-      </Col>
-
-      {/* Nitrite Input */}
-      <Col span={12}>
-        <Form.Item
-          label="Nitrite (NO₂)"
-          name="nitrite"
-          rules={[{ required: true, message: "Please input Nitrite!" }]}
-        >
-          <Input />
-        </Form.Item>
-      </Col>
-
-      {/* Nitrate Input */}
-      <Col span={12}>
-        <Form.Item
-          label="Nitrate (NO₃)"
-          name="nitrates"
-          rules={[{ required: true, message: "Please input Nitrate!" }]}
-        >
-          <Input />
-        </Form.Item>
-      </Col>
-
-      {/* Ammonium Input */}
-      <Col span={12}>
-        <Form.Item
-          label="Ammonium (NH₄)"
-          name="amonium"
-          rules={[{ required: true, message: "Please input Ammonium!" }]}
-        >
-          <Input />
-        </Form.Item>
-      </Col>
-
-      {/* Hardness Input */}
-      <Col span={12}>
-        <Form.Item
-          label="Hardness (GH)"
-          name="hardness"
-          rules={[{ required: true, message: "Please input Hardness!" }]}
-        >
-          <Input />
-        </Form.Item>
-      </Col>
-
-      {/* Oxygen Input */}
-      <Col span={12}>
-        <Form.Item
-          label="Oxygen (O₂)"
-          name="oxigen"
-          rules={[{ required: true, message: "Please input Oxygen!" }]}
-        >
-          <Input />
-        </Form.Item>
-      </Col>
-
-      {/* Temperature Input */}
-      <Col span={12}>
-        <Form.Item
-          label="Temperature (℃)"
-          name="temperature"
-          rules={[{ required: true, message: "Please input Temperature!" }]}
-        >
-          <Input />
-        </Form.Item>
-      </Col>
-
-      {/* pH-Value Input */}
-      <Col span={12}>
-        <Form.Item
-          label="pH-Value"
-          name="phVaule"
-          rules={[{ required: true, message: "Please input pH-Value!" }]}
-        >
-          <Input />
-        </Form.Item>
-      </Col>
-
-      {/* CO₂ Input */}
-      <Col span={12}>
-        <Form.Item
-          label="CO₂"
-          name="cabondioxide"
-          rules={[{ required: true, message: "Please input CO₂!" }]}
-        >
-          <Input />
-        </Form.Item>
-      </Col>
-    </Row>
-
-    {/* Submit Buttons */}
-    <Form.Item>
-      <Button type="primary" htmlType="submit">
-        Add
-      </Button>
-      <Button
-        type="default"
-        onClick={handleCancel}
-        style={{ marginLeft: "10px" }}
+        title={editReport ? "Update Water Parameters" : "Input Water Parameters"}
+        open={isModalVisible}
+        onCancel={handleCancel}
+        footer={null}
       >
-        Close
-      </Button>
-    </Form.Item>
-  </Form>
-</Modal>
+        <Form form={form} layout="vertical" onFinish={onFinish}>
+          <Row gutter={16}>
+            {/* Date Picker */}
+            <Col span={12}>
+              <Form.Item
+                label="Date"
+                name="date"
+                rules={[{ required: true, message: "Please select a date!" }]}
+              >
+                <DatePicker style={{ width: "100%" }} />
+              </Form.Item>
+            </Col>
 
+            {/* Salt Input */}
+            <Col span={12}>
+              <Form.Item
+                label="Salt"
+                name="salt"
+                rules={[{ required: true, message: "Please input Salt!" }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+
+            {/* Nitrite Input */}
+            <Col span={12}>
+              <Form.Item
+                label="Nitrite (NO₂)"
+                name="nitrite"
+                rules={[{ required: true, message: "Please input Nitrite!" }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+
+            {/* Nitrate Input */}
+            <Col span={12}>
+              <Form.Item
+                label="Nitrate (NO₃)"
+                name="nitrates"
+                rules={[{ required: true, message: "Please input Nitrate!" }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+
+            {/* Ammonium Input */}
+            <Col span={12}>
+              <Form.Item
+                label="Ammonium (NH₄)"
+                name="amonium"
+                rules={[{ required: true, message: "Please input Ammonium!" }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+
+            {/* Hardness Input */}
+            <Col span={12}>
+              <Form.Item
+                label="Hardness (GH)"
+                name="hardness"
+                rules={[{ required: true, message: "Please input Hardness!" }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+
+            {/* Oxygen Input */}
+            <Col span={12}>
+              <Form.Item
+                label="Oxygen (O₂)"
+                name="oxigen"
+                rules={[{ required: true, message: "Please input Oxygen!" }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+
+            {/* Temperature Input */}
+            <Col span={12}>
+              <Form.Item
+                label="Temperature (℃)"
+                name="temperature"
+                rules={[{ required: true, message: "Please input Temperature!" }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+
+            {/* pH-Value Input */}
+            <Col span={12}>
+              <Form.Item
+                label="pH-Value"
+                name="phVaule"
+                rules={[{ required: true, message: "Please input pH-Value!" }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+
+            {/* CO₂ Input */}
+            <Col span={12}>
+              <Form.Item
+                label="CO₂"
+                name="cabondioxide"
+                rules={[{ required: true, message: "Please input CO₂!" }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          {/* Submit Buttons */}
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              {editReport ? "Update" : "Add"}
+            </Button>
+            <Button
+              type="default"
+              onClick={handleCancel}
+              style={{ marginLeft: "10px" }}
+            >
+              Close
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
 
       {/* Display Water Reports */}
       {waterReports.length > 0 ? (
@@ -282,6 +302,14 @@ const WaterParameter = () => {
               <Card
                 title={`Water Report for Pond: ${selectedPond}`}
                 style={{ width: "100%", marginBottom: "20px" }}
+                extra={
+                  <Button
+                    type="link"
+                    onClick={() => showModal(report)}
+                  >
+                    Update
+                  </Button>
+                }
               >
                 <p>
                   <strong>Date:</strong>{" "}
@@ -320,7 +348,7 @@ const WaterParameter = () => {
         </Row>
       ) : (
         <p style={{ color: "white" }}>
-          
+          No reports available.
         </p>
       )}
     </div>

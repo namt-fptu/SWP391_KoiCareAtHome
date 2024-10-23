@@ -135,16 +135,16 @@ namespace SWP391_KoiManagement.API.Controllers
             }
         }
 
-        //[HttpDelete("deletePakage/{packageId}")]
-        //public async Task<ActionResult> DeletePackage(int packageId)
-        //{
-        //    bool success = await _postPackageService.DeletePostPakageAsync(packageId);
+        [HttpDelete("deletePakage/{packageId}")]
+        public async Task<ActionResult> DeletePackage(int packageId)
+        {
+            bool success = await _postPackageService.DeletePostPakageAsync(packageId);
 
-        //    if (!success)
-        //        return NotFound();
+            if (!success)
+                return NotFound();
 
-        //    return NoContent();
-        //}
+            return NoContent();
+        }
 
     }
 }
