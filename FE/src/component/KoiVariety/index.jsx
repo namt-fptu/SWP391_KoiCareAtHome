@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Table, Button, Modal, Form, Input, Select, notification, Row, Col } from "antd";
+import { Table, Button, Modal, Form, Input, Select, notification } from "antd";
 import api from "../../config/axios";
 
-const { Option } = Select; // Destructure Option from Select
+const { Option } = Select;
 
 const KoiVariety = () => {
   const [varieties, setVarieties] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [form] = Form.useForm(); // Create form instance
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [selectedVariety, setSelectedVariety] = useState(null); // Track the variety being updated
+  const [form] = Form.useForm();
 
-  // Function to fetch koi varieties from the API
   const fetchKoiVarieties = async () => {
     try {
       const response = await api.get("KoiVariety/variety");
@@ -27,32 +28,62 @@ const KoiVariety = () => {
     fetchKoiVarieties();
   }, []);
 
-  // Function to handle create new variety modal
+  // Open modal for creating a new variety
   const handleCreate = () => {
+    setSelectedVariety(null);
+    setIsUpdating(false); // Create mode
     setIsModalVisible(true);
+    form.resetFields();
+  };
+
+  // Open modal for updating an existing variety
+  const handleUpdate = (record) => {
+    setSelectedVariety(record);
+    setIsUpdating(true); // Update mode
+    setIsModalVisible(true);
+    form.setFieldsValue(record); // Pre-fill the form with selected variety's data
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
-    form.resetFields(); // Reset the form fields
+    form.resetFields();
   };
 
-  // Function to handle form submission
   const onFinish = async (values) => {
-    try {
-      await api.post("KoiVariety/createKoiVariety", values);
-      notification.success({
-        message: "Success",
-        description: "Koi variety created successfully!",
-      });
-      handleCancel(); // Close the modal after successful creation
-      fetchKoiVarieties(); // Refresh the list of varieties
-    } catch (error) {
-      console.error("Error creating koi variety:", error);
-      notification.error({
-        message: "Error",
-        description: "Failed to create koi variety.",
-      });
+    if (isUpdating && selectedVariety) {
+      // Handle update
+      try {
+        await api.put(`KoiVariety/updateKoiVariety/${selectedVariety.variety}`, values); // Using selectedVariety.variety as identifier
+        notification.success({
+          message: "Success",
+          description: "Koi variety updated successfully!",
+        });
+        handleCancel();
+        fetchKoiVarieties(); // Refresh the list
+      } catch (error) {
+        console.error("Error updating koi variety:", error);
+        notification.error({
+          message: "Error",
+          description: "Failed to update koi variety.",
+        });
+      }
+    } else {
+      // Handle create
+      try {
+        await api.post("KoiVariety/createKoiVariety", values);
+        notification.success({
+          message: "Success",
+          description: "Koi variety created successfully!",
+        });
+        handleCancel();
+        fetchKoiVarieties();
+      } catch (error) {
+        console.error("Error creating koi variety:", error);
+        notification.error({
+          message: "Error",
+          description: "Failed to create koi variety.",
+        });
+      }
     }
   };
 
@@ -80,17 +111,26 @@ const KoiVariety = () => {
             dataIndex: "color",
             key: "color",
           },
+          {
+            title: "Actions",
+            key: "actions",
+            render: (text, record) => (
+              <Button type="link" onClick={() => handleUpdate(record)}>
+                Update
+              </Button>
+            ),
+          },
         ]}
         rowKey="variety"
-        pagination={false} // Disable pagination if you want full-screen effect
-        scroll={{ y: 'calc(100vh - 300px)' }} // Adjust this value as needed
-        style={{ background: "#1f2937", borderRadius: "8px" }} // Optional styling
+        pagination={false}
+        scroll={{ y: 'calc(100vh - 300px)' }}
+        style={{ background: "#1f2937", borderRadius: "8px" }}
       />
       <Modal
-        title="Create New Koi Variety"
+        title={isUpdating ? "Update Koi Variety" : "Create New Koi Variety"}
         open={isModalVisible}
         onCancel={handleCancel}
-        footer={null} // Hide default footer
+        footer={null}
       >
         <Form layout="vertical" form={form} onFinish={onFinish}>
           <Form.Item
@@ -98,7 +138,10 @@ const KoiVariety = () => {
             name="variety"
             rules={[{ required: true, message: 'Please input the koi variety!' }]}
           >
-            <Input placeholder="Enter koi variety (e.g. Kohaku, General)" />
+            <Input
+              placeholder="Enter koi variety (e.g. Kohaku, General)"
+              disabled={isUpdating} // Disable the field during update
+            />
           </Form.Item>
           <Form.Item
             label="Rarity"
@@ -120,7 +163,7 @@ const KoiVariety = () => {
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
-              Create
+              {isUpdating ? "Update" : "Create"}
             </Button>
           </Form.Item>
         </Form>

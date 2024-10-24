@@ -1,10 +1,11 @@
 import Header from "../../component/header";
 import Footer from "../../component/footer";
 import VipPackage from "../../component/vipPackage";
-// import LandingAdvertisement from "../../component/LandingAdvertisement";
-import { Button } from "antd";
+import { Button, Row, Col, Card, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 import landing1 from "../../assets/landing 1.png";
+
+const { Title, Paragraph, Text } = Typography;
 
 const Home = () => {
   const navigate = useNavigate();
@@ -38,20 +39,23 @@ const Home = () => {
         "Simple charts allow you to easily see how your koi are growing and developing.",
     },
   ];
+
   return (
     <div className="home bg-gray-950 text-slate-50">
       <Header />
 
       <div className="main-content max-w-screen-2xl text-base mx-auto px-8 flex items-center justify-center gap-10 pt-28">
         <div className="basis-1/2">
-          <h1 className="text-5xl font-bold mb-4">Manage & monitor your Koi</h1>
-          <p className="mb-6 text-lg">
-            Would you like to monitor the growth, feeding and health of your
-            Koi? Log from anywhere, always available, including photos and easy
-            charts.
-          </p>
+          <Title level={1} style={{ color: "#fff" }}>
+            Manage & monitor your Koi
+          </Title>
+          <Paragraph style={{ color: "#d1d5db", fontSize: "18px" }}>
+            Would you like to monitor the growth, feeding and health of your Koi?
+            Log from anywhere, always available, including photos and easy charts.
+          </Paragraph>
           <Button
             type="primary"
+            size="large"
             onClick={() => {
               navigate("/signin");
             }}
@@ -63,62 +67,62 @@ const Home = () => {
           <img id="carouselImage" src={landing1} alt="" />
         </div>
       </div>
-      <div
-        id="features"
-        className="pt-36 px-8 flex flex-col items-center justify-center"
-      >
-        <p className="text-5xl font-bold mb-10">KoiF allows you to:</p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl place-items-center">
+
+      <div id="features" className="pt-36 px-8">
+        <Title level={2} style={{ textAlign: "center", color: "#fff" }}>
+          KoiF allows you to:
+        </Title>
+        <Row gutter={[16, 16]} justify="center">
           {features.map((feature, index) => (
-            <div
-              key={index}
-              className="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-700 transition duration-300"
-            >
-              <h2 className="text-xl font-bold mb-2">{feature.title}</h2>
-              <p>{feature.description}</p>
-            </div>
+            <Col key={index} xs={24} sm={12} md={8}>
+              <Card
+                hoverable
+                style={{
+                  backgroundColor: "#1f2937",
+                  color: "#fff",
+                  borderRadius: "8px",
+                }}
+              >
+                <Title level={4} style={{ color: "#fff" }}>
+                  {feature.title}
+                </Title>
+                <Paragraph style={{ color: "#d1d5db" }}>
+                  {feature.description}
+                </Paragraph>
+              </Card>
+            </Col>
           ))}
-        </div>
+        </Row>
       </div>
 
-      <div
-        id="advertisements"
-        className="flex flex-col mt-8 items-center pt-24 px-8"
-      >
-        <h1 className="text-5xl font-bold mb-1">Advertisements</h1>
+      <div id="advertisements" className="flex flex-col mt-8 items-center pt-24 px-8">
+        <Title level={1} style={{ color: "#fff" }}>
+          Advertisements
+        </Title>
         <VipPackage />
       </div>
 
-      <div
-        id="aboutus"
-        className="pt-24 px-8 flex flex-col items-center justify-center"
-      >
-        <h1 className="text-5xl font-bold mb-10">About Us</h1>
-        <p className="mb-6 indent-8">
-          Welcome to <strong>KoiF</strong>, your trusted partner for Koi fish
-          care services at home. We understand the passion and dedication
-          required to maintain the beauty and health of Koi fish, and {`we're`}{" "}
-          here to make that journey easier for you.
-        </p>
-        <p className="mb-6 indent-8">
+      <div id="aboutus" className="pt-24 px-8 flex flex-col items-center justify-center">
+        <Title level={1} style={{ color: "#fff" }}>
+          About Us
+        </Title>
+        <Paragraph style={{ color: "#d1d5db", textIndent: "2em" }}>
+          Welcome to <Text strong>KoiF</Text>, your trusted partner for Koi fish
+          care services at home. We understand the passion and dedication required
+          to maintain the beauty and health of Koi fish, and {`we're`} here to
+          make that journey easier for you.
+        </Paragraph>
+        <Paragraph style={{ color: "#d1d5db", textIndent: "2em" }}>
           Our platform acts as a bridge between Koi enthusiasts and professional
-          care solutions. With our advanced tools, we help you accurately
-          calculate key parameters for your Koi fish and pond, ensuring a
-          thriving aquatic environment. From water quality to feeding schedules,
-          we provide the insights you need to keep your Koi happy and healthy.
-        </p>
-        <p className="mb-6 indent-8">
-          In addition to expert advice, we also connect you with top-tier
-          products that are carefully selected and advertised on our platform,
-          making it simple to find the right equipment and supplies for your
-          pond.
-        </p>
-        <p className="mb-6 indent-8">
-          Whether {`you're`} a seasoned Koi keeper or just starting out,{" "}
-          <strong>KoiF</strong> is here to support you every step of the way.
-          Let us take the guesswork out of Koi care, so you can focus on
-          enjoying the vibrant beauty of your fish.
-        </p>
+          care solutions. With our advanced tools, we help you accurately calculate
+          key parameters for your Koi fish and pond, ensuring a thriving aquatic
+          environment.
+        </Paragraph>
+        <Paragraph style={{ color: "#d1d5db", textIndent: "2em" }}>
+          Whether {`you're`} a seasoned Koi keeper or just starting out, <Text strong>KoiF</Text>{" "}
+          is here to support you every step of the way. Let us take the guesswork
+          out of Koi care, so you can focus on enjoying the vibrant beauty of your fish.
+        </Paragraph>
       </div>
       <Footer />
     </div>
