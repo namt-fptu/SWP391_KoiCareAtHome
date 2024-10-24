@@ -4,32 +4,31 @@ import signinimg from "../../assets/signin.png";
 import { useState } from "react";
 import api from "../../config/axios";
 
+export const decodeJWT = (token) => {
+  try {
+    if (!token) {
+      throw new Error("Token is undefined");
+    }
+
+    const tokenParts = token.split(".");
+    if (tokenParts.length !== 3) {
+      throw new Error("Invalid token format");
+    }
+
+    const base64Url = tokenParts[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const decodedPayload = atob(base64);
+    return JSON.parse(decodedPayload);
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return null;
+  }
+};
+
 const Signin = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [staySignedIn, setStaySignedIn] = useState(false);
   const navigate = useNavigate();
-
-  // Function to decode JWT without jwt-decode
-  const decodeJWT = (token) => {
-    try {
-      if (!token) {
-        throw new Error("Token is undefined");
-      }
-
-      const tokenParts = token.split(".");
-      if (tokenParts.length !== 3) {
-        throw new Error("Invalid token format");
-      }
-
-      const base64Url = tokenParts[1];
-      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-      const decodedPayload = atob(base64);
-      return JSON.parse(decodedPayload);
-    } catch (error) {
-      console.error("Error decoding token:", error);
-      return null;
-    }
-  };
 
   const handleSignin = async (values) => {
     const { email, password } = values;
@@ -50,8 +49,10 @@ const Signin = () => {
       }
 
       sessionStorage.setItem("authToken", token);
+      console.log("Token saved:", sessionStorage.getItem("authToken"));
 
       const decodedToken = decodeJWT(token);
+      console.log("Decoded token:", decodedToken);
       if (!decodedToken) {
         setErrorMessage("Invalid token. Please try again.");
         return;
@@ -72,12 +73,12 @@ const Signin = () => {
         try {
           sessionStorage.setItem("id", id);
         } catch (storageError) {
-          console.error("Error storing pond owner ID:", storageError);
-          setErrorMessage("Error storing pond owner ID. Please try again.");
+          console.error("Error storing user ID:", storageError);
+          setErrorMessage("Error storing user ID. Please try again.");
           return;
         }
       } else {
-        setErrorMessage("Failed to retrieve pond owner ID from token.");
+        setErrorMessage("Failed to retrieve user ID from token.");
         return;
       }
 
