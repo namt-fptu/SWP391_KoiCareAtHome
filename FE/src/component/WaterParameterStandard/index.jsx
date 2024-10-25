@@ -10,19 +10,21 @@ import {
   Modal,
   Select,
 } from "antd";
-import api from "../../config/axios";
 import {
   UploadOutlined,
   EditOutlined,
   DeleteOutlined,
-  CloseSquareFilled,
+  EyeOutlined,
 } from "@ant-design/icons";
+import api from "../../config/axios";
 
 const WaterParameterStandard = () => {
   const [waterStandards, setWaterStandards] = useState([]);
   const [koiVarieties, setKoiVarieties] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isDetailModalVisible, setIsDetailModalVisible] = useState(false);
+  const [selectedStandard, setSelectedStandard] = useState(null);
   const [editingStandard, setEditingStandard] = useState(null);
   const [form] = Form.useForm();
 
@@ -31,7 +33,6 @@ const WaterParameterStandard = () => {
     fetchKoiVarieties();
   }, []);
 
-  // Fetch water parameter standards
   const fetchWaterStandards = async () => {
     try {
       const response = await api.get("WaterParameterStandard/waterStandard");
@@ -42,14 +43,13 @@ const WaterParameterStandard = () => {
     }
   };
 
-  // Fetch koi varieties from API
   const fetchKoiVarieties = async () => {
     try {
-      const response = await api.get("KoiVariety/variety"); // Ensure the endpoint is correct
+      const response = await api.get("KoiVariety/variety");
       if (response.data && Array.isArray(response.data)) {
         setKoiVarieties(
           response.data.map((variety, index) => ({
-            value: variety.id || index, // Fallback to index if `id` is null
+            value: variety.id || index,
             label: variety.variety,
           }))
         );
@@ -61,7 +61,6 @@ const WaterParameterStandard = () => {
       message.error("Failed to fetch koi varieties.");
     }
   };
-
   const onFinish = async (values) => {
     const selectedVariety = koiVarieties.find(
       (variety) => variety.value === values.koiVariety
@@ -114,18 +113,6 @@ const WaterParameterStandard = () => {
       setLoading(false);
     }
   };
-
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-    setEditingStandard(null);
-    form.resetFields();
-  };
-
-  // Function to trigger the update process
   const handleUpdate = (standard) => {
     setEditingStandard(standard);
     form.setFieldsValue({
@@ -167,6 +154,25 @@ const WaterParameterStandard = () => {
       message.error("Failed to delete water parameter standard.");
     }
   };
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+    setEditingStandard(null);
+    form.resetFields();
+  };
+
+  const showDetailModal = (standard) => {
+    setSelectedStandard(standard);
+    setIsDetailModalVisible(true);
+  };
+
+  const handleDetailModalCancel = () => {
+    setIsDetailModalVisible(false);
+    setSelectedStandard(null);
+  };
 
   return (
     <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
@@ -181,7 +187,6 @@ const WaterParameterStandard = () => {
       >
         Create New Water Parameter Standard
       </Button>
-
       <Modal
         title={
           editingStandard
@@ -451,6 +456,27 @@ const WaterParameterStandard = () => {
           </Form.Item>
         </Form>
       </Modal>
+      {/* Modal to show detailed information */}
+      <Modal
+        title="Water Parameter Standard Details"
+        open={isDetailModalVisible}
+        onCancel={handleDetailModalCancel}
+        footer={null}
+      >
+        {selectedStandard && (
+          <div>
+            <p><strong>Koi Variety:</strong> {selectedStandard.koiVariety}</p>
+            <p><strong>Temperature (℃):</strong>Min: {selectedStandard.minTemp}, Max: {selectedStandard.maxTemp} </p>         
+            <p><strong>pH:</strong>Min: {selectedStandard.minPh}, Max: {selectedStandard.maxPh}</p>
+            <p><strong>Oxygen (O₂):</strong> Min: {selectedStandard.minOxigen}, Max: {selectedStandard.maxOxigen}</p>
+            <p><strong>Nitrates:</strong> Min: {selectedStandard.minNitrates}, Max: {selectedStandard.maxNitrates}</p>
+            <p><strong>Hardness (GH):</strong> Min: {selectedStandard.minHardness}, Max: {selectedStandard.maxHardness}</p>
+            <p><strong>Carbon Dioxide (CO₂):</strong> Min: {selectedStandard.minCabondioxide}, Max: {selectedStandard.maxCabondioxide}</p>
+            <p><strong>Nitrite:</strong> Min: {selectedStandard.minNitrite}, Max: {selectedStandard.maxNitrite}</p>
+            <p><strong>Ammonium:</strong> Min: {selectedStandard.minAmonium}, Max: {selectedStandard.maxAmonium}</p>
+          </div>
+        )}
+      </Modal>
 
       {/* Display water parameter standards */}
       {waterStandards.length > 0 ? (
@@ -460,170 +486,41 @@ const WaterParameterStandard = () => {
               <Card
                 title={`Koi Variety: ${standard.koiVariety}`}
                 style={{ width: "100%", marginBottom: "20px" }}
-                extra={
-                  <>
-                    <Button
-                      type="primary"
-                      icon={<EditOutlined />}
-                      onClick={() => handleUpdate(standard)}
-                      style={{ marginRight: "10px" }}
-                    >
-                      Update
-                    </Button>
-                    <Button
-                      type="danger"
-                      icon={<DeleteOutlined />}
-                      onClick={() => deleteWaterParameterStandard(standard.id)}
-                    >
-                      Delete
-                    </Button>
-                  </>
-                }
               >
-                <Row gutter={16}>
-                  <Col span={12}>
-                    <p>
-                      <strong>Temperature (℃):</strong>
-                    </p>
-                    <p>
-                      Min:{" "}
-                      <span style={{ color: "#00FF00" }}>
-                        {standard.minTemp}
-                      </span>
-                    </p>
-                    <p>
-                      Max:{" "}
-                      <span style={{ color: "#FF4500" }}>
-                        {standard.maxTemp}
-                      </span>
-                    </p>
-
-                    <p>
-                      <strong>pH:</strong>
-                    </p>
-                    <p>
-                      Min:{" "}
-                      <span style={{ color: "#00FF00" }}>{standard.minPh}</span>
-                    </p>
-                    <p>
-                      Max:{" "}
-                      <span style={{ color: "#FF4500" }}>{standard.maxPh}</span>
-                    </p>
-
-                    <p>
-                      <strong>Oxygen (O₂):</strong>
-                    </p>
-                    <p>
-                      Min:{" "}
-                      <span style={{ color: "#00FF00" }}>
-                        {standard.minOxigen}
-                      </span>
-                    </p>
-                    <p>
-                      Max:{" "}
-                      <span style={{ color: "#FF4500" }}>
-                        {standard.maxOxigen}
-                      </span>
-                    </p>
-
-                    <p>
-                      <strong>Nitrates:</strong>
-                    </p>
-                    <p>
-                      Min:{" "}
-                      <span style={{ color: "#00FF00" }}>
-                        {standard.minNitrates}
-                      </span>
-                    </p>
-                    <p>
-                      Max:{" "}
-                      <span style={{ color: "#FF4500" }}>
-                        {standard.maxNitrates}
-                      </span>
-                    </p>
-                  </Col>
-                  <Col span={12}>
-                    <p>
-                      <strong>Hardness (GH):</strong>
-                    </p>
-                    <p>
-                      Min:{" "}
-                      <span style={{ color: "#00FF00" }}>
-                        {standard.minHardness}
-                      </span>
-                    </p>
-                    <p>
-                      Max:{" "}
-                      <span style={{ color: "#FF4500" }}>
-                        {standard.maxHardness}
-                      </span>
-                    </p>
-
-                    <p>
-                      <strong>Carbon Dioxide (CO₂):</strong>
-                    </p>
-                    <p>
-                      Min:{" "}
-                      <span style={{ color: "#00FF00" }}>
-                        {standard.minCabondioxide}
-                      </span>
-                    </p>
-                    <p>
-                      Max:{" "}
-                      <span style={{ color: "#FF4500" }}>
-                        {standard.maxCabondioxide}
-                      </span>
-                    </p>
-
-                    <p>
-                      <strong>Salt:</strong>
-                    </p>
-                    <p>
-                      Min:{" "}
-                      <span style={{ color: "#00FF00" }}>
-                        {standard.minSalt}
-                      </span>
-                    </p>
-                    <p>
-                      Max:{" "}
-                      <span style={{ color: "#FF4500" }}>
-                        {standard.maxSalt}
-                      </span>
-                    </p>
-
-                    <p>
-                      <strong>Nitrite:</strong>
-                    </p>
-                    <p>
-                      Min:{" "}
-                      <span style={{ color: "#00FF00" }}>
-                        {standard.minNitrite}
-                      </span>
-                    </p>
-                    <p>
-                      Max:{" "}
-                      <span style={{ color: "#FF4500" }}>
-                        {standard.maxNitrite}
-                      </span>
-                    </p>
-
-                    <p>
-                      <strong>Ammonium:</strong>
-                    </p>
-                    <p>
-                      Min:{" "}
-                      <span style={{ color: "#00FF00" }}>
-                        {standard.minAmonium}
-                      </span>
-                    </p>
-                    <p>
-                      Max:{" "}
-                      <span style={{ color: "#FF4500" }}>
-                        {standard.maxAmonium}
-                      </span>
-                    </p>
-                  </Col>
-                </Row>
+                <p>
+                  <strong>Temperature (℃):</strong> {standard.minTemp} - {standard.maxTemp}
+                </p>
+                <p>
+                  <strong>pH:</strong> {standard.minPh} - {standard.maxPh}
+                </p>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    marginTop: "10px",
+                  }}
+                >
+                  <Button
+                    icon={<EyeOutlined />}
+                    onClick={() => showDetailModal(standard)}
+                  >
+                    View More
+                  </Button>
+                  <Button
+                    type="primary"
+                    icon={<EditOutlined />}
+                    onClick={() => handleUpdate(standard)}
+                  >
+                    Update
+                  </Button>
+                  <Button
+                    type="danger"
+                    icon={<DeleteOutlined />}
+                    onClick={() => deleteWaterParameterStandard(standard.id)}
+                  >
+                    Delete
+                  </Button>
+                </div>
               </Card>
             </Col>
           ))}

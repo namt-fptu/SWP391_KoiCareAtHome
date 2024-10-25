@@ -167,10 +167,10 @@ const WaterParameter = () => {
   };
 
   return (
+    <div className="flex-container">
     <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
-      <h1 className="text-3xl font-bold mb-8 text-white p-8">
-        Water Parameters
-      </h1>
+       <h1 className="text-3xl font-bold mb-8 text-white">Water Parameter</h1>
+       <p className="text-white">Information about your Water.</p>
 
       {/* Pond Selection */}
       <Form.Item
@@ -427,6 +427,7 @@ const WaterParameter = () => {
       ) : (
         <p style={{ color: "white" }}>No reports available.</p>
       )}
+    </div>
     </div>
   );
 };

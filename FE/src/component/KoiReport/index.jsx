@@ -184,8 +184,8 @@ const KoiReport = () => {
   return (
     <div className="flex-container">
       <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
-        <h1 className="text-3xl font-bold mb-8 text-white p-8">Koi Report</h1>
-
+      <h1 className="text-3xl font-bold mb-8 text-white">Koi Report</h1>
+      <p className="text-white"> Report about your Koi.</p>
         {/* Pond Selection */}
         <Select
           placeholder="Select a pond to view koi fish"

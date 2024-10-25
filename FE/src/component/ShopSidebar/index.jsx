@@ -14,17 +14,7 @@ const ShopSideBar = () => {
   const navigate = useNavigate(); // Create a navigate function
   const { logout } = useAuthStore();
 
-  // const Menus = [
-  //   { title: "Overview", path: "Overview", src: "logo sidebar" },
-  //   { title: "My Pond", path: "MyPond", src: "logo sidebar" },
-  //   { title: "My Koi Fish", path: "MyKoiFish", gap: true, src: "logo sidebar" },
-  //   { title: "Water Parameter", path: "WaterParameter", src: "logo sidebar" },
-  //   { title: "Food Calculator", path: "FoodCalculator", src: "logo sidebar" },
-  //   { title: "Salt Calculator", path: "SaltCalculator", src: "logo sidebar" },
-  //   { title: "Statistics", path: "Statistics", gap: true, src: "logo sidebar" },
-  //   { title: "About Koi", path: "AboutKoi", src: "logo sidebar" },
-  //   { title: "Log Out", path: "/", gap: true, src: "logo sidebar" }, // Add Log Out item
-  // ];
+  
 
   const handleLogout = () => {
     // Clear user data or tokens from local storage/session storage/context
@@ -111,46 +101,8 @@ const ShopSideBar = () => {
             </li>
           </Link>
 
-          {/* Salt Calculator */}
-          {/* <Link to="SaltCalculator">
-            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
-              <img src={saltCalcIcon} alt="Salt Calculator" />
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
-                Salt Calculator
-              </span>
-            </li>
-          </Link> */}
-
-          {/* Blog */}
-          {/* <Link to="Blog">
-            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
-              <img src={aboutKoiIcon} alt="About Koi" />
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
-                Blog !!!
-              </span>
-            </li>
-          </Link> */}
-
-          {/* Statistics */}
-          {/* <Link to="Statistics">
-            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-9">
-              <img src={statsIcon} alt="Statistics" />
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
-                Statistics
-              </span>
-            </li>
-          </Link> */}
-
-          {/* About Koi */}
-          <Link to="AboutKoi">
-            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
-              <img src={aboutKoiIcon} alt="About Koi" />
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
-                About Koi
-              </span>
-            </li>
-          </Link>
-
+          
+         
           {/* Log Out */}
           <Link to="#">
             <li

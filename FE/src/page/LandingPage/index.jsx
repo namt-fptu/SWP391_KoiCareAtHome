@@ -107,7 +107,7 @@ const Home = () => {
           About Us
         </Title>
         <Paragraph style={{ color: "#d1d5db", textIndent: "2em" }}>
-          Welcome to <Text strong>KoiF</Text>, your trusted partner for Koi fish
+          Welcome to < strong>KoiF</strong>, your trusted partner for Koi fish
           care services at home. We understand the passion and dedication required
           to maintain the beauty and health of Koi fish, and {`we're`} here to
           make that journey easier for you.
@@ -119,7 +119,7 @@ const Home = () => {
           environment.
         </Paragraph>
         <Paragraph style={{ color: "#d1d5db", textIndent: "2em" }}>
-          Whether {`you're`} a seasoned Koi keeper or just starting out, <Text strong>KoiF</Text>{" "}
+          Whether {`you're`} a seasoned Koi keeper or just starting out, < strong>KoiF</strong>{" "}
           is here to support you every step of the way. Let us take the guesswork
           out of Koi care, so you can focus on enjoying the vibrant beauty of your fish.
         </Paragraph>

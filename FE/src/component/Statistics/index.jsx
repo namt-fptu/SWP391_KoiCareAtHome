@@ -308,8 +308,8 @@ const Statistics = () => {
       {
         label: "pH",
         data: correctedWaterQualityReport.map((item) => item.pH),
-        backgroundColor: "rgba(255, 206, 86, 0.2)",
-        borderColor: "rgba(255, 206, 86, 1)",
+        backgroundColor: "rgba(54, 162, 235, 0.2)",
+        borderColor: "rgba(54, 162, 235, 1)",
         borderWidth: 2,
       },
     ];
@@ -331,8 +331,8 @@ const Statistics = () => {
       {
         label: "Hardness",
         data: correctedWaterQualityReport.map((item) => item.hardness),
-        backgroundColor: "rgba(255, 159, 64, 0.2)",
-        borderColor: "rgba(255, 159, 64, 1)",
+        backgroundColor: "rgba(54, 162, 235, 0.2)",
+        borderColor: "rgba(54, 162, 235, 1)",
         borderWidth: 2,
       },
     ];
@@ -355,8 +355,8 @@ const Statistics = () => {
       {
         label: "Oxygen",
         data: correctedWaterQualityReport.map((item) => item.oxigen),
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-        borderColor: "rgba(75, 192, 192, 1)",
+        backgroundColor: "rgba(54, 162, 235, 0.2)",
+        borderColor: "rgba(54, 162, 235, 1)",
         borderWidth: 2,
       },
     ];
@@ -379,8 +379,8 @@ const Statistics = () => {
       {
         label: "Carbon Dioxide",
         data: correctedWaterQualityReport.map((item) => item.carbonDioxide),
-        backgroundColor: "rgba(255, 206, 86, 0.2)",
-        borderColor: "rgba(255, 206, 86, 1)",
+        backgroundColor: "rgba(54, 162, 235, 0.2)",
+        borderColor: "rgba(54, 162, 235, 1)",
         borderWidth: 2,
       },
     ];
@@ -403,8 +403,8 @@ const Statistics = () => {
       {
         label: "Salt",
         data: correctedWaterQualityReport.map((item) => item.salt),
-        backgroundColor: "rgba(54, 162, 235, 0.2)", // Có thể thay đổi nếu cần
-        borderColor: "rgba(54, 162, 235, 1)", // Có thể thay đổi nếu cần
+        backgroundColor: "rgba(153, 102, 255, 0.2)",
+        borderColor: "rgba(153, 102, 255, 1)",
         borderWidth: 2,
       },
     ];
@@ -427,8 +427,8 @@ const Statistics = () => {
       {
         label: "Nitrates",
         data: correctedWaterQualityReport.map((item) => item.nitrates), // Chỉnh sửa thành nitrates
-        backgroundColor: "rgba(255, 159, 64, 0.2)",
-        borderColor: "rgba(255, 159, 64, 1)",
+        backgroundColor: "rgba(153, 102, 255, 0.2)",
+        borderColor: "rgba(153, 102, 255, 1)",
         borderWidth: 2,
       },
     ];
@@ -451,8 +451,8 @@ const Statistics = () => {
       {
         label: "Nitrite",
         data: correctedWaterQualityReport.map((item) => item.nitrite),
-        backgroundColor: "rgba(255, 99, 132, 0.2)",
-        borderColor: "rgba(255, 99, 132, 1)",
+        backgroundColor: "rgba(54, 162, 235, 0.2)",
+        borderColor: "rgba(54, 162, 235, 1)",
         borderWidth: 2,
       },
     ];
@@ -475,8 +475,8 @@ const Statistics = () => {
       {
         label: "Ammonium",
         data: correctedWaterQualityReport.map((item) => item.ammonium),
-        backgroundColor: "rgba(54, 162, 235, 0.2)", // Có thể thay đổi nếu cần
-        borderColor: "rgba(54, 162, 235, 1)", // Có thể thay đổi nếu cần
+        backgroundColor: "rgba(153, 102, 255, 0.2)",
+        borderColor: "rgba(153, 102, 255, 1)",
         borderWidth: 2,
       },
     ];

@@ -60,7 +60,7 @@ const DashBoard = () => {
                     <h4 className="text-lg font-semibold">Total User</h4>
                     <div className="flex justify-between items-center mt-4">
                         <span className="text-3xl font-bold">{totalUser}</span> {/* Use totalUser from state */}
-                        <div className="text-green-500 text-sm">8.5% Up from yesterday</div>
+                        
                     </div>
                 </div>
 
@@ -69,28 +69,27 @@ const DashBoard = () => {
                     <h4 className="text-lg font-semibold">Total Post</h4>
                     <div className="flex justify-between items-center mt-4">
                         <span className="text-3xl font-bold">20</span>
-                        <div className="text-red-500 text-sm">4.3% Down from yesterday</div>
+                        
                     </div>
                 </div>
             </div>
 
-            {/* Pie Charts Section */}
+           
             <div className="bg-white p-6 rounded-lg shadow-lg">
                 <h4 className="text-lg font-semibold mb-6">Overview</h4>
                 <div className="flex justify-around">
-                    {/* Total Order Pie Chart */}
+                    
                     <div className="w-1/4 text-center">
                         <Pie data={dataOrder} />
                         <h5 className="mt-4 font-medium">Total Order</h5>
                     </div>
 
-                    {/* Customer Growth Pie Chart */}
                     <div className="w-1/4 text-center">
                         <Pie data={dataCustomerGrowth} />
                         <h5 className="mt-4 font-medium">Customer Growth</h5>
                     </div>
 
-                    {/* Total Revenue Pie Chart */}
+
                     <div className="w-1/4 text-center">
                         <Pie data={dataRevenue} />
                         <h5 className="mt-4 font-medium">Total Revenue</h5>
