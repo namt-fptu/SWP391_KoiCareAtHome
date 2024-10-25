@@ -30,16 +30,14 @@ const AdminSideBar = () => {
   return (
     <div className="flex h-auto">
       <div
-        className={`sidebar ${
-          open ? "w-72" : "w-20"
-        } bg-black h-full p-5 pt-8 relative duration-300`}
+        className={`sidebar ${open ? "w-72" : "w-20"
+          } bg-black h-full p-5 pt-8 relative duration-300`}
       >
         {/* Control Button */}
         <img
           src={controlButton}
-          className={`absolute cursor-pointer -right-3 top-9 w-7 border-black border-2 rounded-full ${
-            !open && "rotate-180"
-          }`}
+          className={`absolute cursor-pointer -right-3 top-9 w-7 border-black border-2 rounded-full ${!open && "rotate-180"
+            }`}
           onClick={() => setOpen(!open)}
           alt="control"
         />
@@ -51,15 +49,13 @@ const AdminSideBar = () => {
               src={logoimg}
               alt="logo"
               width={60}
-              className={`cursor-pointer duration-500 ${
-                open && "rotate-[360deg]"
-              }`}
+              className={`cursor-pointer duration-500 ${open && "rotate-[360deg]"
+                }`}
             />
           </Link>
           <h1
-            className={`text-white origin-left font-medium text-xl duration-200 ${
-              !open && "scale-0"
-            }`}
+            className={`text-white origin-left font-medium text-xl duration-200 ${!open && "scale-0"
+              }`}
           >
             KoiF
           </h1>
@@ -123,6 +119,16 @@ const AdminSideBar = () => {
               <img src={postsIcon} alt="Posts" />
               <span className={`${!open && "hidden"} origin-left duration-200`}>
                 Posts
+              </span>
+            </li>
+          </Link>
+
+          {/* PostPackage */}
+          <Link to="PostPackage">
+            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-9">
+              <img src={tableListIcon} alt="Table List" />
+              <span className={`${!open && "hidden"} origin-left duration-200`}>
+                PostPackage
               </span>
             </li>
           </Link>

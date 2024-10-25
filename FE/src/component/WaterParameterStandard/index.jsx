@@ -466,7 +466,7 @@ const WaterParameterStandard = () => {
         {selectedStandard && (
           <div>
             <p><strong>Koi Variety:</strong> {selectedStandard.koiVariety}</p>
-            <p><strong>Temperature (℃):</strong>Min: {selectedStandard.minTemp}, Max: {selectedStandard.maxTemp} </p>         
+            <p><strong>Temperature (℃):</strong>Min: {selectedStandard.minTemp}, Max: {selectedStandard.maxTemp} </p>
             <p><strong>pH:</strong>Min: {selectedStandard.minPh}, Max: {selectedStandard.maxPh}</p>
             <p><strong>Oxygen (O₂):</strong> Min: {selectedStandard.minOxigen}, Max: {selectedStandard.maxOxigen}</p>
             <p><strong>Nitrates:</strong> Min: {selectedStandard.minNitrates}, Max: {selectedStandard.maxNitrates}</p>

@@ -25,6 +25,7 @@ import ShopProduct from "./component/ShopProduct";
 import KoiVariety from "./component/KoiVariety";
 import KoiGrowthStandard from "./component/KoiGrowthStandard";
 import UserProfile from "./component/UserProfile";
+import PostPackage from "./component/PostPackage";
 
 // import ShopAds from "./component/ShopAds";
 import ShopVipPackage from "./component/ShopVipPackage";
@@ -36,6 +37,7 @@ import KoiReport from "./component/KoiReport";
 import WaterParameterStandard from "./component/WaterParameterStandard";
 import { createRoutes } from "./routes/utils";
 import { useAuthStore } from "./page/(auth)/store";
+import { elements } from "chart.js";
 const App = () => {
   const { authUser } = useAuthStore();
 
@@ -92,6 +94,7 @@ const App = () => {
         { path: "KoiGrowthStandard", element: <KoiGrowthStandard /> },
         { path: "Posts", element: <Posts /> },
         { path: "WaterParameterStandard", element: <WaterParameterStandard /> },
+        { path: "PostPackage", element: <PostPackage /> }
       ],
     },
   ];

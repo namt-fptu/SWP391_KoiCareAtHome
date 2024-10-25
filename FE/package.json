@@ -15,6 +15,7 @@
     "axios": "^1.7.7",
     "chart.js": "^4.4.4",
     "firebase": "^10.14.1",
+    "i": "^0.3.7",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.453.0",
     "moment": "^2.30.1",
