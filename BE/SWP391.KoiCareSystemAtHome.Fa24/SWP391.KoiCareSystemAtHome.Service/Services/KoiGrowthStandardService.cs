@@ -123,5 +123,22 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return true;
         }
 
+        public async Task DeleteKoiGrowthStandardByVarietyAsync(string variety)
+        {
+            var growthStandards = await _unitOfWork.KoiGrowthStandards.GetAsync();
+            var fillterdGrowthStandard = growthStandards.Where(w => w.KoiVariety.Equals(variety));
+
+            if (fillterdGrowthStandard == null || !fillterdGrowthStandard.Any())
+                return;
+
+            foreach (var item in fillterdGrowthStandard)
+            {
+                _unitOfWork.KoiGrowthStandards.DeleteAsync(item);
+            }
+
+            await _unitOfWork.SaveAsync();
+            return;
+        }
+
     }
 }

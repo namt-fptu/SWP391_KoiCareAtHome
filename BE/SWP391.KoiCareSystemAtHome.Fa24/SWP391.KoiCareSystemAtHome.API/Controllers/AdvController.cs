@@ -69,7 +69,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         }
 
         [HttpGet("getApprovedAdv")]
-        public async Task<ActionResult<AdvResponseModel>> GetApprovedAdv()
+        public async Task<ActionResult<IEnumerable<AdvResponseModel>>> GetApprovedAdv()
         {
 
             var advs = await _advService.GetApprovedAdvAsync();
@@ -80,7 +80,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             var validAdvs = new List<AdvModel>();
             foreach (var adv in advs)
             {
-                if ((adv.ExpiredDate <= DateTime.Now) && adv.Status.Equals("Approved"))
+                if ((adv.ExpiredDate >= DateTime.Now) && adv.Status.Equals("Approved"))
                 {
                     validAdvs.Add(adv);
                 }
