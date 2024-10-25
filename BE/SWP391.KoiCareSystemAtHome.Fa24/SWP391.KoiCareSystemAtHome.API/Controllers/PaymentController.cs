@@ -169,7 +169,8 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                     await _advService.UpdateAdsPaymentAsync(advModel);
                 }
 
-                return Ok(response);
+                //return Ok(response);
+                return Redirect("http://localhost:5173/SuccessPage");
             }
             catch (Exception ex)
             {
