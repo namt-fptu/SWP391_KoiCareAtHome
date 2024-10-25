@@ -12,6 +12,7 @@ import {
 } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import api from "../../config/axios"; // Axios instance configuration
+import { useAuthStore } from "../../page/(auth)/store";
 
 const ShopProduct = () => {
   const [products, setProducts] = useState([]);
@@ -23,7 +24,9 @@ const ShopProduct = () => {
   const [posts, setPosts] = useState([]);
 
   const { Option } = Select;
-  const id = sessionStorage.getItem("id");
+  // const id = sessionStorage.getItem("id");
+  const { authUser } = useAuthStore();
+  const id = authUser.id;
 
   useEffect(() => {
     if (!id) {

@@ -14,6 +14,7 @@ import {
   message,
   Select,
   InputNumber,
+  notification,
 } from "antd";
 
 // Firebase configuration
@@ -68,7 +69,11 @@ const Posts = () => {
 
         setPosts(postsWithContent);
       } catch (error) {
-        message.error("Failed to fetch post data.");
+        notification.error({
+          message: "Error",
+          description: "Failed to load Post. Maybe there're no Processing Post",
+        });
+        // message.error("Failed to fetch post data.");
       }
     };
     fetchProcessingPosts();

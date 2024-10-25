@@ -27,6 +27,7 @@ import {
 } from "firebase/storage";
 import { initializeApp } from "firebase/app";
 import api from "../../config/axios"; // Axios instance configuration
+import { useAuthStore } from "../../page/(auth)/store";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBIcvSZRnSTBxw8yrLcq7AqLjqNhvaUQyk",
@@ -53,7 +54,9 @@ const MyKoiFish = () => {
   const [ponds, setPonds] = useState([]);
 
   const { Option } = Select;
-  const id = sessionStorage.getItem("id");
+  // const id = sessionStorage.getItem("id");
+  const { authUser } = useAuthStore();
+  const id = authUser.id;
 
   useEffect(() => {
     if (!id) {
@@ -392,7 +395,6 @@ const MyKoiFish = () => {
               price: selectedKoi?.price,
             }}
           >
-            
             <Form.Item label="Upload Image" name="image">
               <Upload
                 listType="picture"

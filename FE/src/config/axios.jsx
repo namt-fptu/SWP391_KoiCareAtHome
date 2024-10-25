@@ -1,4 +1,5 @@
 import axios from "axios";
+import { AUTH_LOCALSTORAGE_KEY } from "../page/(auth)/store";
 const baseUrl = "http://localhost:5088/api/";
 
 const config = {
@@ -11,8 +12,21 @@ api.defaults.baseURL = baseUrl;
 
 // handle before call API
 const handleBefore = (config) => {
-  const token = localStorage.getItem("token")?.replaceAll('"', "");
-  config.headers["Authorization"] = `Bearer ${token}`;
+  try {
+    const authData = localStorage.getItem(AUTH_LOCALSTORAGE_KEY);
+    if (authData) {
+      const parsedData = JSON.parse(authData);
+      const accessToken = parsedData?.state?.accessToken;
+      if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
+      }
+    }
+  } catch (error) {
+    console.error("Failed to set authorization header:", error);
+  }
+
+  // const token = localStorage.getItem(AUTH_LOCALSTORAGE_KEY)?.replaceAll('"', "");
+  // config.headers["Authorization"] = `Bearer ${token}`;
   return config;
 };
 

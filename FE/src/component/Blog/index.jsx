@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Row, Col, message } from "antd";
+import { Card, Row, Col, message, notification } from "antd";
 import api from "../../config/axios";
 import { initializeApp } from "firebase/app";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
@@ -26,6 +26,7 @@ const Blog = () => {
       try {
         const response = await api.get("Adv/getApprovedAdv"); // API để lấy bài post đã được Approved
         const postsData = response.data;
+        console.log(postsData);
 
         // Tải nội dung từ Firebase cho từng bài viết
         const postsWithContent = await Promise.all(
@@ -47,8 +48,12 @@ const Blog = () => {
 
         setApprovedPosts(postsWithContent);
       } catch (error) {
+        notification.error({
+          message: "Error",
+          description:
+            "Failed to load Approved Posts. Maybe you haven't approved any posts yet.",
+        });
         console.log("Error", error);
-        message.error("Failed to fetch approved posts.");
       }
     };
 

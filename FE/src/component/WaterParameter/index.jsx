@@ -12,8 +12,13 @@ import {
   message,
 } from "antd";
 import api from "../../config/axios";
-import { UploadOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  UploadOutlined,
+  EditOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 import moment from "moment"; // For date formatting
+import { useAuthStore } from "../../page/(auth)/store";
 
 const WaterParameter = () => {
   const [waterReports, setWaterReports] = useState([]);
@@ -28,10 +33,13 @@ const WaterParameter = () => {
   useEffect(() => {
     fetchUserPonds();
   }, []);
+  const { authUser } = useAuthStore();
+  const id = authUser.id;
 
   // Fetch user's ponds
   const fetchUserPonds = async () => {
-    const id = sessionStorage.getItem("id");
+    // const id = sessionStorage.getItem("id");
+
     if (!id) {
       message.error("User not logged in. Unable to fetch ponds.");
       return;
@@ -139,7 +147,10 @@ const WaterParameter = () => {
     try {
       if (editReport) {
         // Update existing report
-        await api.put(`WaterReport/updateWaterReport/${editReport.id}`, newReport);
+        await api.put(
+          `WaterReport/updateWaterReport/${editReport.id}`,
+          newReport
+        );
         message.success("Water parameters updated successfully!");
       } else {
         // Create new report
@@ -170,7 +181,7 @@ const WaterParameter = () => {
           placeholder="Select a pond"
           onChange={handlePondChange}
           allowClear
-          style={{ width: "10%" }}  // Apply inline styling for width
+          style={{ width: "10%" }} // Apply inline styling for width
         >
           {ponds.map((pond) => (
             <Option key={pond.id} value={pond.id}>
@@ -189,7 +200,9 @@ const WaterParameter = () => {
 
       {/* Modal for Adding or Updating Water Parameters */}
       <Modal
-        title={editReport ? "Update Water Parameters" : "Input Water Parameters"}
+        title={
+          editReport ? "Update Water Parameters" : "Input Water Parameters"
+        }
         open={isModalVisible}
         onCancel={handleCancel}
         footer={null}
@@ -278,7 +291,9 @@ const WaterParameter = () => {
               <Form.Item
                 label="Temperature (℃)"
                 name="temperature"
-                rules={[{ required: true, message: "Please input Temperature!" }]}
+                rules={[
+                  { required: true, message: "Please input Temperature!" },
+                ]}
               >
                 <Input />
               </Form.Item>
@@ -331,25 +346,25 @@ const WaterParameter = () => {
               <Card
                 title={`Water Report for Pond: ${selectedPond}`}
                 style={{ width: "100%", marginBottom: "20px" }}
-                extra={
-                  <>
-                    <Button
-                      type="primary"
-                      icon={<EditOutlined />}
-                      onClick={() => showModal(report)}
-                      style={{ marginRight: "10px" }}
-                    >
-                      Update
-                    </Button>
-                    <Button
-                      type="danger"
-                      icon={<DeleteOutlined />}
-                      onClick={() => handleDeleteReport(report.id)} // Pass report.id here
-                    >
-                      Delete
-                    </Button>
-                  </>
-                }
+                // extra={
+                //   <>
+                //     <Button
+                //       type="primary"
+                //       icon={<EditOutlined />}
+                //       onClick={() => showModal(report)}
+                //       style={{ marginRight: "10px" }}
+                //     >
+                //       Update
+                //     </Button>
+                //     <Button
+                //       type="danger"
+                //       icon={<DeleteOutlined />}
+                //       onClick={() => handleDeleteReport(report.id)} // Pass report.id here
+                //     >
+                //       Delete
+                //     </Button>
+                //   </>
+                // }
               >
                 <p>
                   <strong>Date:</strong>{" "}
@@ -382,14 +397,35 @@ const WaterParameter = () => {
                 <p>
                   <strong>CO₂:</strong> {report.cabondioxide}
                 </p>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    marginTop: "10px",
+                  }}
+                >
+                  <Button
+                    type="primary"
+                    icon={<EditOutlined />}
+                    onClick={() => showModal(report)}
+                  >
+                    Update
+                  </Button>
+
+                  <Button
+                    type="danger"
+                    icon={<DeleteOutlined />}
+                    onClick={() => handleDeleteReport(report.id)}
+                  >
+                    Delete
+                  </Button>
+                </div>
               </Card>
             </Col>
           ))}
         </Row>
       ) : (
-        <p style={{ color: "white" }}>
-          No reports available.
-        </p>
+        <p style={{ color: "white" }}>No reports available.</p>
       )}
     </div>
   );

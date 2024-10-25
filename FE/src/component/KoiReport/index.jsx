@@ -18,6 +18,7 @@ import {
 } from "@ant-design/icons";
 import api from "../../config/axios"; // Axios instance configuration
 import moment from "moment";
+import { useAuthStore } from "../../page/(auth)/store";
 
 const KoiReport = () => {
   const [kois, setKois] = useState([]); // Array to store Koi fish details
@@ -31,7 +32,9 @@ const KoiReport = () => {
   const [selectedReport, setSelectedReport] = useState(null); // Store selected report for update
   const [form] = Form.useForm(); // Form instance for create
   const [updateForm] = Form.useForm(); // Form instance for update
-  const id = sessionStorage.getItem("id");
+  // const id = sessionStorage.getItem("id");
+  const { authUser } = useAuthStore();
+  const id = authUser.id;
 
   useEffect(() => {
     if (!id) {

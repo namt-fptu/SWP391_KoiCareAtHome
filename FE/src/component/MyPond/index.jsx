@@ -11,10 +11,15 @@ import {
   message,
   Popconfirm,
 } from "antd";
-import { UploadOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  UploadOutlined,
+  EditOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 import { initializeApp } from "firebase/app";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import api from "../../config/axios";
+import { useAuthStore } from "../../page/(auth)/store";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -37,7 +42,9 @@ const MyPond = () => {
   const [fileList, setFileList] = useState([]);
   const [editingPond, setEditingPond] = useState(null);
 
-  const id = sessionStorage.getItem("id");
+  // const id = sessionStorage.getItem("id");
+  const { authUser } = useAuthStore();
+  const id = authUser.id;
 
   useEffect(() => {
     if (!id) {
@@ -156,7 +163,6 @@ const MyPond = () => {
     }
   };
 
-
   return (
     <div className="flex-container">
       <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
@@ -170,16 +176,27 @@ const MyPond = () => {
           </div>
 
           <Modal
-            title={editingPond ? "Edit Pond Information" : "Input Pond Information"}
+            title={
+              editingPond ? "Edit Pond Information" : "Input Pond Information"
+            }
             open={isModalVisible}
             onCancel={handleCancel}
             footer={null}
           >
-            <Form layout="vertical" onFinish={onFinish} initialValues={editingPond}>
+            <Form
+              layout="vertical"
+              onFinish={onFinish}
+              initialValues={editingPond}
+            >
               <Form.Item
                 label="Upload Image"
                 name="image"
-                rules={[{ required: !editingPond, message: "Please upload an image!" }]}
+                rules={[
+                  {
+                    required: !editingPond,
+                    message: "Please upload an image!",
+                  },
+                ]}
               >
                 <Upload
                   name="image"
@@ -228,7 +245,9 @@ const MyPond = () => {
               <Form.Item
                 label="Drain Count"
                 name="draimCount"
-                rules={[{ required: true, message: "Please input Drain Count!" }]}
+                rules={[
+                  { required: true, message: "Please input Drain Count!" },
+                ]}
               >
                 <Input />
               </Form.Item>
@@ -236,7 +255,9 @@ const MyPond = () => {
               <Form.Item
                 label="Skimmer Count"
                 name="skimmerCount"
-                rules={[{ required: true, message: "Please input Skimmer Count!" }]}
+                rules={[
+                  { required: true, message: "Please input Skimmer Count!" },
+                ]}
               >
                 <Input />
               </Form.Item>
@@ -244,7 +265,9 @@ const MyPond = () => {
               <Form.Item
                 label="Pumping Capacity"
                 name="pumpingCapacity"
-                rules={[{ required: true, message: "Please input Pumping Capacity!" }]}
+                rules={[
+                  { required: true, message: "Please input Pumping Capacity!" },
+                ]}
               >
                 <Input />
               </Form.Item>
@@ -290,15 +313,13 @@ const MyPond = () => {
                       </Button>
                       {/* Delete button */}
                       <Popconfirm
-                        title="Are you sure you want to delete this pond?"  // This text can be changed
+                        title="Are you sure you want to delete this pond?" // This text can be changed
                         onConfirm={() => deletePond(pond.id)}
                         okText="Yes"
                         cancelText="Cancel"
                       >
-                        <Button
-                          type="danger"
-                          icon={<DeleteOutlined />}
-                        />Delete
+                        <Button type="danger" icon={<DeleteOutlined />} />
+                        Delete
                       </Popconfirm>
                     </div>
                   </Card>

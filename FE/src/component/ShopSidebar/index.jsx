@@ -7,10 +7,12 @@ import overviewIcon from "./../../assets/Logo sidebar/overview.png"; // Thêm ic
 import myPondIcon from "./../../assets/Logo sidebar/myPond.png"; // Thêm icon cho MyPond
 import aboutKoiIcon from "./../../assets/Logo sidebar/aboutKoi.png"; // Thêm icon cho About Koi
 import logOutIcon from "./../../assets/Logo sidebar/logout.png"; // Thêm icon cho Log Out
+import { useAuthStore } from "../../page/(auth)/store";
 
 const ShopSideBar = () => {
   const [open, setOpen] = useState(true);
   const navigate = useNavigate(); // Create a navigate function
+  const { logout } = useAuthStore();
 
   // const Menus = [
   //   { title: "Overview", path: "Overview", src: "logo sidebar" },
@@ -153,7 +155,9 @@ const ShopSideBar = () => {
           <Link to="#">
             <li
               className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-9"
-              onClick={handleLogout}
+              onClick={() => {
+                logout();
+              }}
             >
               <img src={logOutIcon} alt="Log Out" />
               <span className={`${!open && "hidden"} origin-left duration-200`}>

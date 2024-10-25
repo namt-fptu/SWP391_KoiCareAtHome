@@ -3,105 +3,128 @@ import { Link, useNavigate } from "react-router-dom";
 import signinimg from "../../assets/signin.png";
 import { useState } from "react";
 import api from "../../config/axios";
-
-export const decodeJWT = (token) => {
-  try {
-    if (!token) {
-      throw new Error("Token is undefined");
-    }
-
-    const tokenParts = token.split(".");
-    if (tokenParts.length !== 3) {
-      throw new Error("Invalid token format");
-    }
-
-    const base64Url = tokenParts[1];
-    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-    const decodedPayload = atob(base64);
-    return JSON.parse(decodedPayload);
-  } catch (error) {
-    console.error("Error decoding token:", error);
-    return null;
-  }
-};
+import { useAuthStore } from "../(auth)/store";
+import { useMutation } from "@tanstack/react-query";
 
 const Signin = () => {
+  const { isKeepLogin, login } = useAuthStore();
   const [errorMessage, setErrorMessage] = useState(null);
   const [staySignedIn, setStaySignedIn] = useState(false);
   const navigate = useNavigate();
 
-  const handleSignin = async (values) => {
-    const { email, password } = values;
+  // // Function to decode JWT without jwt-decode
+  // const decodeJWT = (token) => {
+  //   try {
+  //     if (!token) {
+  //       throw new Error("Token is undefined");
+  //     }
 
-    try {
-      const response = await api.post(
-        "Account/login",
-        { email, password },
-        { headers: { "Content-Type": "application/json" } }
-      );
+  //     const tokenParts = token.split(".");
+  //     if (tokenParts.length !== 3) {
+  //       throw new Error("Invalid token format");
+  //     }
 
-      const token = response.data;
-      console.log("Login successful", token);
+  //     const base64Url = tokenParts[1];
+  //     const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  //     const decodedPayload = atob(base64);
+  //     return JSON.parse(decodedPayload);
+  //   } catch (error) {
+  //     console.error("Error decoding token:", error);
+  //     return null;
+  //   }
+  // };
 
-      if (!token) {
-        setErrorMessage("Login failed: No token returned from server.");
-        return;
-      }
+  // const handleSignin = async (values) => {
+  //   const { email, password } = values;
 
-      sessionStorage.setItem("authToken", token);
-      console.log("Token saved:", sessionStorage.getItem("authToken"));
+  //   try {
+  //     const response = await api.post(
+  //       "Account/login",
+  //       { email, password },
+  //       { headers: { "Content-Type": "application/json" } }
+  //     );
 
-      const decodedToken = decodeJWT(token);
-      console.log("Decoded token:", decodedToken);
-      if (!decodedToken) {
-        setErrorMessage("Invalid token. Please try again.");
-        return;
-      }
+  //     const token = response.data;
+  //     console.log("Login successful", token);
 
-      const userRole =
-        decodedToken.role ||
-        decodedToken[
-          "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
-        ];
-      const id =
-        decodedToken.nameidentifier ||
-        decodedToken[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-        ];
+  //     if (!token) {
+  //       setErrorMessage("Login failed: No token returned from server.");
+  //       return;
+  //     }
 
-      if (id) {
-        try {
-          sessionStorage.setItem("id", id);
-        } catch (storageError) {
-          console.error("Error storing user ID:", storageError);
-          setErrorMessage("Error storing user ID. Please try again.");
-          return;
-        }
-      } else {
-        setErrorMessage("Failed to retrieve user ID from token.");
-        return;
-      }
+  //     sessionStorage.setItem("authToken", token);
 
-      if (userRole === "Admin") {
-        navigate("/DashBoard");
-      } else if (userRole === "PondOwner") {
-        navigate("/overview");
-      } else if (userRole === "Shop") {
-        navigate("/ShopOverview");
-      } else {
-        setErrorMessage("Unknown user role.");
-      }
-    } catch (error) {
-      console.error("Error during login:", error);
-      if (error.response && error.response.status === 401) {
-        setErrorMessage("Invalid email or password");
-      } else if (error.response) {
-        setErrorMessage(`Login failed: ${error.response.statusText}`);
-      } else {
-        setErrorMessage("Network error. Please try again later.");
-      }
-    }
-  };
+  //     const decodedToken = decodeJWT(token);
+  //     if (!decodedToken) {
+  //       setErrorMessage("Invalid token. Please try again.");
+  //       return;
+  //     }
+
+  //     const userRole =
+  //       decodedToken.role ||
+  //       decodedToken[
+  //         "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+  //       ];
+  //     const id =
+  //       decodedToken.nameidentifier ||
+  //       decodedToken[
+  //         "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+  //       ];
+
+  //     if (id) {
+  //       try {
+  //         sessionStorage.setItem("id", id);
+  //       } catch (storageError) {
+  //         console.error("Error storing pond owner ID:", storageError);
+  //         setErrorMessage("Error storing pond owner ID. Please try again.");
+  //         return;
+  //       }
+  //     } else {
+  //       setErrorMessage("Failed to retrieve pond owner ID from token.");
+  //       return;
+  //     }
+
+  //     if (userRole === "Admin") {
+  //       navigate("/DashBoard");
+  //     } else if (userRole === "PondOwner") {
+  //       navigate("/overview");
+  //     } else if (userRole === "Shop") {
+  //       navigate("/ShopOverview");
+  //     } else {
+  //       setErrorMessage("Unknown user role.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error during login:", error);
+  //     if (error.response && error.response.status === 401) {
+  //       setErrorMessage("Invalid email or password");
+  //     } else if (error.response) {
+  //       setErrorMessage(`Login failed: ${error.response.statusText}`);
+  //     } else {
+  //       setErrorMessage("Network error. Please try again later.");
+  //     }
+  //   }
+  // };
+
+  const loginMutation = useMutation({
+    mutationFn: login,
+    onSuccess: () => {
+      console.log("Login successful");
+      // CustomMessage({message: t("page.login.login_successful")})
+      // SetSaveAccountStorage(
+      //   form.getValues().username,
+      //   form.getValues().isKeepLogin,
+      // );
+    },
+    onError: (error) => {
+      console.log("Login failed", error);
+      // if(error.message === "username_or_password_incorrect") {
+      //   setUsernameError(t("page.login.username_error"));
+      //   setPasswordError(t("page.login.password_error"));
+      // } else {
+      //   message.error(`${t("error." + error.message)}`);
+      // }
+    },
+  });
 
   return (
     <>
@@ -119,15 +142,15 @@ const Signin = () => {
             <Form
               className="form"
               labelCol={{ span: 24 }}
-              onFinish={handleSignin}
+              onFinish={loginMutation.mutate}
             >
               <h1 className="text-3xl font-semibold mb-6">Sign In</h1>
-              <p className="mb-4">
+              <div className="mb-4">
                 New User?{" "}
                 <Link to="/signup">
                   <div className="text-blue-500 ml-auto">Create an account</div>
                 </Link>
-              </p>
+              </div>
 
               {errorMessage && (
                 <div className="mb-4 text-red-500">{errorMessage}</div>

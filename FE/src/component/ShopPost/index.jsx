@@ -30,6 +30,7 @@ import {
 } from "firebase/storage";
 // import { getFirestore, addDoc, collection, getDocs } from "firebase/firestore";
 import api from "../../config/axios";
+import { useAuthStore } from "../../page/(auth)/store";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -62,7 +63,9 @@ const ShopPost = () => {
   const [currentPostId, setCurrentPostId] = useState(null);
   const [shortContents, setShortContents] = useState({});
   // Retrieve pondOwnerId from sessionStorage
-  const id = sessionStorage.getItem("id");
+  // const id = sessionStorage.getItem("id");
+  const { authUser } = useAuthStore();
+  const id = authUser.id;
 
   useEffect(() => {
     if (!id) {

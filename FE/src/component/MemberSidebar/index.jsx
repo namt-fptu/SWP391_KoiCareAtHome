@@ -11,10 +11,12 @@ import saltCalcIcon from "./../../assets/Logo sidebar/saltCalculator.png"; // Th
 import statsIcon from "./../../assets/Logo sidebar/statistics.png"; // Thêm icon cho Statistics
 import aboutKoiIcon from "./../../assets/Logo sidebar/aboutKoi.png"; // Thêm icon cho About Koi
 import logOutIcon from "./../../assets/Logo sidebar/logout.png"; // Thêm icon cho Log Out
+import { useAuthStore } from "../../page/(auth)/store";
 
 const MemberSideBar = () => {
   const [open, setOpen] = useState(true);
   const navigate = useNavigate(); // Create a navigate function
+  const { logout } = useAuthStore();
 
   // const Menus = [
   //   { title: "Overview", path: "Overview", src: "logo sidebar" },
@@ -118,11 +120,10 @@ const MemberSideBar = () => {
             <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
               <img src={waterParamIcon} alt="Water Parameter" />
               <span className={`${!open && "hidden"} origin-left duration-200`}>
-              Koi Report
+                Koi Report
               </span>
             </li>
           </Link>
-
 
           {/* Food Calculator */}
           <Link to="FoodCalculator">
@@ -178,7 +179,9 @@ const MemberSideBar = () => {
           <Link to="#">
             <li
               className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-9"
-              onClick={handleLogout}
+              onClick={() => {
+                logout();
+              }}
             >
               <img src={logOutIcon} alt="Log Out" />
               <span className={`${!open && "hidden"} origin-left duration-200`}>

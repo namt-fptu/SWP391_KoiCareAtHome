@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { message, Select, Button, Typography, Card } from 'antd';
+import { message, Select, Button, Typography, Card } from "antd";
 import api from "../../config/axios"; // Update with your actual API import
+import { useAuthStore } from "../../page/(auth)/store";
 
 const { Title, Text } = Typography;
 
@@ -11,7 +12,9 @@ const SaltCalculator = () => {
   const [saltAmount, setSaltAmount] = useState(0); // State to store calculated salt amount
   const [selectedSaltLevel, setSelectedSaltLevel] = useState("medium"); // State for salt level selection
 
-  const id = sessionStorage.getItem("id"); // Get user ID from sessionStorage
+  // const id = sessionStorage.getItem("id"); // Get user ID from sessionStorage
+  const { authUser } = useAuthStore();
+  const id = authUser.id;
 
   const fetchPondDetails = async (pondId) => {
     try {
@@ -96,7 +99,10 @@ const SaltCalculator = () => {
           {/* Pond Volume Display */}
           <div className="mb-8">
             <Text className="text-lg">
-              Pond Volume: {typeof pondVolume === "number" ? `${pondVolume} liters` : "Not available"}
+              Pond Volume:{" "}
+              {typeof pondVolume === "number"
+                ? `${pondVolume} liters`
+                : "Not available"}
             </Text>
           </div>
 
@@ -131,9 +137,11 @@ const SaltCalculator = () => {
             <Text strong>Calculated Salt Amount:</Text>
             <div
               className="bg-white text-black p-2 rounded mt-2 inline-block"
-              style={{ minWidth: "100px", textAlign: "center" }} 
+              style={{ minWidth: "100px", textAlign: "center" }}
             >
-              {saltAmount > 0 ? `${saltAmount.toFixed(2)} kg` : "Select salt level"}
+              {saltAmount > 0
+                ? `${saltAmount.toFixed(2)} kg`
+                : "Select salt level"}
             </div>
           </div>
         </Card>
@@ -144,12 +152,16 @@ const SaltCalculator = () => {
         <Card>
           <Title level={4}>Salt Information</Title>
           <Text>
-            The recommended amount of salt should be split evenly into 3-7 % per liter.
-            This way, the koi will ingest the food better.
+            The recommended amount of salt should be split evenly into 3-7 % per
+            liter. This way, the koi will ingest the food better.
           </Text>
-          <Title level={4} className="mt-6">Instructions</Title>
-          <Text>1. Select a pond to get the volume of Koi.</Text><br />
-          <Text>2. Choose the desired salt level.</Text><br />
+          <Title level={4} className="mt-6">
+            Instructions
+          </Title>
+          <Text>1. Select a pond to get the volume of Koi.</Text>
+          <br />
+          <Text>2. Choose the desired salt level.</Text>
+          <br />
           <Text>3. Check the calculated salt amount.</Text>
         </Card>
       </div>
