@@ -170,5 +170,22 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return true;
         }
 
+        public async Task DeleteWaterStandardByVarietyAsync(string variety)
+        {
+            var waterStandards = await _unitOfWork.WaterParameterStandards.GetAsync();
+            var fillteredWaterStandard = waterStandards.Where(w => w.KoiVariety.Equals(variety));
+
+            if (fillteredWaterStandard == null || !fillteredWaterStandard.Any())
+                return;
+
+            foreach (var item in fillteredWaterStandard)
+            {
+                _unitOfWork.WaterParameterStandards.DeleteAsync(item);
+            }
+
+            await _unitOfWork.SaveAsync();
+            return;
+        }
+
     }
 }

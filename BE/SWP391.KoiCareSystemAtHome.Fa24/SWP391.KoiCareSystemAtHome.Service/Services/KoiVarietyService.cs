@@ -12,10 +12,14 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
     public class KoiVarietyService
     {
         private readonly UnitOfWork _unitOfWork;
+        private readonly WaterParameterStandardService _waterParameterStandardService;
+        private readonly KoiGrowthStandardService _growthParameterStandardService;
 
-        public KoiVarietyService(UnitOfWork unitOfWork)
+        public KoiVarietyService(UnitOfWork unitOfWork, WaterParameterStandardService waterParameterStandardService, KoiGrowthStandardService growthParameterStandardService)
         {
             _unitOfWork = unitOfWork;
+            _growthParameterStandardService = growthParameterStandardService;
+            _waterParameterStandardService = waterParameterStandardService;
         }
 
         public async Task<IEnumerable<KoiVarietyModel>> GetAllKoiVarietyAsync()
@@ -79,6 +83,21 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             _unitOfWork.KoiVarietys.UpdateAsync(koiVariety);
             await _unitOfWork.SaveAsync();
 
+            return true;
+        }
+
+        public async Task<bool> DeleteKoiVarietyAsync(string variety)
+        {
+            var koiVariety = await _unitOfWork.KoiVarietys.GetByIdAsync(variety);
+
+            if (koiVariety == null)
+                return false;
+
+            await _waterParameterStandardService.DeleteWaterStandardByVarietyAsync(variety);
+            await _growthParameterStandardService.DeleteKoiGrowthStandardByVarietyAsync(variety);
+            _unitOfWork.KoiVarietys.DeleteAsync(koiVariety);
+
+            await _unitOfWork.SaveAsync();
             return true;
         }
 

@@ -129,5 +129,14 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
         }
 
+        //[HttpDelete("deleteKoiVariety/{variety}")]
+        //public async Task<ActionResult> DeleteKoiVariety(string variety)
+        //{
+        //    bool success = await _koiVarietyService.DeleteKoiVarietyAsync(variety);
+        //    if (!success) 
+        //        return NotFound();
+
+        //    return NoContent();
+        //}
     }
 }
