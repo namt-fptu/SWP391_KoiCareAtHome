@@ -13,10 +13,12 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
     public class AdminController : ControllerBase
     {
         private readonly AdvService _advService;
+        private readonly PaymentService _paymentService;
 
-        public AdminController(AdvService advService)
+        public AdminController(AdvService advService, PaymentService paymentService)
         {
             _advService = advService;
+            _paymentService = paymentService;
         }
 
         [HttpGet("getAdvByStatus/{status}")]
@@ -131,6 +133,22 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the post.");
             }
+        }
+
+        [HttpGet("getRevenueStatistic")]
+        public async Task<ActionResult> GetRevenueStatistic()
+        {
+            var revenues = await _paymentService.RevenueStatisticAsync();
+            if (revenues == null || !revenues.Any())
+                return NotFound();
+
+            var response = revenues.Select(r => new RevenueResponseModel
+            {
+                Month = r.Month,
+                revenue = r.revenue,
+            });
+
+            return Ok(response);
         }
 
     }

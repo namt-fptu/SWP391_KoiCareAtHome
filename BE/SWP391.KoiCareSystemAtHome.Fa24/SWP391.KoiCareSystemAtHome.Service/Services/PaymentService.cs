@@ -122,5 +122,36 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return;
         }
 
+        public async Task<IEnumerable<RevenueModel>> RevenueStatisticAsync()
+        {
+            var payments = await _unitOfWork.Payments.GetAsync();
+            if (payments == null || !payments.Any())
+                return Enumerable.Empty<RevenueModel>();
+
+            var monthlyRevenues = new Dictionary<int, decimal>();
+
+            foreach (var payment in payments)
+            {
+                var postPackage = await _unitOfWork.PostPackages.GetByIdAsync(payment.PackageId);
+                if (postPackage != null)
+                {
+                    var month = payment.PayDate.Month;
+                    if (monthlyRevenues.ContainsKey(month))
+                    {
+                        monthlyRevenues[month] += postPackage.Price;
+                    }
+                    else
+                    {
+                        monthlyRevenues[month] = postPackage.Price;
+                    }
+                }
+            }
+
+            return monthlyRevenues.Select(m => new RevenueModel
+            {
+                Month = m.Key,
+                revenue = m.Value
+            });
+        }
     }
 }
