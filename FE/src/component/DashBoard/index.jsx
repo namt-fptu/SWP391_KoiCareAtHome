@@ -1,100 +1,156 @@
 import React, { useState, useEffect } from 'react';
-import { Pie } from 'react-chartjs-2';
-import 'chart.js/auto'; // Important for enabling chart.js in React
-import api from '../../config/axios'; // Make sure this is your Axios instance
+import { Bar } from 'react-chartjs-2';
+import 'chart.js/auto';
+import api from '../../config/axios';
 
 const DashBoard = () => {
-    const [totalUser, setTotalUser] = useState(0); // State to hold the total user count
+    const [totalUser, setTotalUser] = useState(0);
+    const [revenueData, setRevenueData] = useState(Array(12).fill(0));
+    const [approvedAds, setApprovedAds] = useState(0);
+    const [draftedAds, setDraftedAds] = useState(0);
 
     // Fetch total user count from API
     useEffect(() => {
         const fetchTotalUser = async () => {
             try {
                 const response = await api.get('/Account/countAccount');
-                setTotalUser(response.data); // Assuming the API returns the count directly in response.data
+                setTotalUser(response.data);
             } catch (error) {
                 console.error('Error fetching total user count:', error);
             }
         };
-
         fetchTotalUser();
-    }, []); // Run once when component mounts
+    }, []);
 
-    // Data for Pie Charts
-    const dataOrder = {
+    // Fetch revenue data for Bar Chart
+    useEffect(() => {
+        const fetchRevenueData = async () => {
+            try {
+                const response = await api.get('/Admin/getRevenueStatistic');
+                
+                const monthlyRevenue = Array(12).fill(0);
+                response.data.forEach(item => {
+                    const monthIndex = item.month - 1;
+                    monthlyRevenue[monthIndex] = item.revenue;
+                });
+                setRevenueData(monthlyRevenue);
+            } catch (error) {
+                console.error('Error fetching revenue data:', error);
+            }
+        };
+        fetchRevenueData();
+    }, []);
+
+    // Fetch count of approved and drafted ads
+    useEffect(() => {
+        const fetchAdCounts = async () => {
+            try {
+                const approvedResponse = await api.get('/Adv/countAdsByStatus/Approved');
+                const draftedResponse = await api.get('/Adv/countAdsByStatus/Drafted');
+
+                setApprovedAds(approvedResponse.data);
+                setDraftedAds(draftedResponse.data);
+            } catch (error) {
+                console.error('Error fetching ad counts:', error);
+            }
+        };
+        fetchAdCounts();
+    }, []);
+
+    // Prepare data for Bar Chart
+    const monthNames = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    const barChartData = {
+        labels: monthNames, // Use month names instead of month numbers
         datasets: [
             {
-                data: [81, 19], // 81% total order
-                backgroundColor: ['#FF6384', '#FFCE56'],
-                hoverBackgroundColor: ['#FF6384', '#FFCE56'],
+                label: 'Revenue',
+                data: revenueData,
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                borderColor: '#4BC0C0',
+                borderWidth: 1,
             },
         ],
     };
 
-    const dataCustomerGrowth = {
-        datasets: [
-            {
-                data: [22, 78], // 22% customer growth
-                backgroundColor: ['#36A2EB', '#FFCE56'],
-                hoverBackgroundColor: ['#36A2EB', '#FFCE56'],
-            },
-        ],
-    };
-
-    const dataRevenue = {
-        datasets: [
-            {
-                data: [62, 38], // 62% total revenue
-                backgroundColor: ['#4BC0C0', '#FFCE56'],
-                hoverBackgroundColor: ['#4BC0C0', '#FFCE56'],
-            },
-        ],
-    };
+    const groupedRevenueData = [
+        revenueData.slice(0, 3).reduce((a, b) => a + b, 0), // Q1
+        revenueData.slice(3, 6).reduce((a, b) => a + b, 0), // Q2
+        revenueData.slice(6, 9).reduce((a, b) => a + b, 0), // Q3
+        revenueData.slice(9, 12).reduce((a, b) => a + b, 0), // Q4
+    ];
+    
 
     return (
-        <div className="dashboard-container flex-1 h-full p-5 bg-gray-900 min-h-screen"> {/* Dark background similar to koiGrowthStandard */}
+        <div className="dashboard-container flex-1 h-full p-8 bg-gradient-to-r from-gray-800 via-gray-900 to-black min-h-screen text-white">
             {/* Overview Section */}
-            <div className="flex justify-between mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 mb-10">
                 {/* Total User Card */}
-                <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
-                    <h4 className="text-lg font-semibold">Total User</h4>
-                    <div className="flex justify-between items-center mt-4">
-                        <span className="text-3xl font-bold">{totalUser}</span> {/* Use totalUser from state */}
-                        
+                <div className="bg-gray-800 rounded-xl p-6 shadow-lg transform transition duration-500 hover:scale-105">
+                    <h4 className="text-lg font-semibold text-gray-300">Total User</h4>
+                    <div className="mt-4 flex items-center space-x-4">
+                        <span className="text-4xl font-bold text-white">{totalUser}</span>
+                        <div className="flex flex-col items-center justify-center text-green-400">
+                            <i className="fas fa-user-plus text-2xl"></i>
+                        </div>
                     </div>
                 </div>
 
                 {/* Total Post Card */}
-                <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
-                    <h4 className="text-lg font-semibold">Total Post</h4>
-                    <div className="flex justify-between items-center mt-4">
-                        <span className="text-3xl font-bold">20</span>
+                <div className="bg-gray-800 rounded-xl p-6 shadow-lg transform transition duration-500 hover:scale-105">
+                    <h4 className="text-lg font-semibold text-gray-300">Total Post</h4>
+                    <div className="mt-4 space-y-2 text-white">
                         
+                    <span className="text-4xl font-bold text-white"> {approvedAds + draftedAds}</span>
+                        
+                        <div>
+                            <span className="font-bold">Approved:</span> {approvedAds}
+                        </div>
+                        <div>
+                            <span className="font-bold">Drafted:</span> {draftedAds}
+                        </div>
                     </div>
                 </div>
             </div>
 
-           
-            <div className="bg-white p-6 rounded-lg shadow-lg">
-                <h4 className="text-lg font-semibold mb-6">Overview</h4>
-                <div className="flex justify-around">
-                    
-                    <div className="w-1/4 text-center">
-                        <Pie data={dataOrder} />
-                        <h5 className="mt-4 font-medium">Total Order</h5>
-                    </div>
-
-                    <div className="w-1/4 text-center">
-                        <Pie data={dataCustomerGrowth} />
-                        <h5 className="mt-4 font-medium">Customer Growth</h5>
-                    </div>
-
-
-                    <div className="w-1/4 text-center">
-                        <Pie data={dataRevenue} />
-                        <h5 className="mt-4 font-medium">Total Revenue</h5>
-                    </div>
-                </div>
+            {/* Revenue Bar Chart */}
+            <div className="bg-gray-800 rounded-xl p-8 shadow-lg">
+                <h4 className="text-xl font-semibold text-gray-300 mb-6">Revenue Overview</h4>
+                <Bar 
+                    data={barChartData} 
+                    options={{
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                labels: {
+                                    color: 'white'
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                ticks: {
+                                    color: 'white'
+                                },
+                                grid: {
+                                    color: '#333'
+                                }
+                            },
+                            y: {
+                                ticks: {
+                                    color: 'white'
+                                },
+                                grid: {
+                                    color: '#333'
+                                }
+                            }
+                        }
+                    }} 
+                />
             </div>
         </div>
     );

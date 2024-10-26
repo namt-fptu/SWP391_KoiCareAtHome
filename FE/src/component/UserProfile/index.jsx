@@ -132,7 +132,7 @@ const AccountList = () => {
       />
       <Modal
         title="Update Account"
-        visible={isModalVisible}
+        open={isModalVisible}
         onCancel={handleCancel}
         footer={null} // Hide default footer
       >
@@ -162,7 +162,7 @@ const AccountList = () => {
             <Button type="primary" htmlType="submit">
               Update
             </Button>
-          </Form.Item>
+          </Form.Item>a
         </Form>
       </Modal>
     </div>
