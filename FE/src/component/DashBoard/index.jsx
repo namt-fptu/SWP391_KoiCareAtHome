@@ -103,6 +103,9 @@ const DashBoard = () => {
                 <div className="bg-gray-800 rounded-xl p-6 shadow-lg transform transition duration-500 hover:scale-105">
                     <h4 className="text-lg font-semibold text-gray-300">Total Post</h4>
                     <div className="mt-4 space-y-2 text-white">
+                        
+                    <span className="text-4xl font-bold text-white"> {approvedAds + draftedAds}</span>
+                        
                         <div>
                             <span className="font-bold">Approved:</span> {approvedAds}
                         </div>
