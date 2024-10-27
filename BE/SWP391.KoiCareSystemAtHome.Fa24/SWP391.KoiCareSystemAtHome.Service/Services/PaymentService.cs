@@ -64,7 +64,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return pamentModels;
         }
 
-        public async Task<PaymentModel> GetPaymentByIdAsync(int paymentID)
+        public async Task<PaymentModel?> GetPaymentByIdAsync(int paymentID)
         {
             var payment = await _unitOfWork.Payments.GetByIdAsync(paymentID);
 

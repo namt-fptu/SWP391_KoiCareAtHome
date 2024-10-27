@@ -52,7 +52,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return waterParameterStandardModels;
         }
 
-        public async Task<WaterParameterStandardModel> GetWaterParameterStandardByVarietyAsync(int id)
+        public async Task<WaterParameterStandardModel?> GetWaterParameterStandardByVarietyAsync(int id)
         {
             var waterParameterStandards = await _unitOfWork.WaterParameterStandards.GetAsync();
 

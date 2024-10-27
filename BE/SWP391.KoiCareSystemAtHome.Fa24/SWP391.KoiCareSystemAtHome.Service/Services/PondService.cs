@@ -46,7 +46,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return pondModels;
         }
 
-        public async Task<PondModel> GetPondByIdAsync(int pondId)
+        public async Task<PondModel?> GetPondByIdAsync(int pondId)
         {
             var ponds = await _unitOfWork.Ponds.GetAsync();
 

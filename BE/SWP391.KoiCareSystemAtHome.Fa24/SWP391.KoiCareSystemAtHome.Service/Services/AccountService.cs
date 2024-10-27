@@ -25,6 +25,9 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
         {
             var accounts = await _unitOfWork.Accounts.GetAsync();
 
+            if (accounts == null || !accounts.Any()) 
+                return Enumerable.Empty<AccountModel>();
+
             return accounts.Select(account => new AccountModel
             {
                 Id = account.Id,
@@ -53,7 +56,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return accountEntity.Id;
         }
 
-        public async Task<AccountModel> GetAccountByIdAsync(int id)
+        public async Task<AccountModel?> GetAccountByIdAsync(int id)
         {
             var account = await _unitOfWork.Accounts.GetByIdAsync(id);
 
@@ -101,8 +104,11 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
         public async Task<AccountModel?> Authenticate(AuthenticateModel authenticateModel)
         {
             var accounts = await _unitOfWork.Accounts.GetAsync();
+            if (accounts == null || !accounts.Any())
+                return null;
 
-            var account = accounts.Where(x => x.Email.ToLower().Equals(authenticateModel.Email.ToLower())).FirstOrDefault();
+            //var account = accounts.Where(x => x.Email.ToLower().Equals(authenticateModel.Email.ToLower())).FirstOrDefault();
+            var account = accounts.FirstOrDefault(x => x.Email.ToLower().Equals(authenticateModel.Email.ToLower()));
 
             if (account == null || !BCrypt.Net.BCrypt.Verify(authenticateModel.Password, account.Password))
                 return null;

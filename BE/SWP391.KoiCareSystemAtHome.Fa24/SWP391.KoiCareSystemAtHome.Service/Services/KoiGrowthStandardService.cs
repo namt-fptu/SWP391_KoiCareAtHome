@@ -41,7 +41,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return koiGrowthStandardModels;
         }
 
-        public async Task<KoiGrowthStandardModel> GetKoiGrowthStandardModelAsync(int id)
+        public async Task<KoiGrowthStandardModel?> GetKoiGrowthStandardModelAsync(int id)
         {
             var koiGrowthStandards = await _unitOfWork.KoiGrowthStandards.GetAsync();
 

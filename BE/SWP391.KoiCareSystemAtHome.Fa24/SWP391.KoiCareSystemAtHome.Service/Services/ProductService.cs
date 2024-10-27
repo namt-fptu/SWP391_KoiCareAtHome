@@ -38,7 +38,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return productModels;
         }
 
-        public async Task<ProductModel> GetProductByIdAsync(int productId)
+        public async Task<ProductModel?> GetProductByIdAsync(int productId)
         {
             var products = await _unitOfWork.Products.GetAsync();
 
@@ -138,6 +138,25 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
 
             await _unitOfWork.SaveAsync();
             return;
+        }
+
+        public async Task<int> CountProductAsync(int shopId)
+        {
+            var advs = await _unitOfWork.Advs.GetAsync();
+            if (advs == null || !advs.Any())
+                return 0;
+
+            var fillteredAdvs = advs.Where(a => a.ShopId == shopId);
+            if (fillteredAdvs == null || !fillteredAdvs.Any())
+                return 0;
+
+            var advIds = fillteredAdvs.Select(a => a.Id).ToList();
+            var products = await _unitOfWork.Products.GetAsync();
+
+            var fillteredProduct = products.Where(p => advIds.Contains(p.PostId));
+
+            return fillteredProduct.Count();
+
         }
 
     }

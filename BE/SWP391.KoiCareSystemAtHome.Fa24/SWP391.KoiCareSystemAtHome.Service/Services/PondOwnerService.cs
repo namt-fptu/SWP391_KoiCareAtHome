@@ -20,7 +20,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             _pondService = pondService;
         }
 
-        public async Task<PondOwnerModel> GetPondOwnerByIdAsync(int id)
+        public async Task<PondOwnerModel?> GetPondOwnerByIdAsync(int id)
         {
             var account = await _unitOfWork.Accounts.GetByIdAsync(id);
             var pondOwners = await _unitOfWork.PondOwners.GetAsync();
@@ -79,6 +79,8 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             //    return false;
 
             var pondOwnerToDelete = await _unitOfWork.PondOwners.GetByIdAsync(id);
+            if (pondOwnerToDelete == null)
+                return false;
 
             bool success = await _pondService.DeletePondByOwnerIdAsync(id);
 

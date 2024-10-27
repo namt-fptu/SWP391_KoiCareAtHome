@@ -58,7 +58,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return koiGrowthReportModels;
         }
 
-        public async Task<KoiGrowthReportModel> GetKoiGrowthReportByIdAsync(int reportId)
+        public async Task<KoiGrowthReportModel?> GetKoiGrowthReportByIdAsync(int reportId)
         {
             var koiGrowthReports = await _unitOfWork.KoiGrowthReports.GetAsync();
 
