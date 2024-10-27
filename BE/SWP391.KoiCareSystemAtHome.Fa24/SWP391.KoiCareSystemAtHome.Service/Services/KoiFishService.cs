@@ -43,7 +43,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return koiFishModels;
         }
 
-        public async Task<KoiFishModel> GetKoiFishByIdAsync(int fishId)
+        public async Task<KoiFishModel?> GetKoiFishByIdAsync(int fishId)
         {
             var koiFishs = await _unitOfWork.KoiFishs.GetAsync();
 

@@ -20,7 +20,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             _advService = advService;
         }
 
-        public async Task<ShopModel> GetShopModelByIdAsync(int id)
+        public async Task<ShopModel?> GetShopModelByIdAsync(int id)
         {
             var acccount = await _unitOfWork.Accounts.GetByIdAsync(id);
             var shops = await _unitOfWork.Shops.GetAsync();
@@ -29,6 +29,8 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                 return null;
 
             var shop = shops.Where(x => x.ShopId == id).FirstOrDefault();
+            if (shop == null)
+                return null;
 
             return new ShopModel
             {

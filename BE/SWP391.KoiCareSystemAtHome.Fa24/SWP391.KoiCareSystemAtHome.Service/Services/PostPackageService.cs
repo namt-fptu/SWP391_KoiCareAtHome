@@ -37,7 +37,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return postpakageModels;
         }
 
-        public async Task<PostPackageModel> GetPostPackageByIdAsync(int id)
+        public async Task<PostPackageModel?> GetPostPackageByIdAsync(int id)
         {
             var postPackage = await _unitOfWork.PostPackages.GetByIdAsync(id);
 

@@ -162,5 +162,13 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return NoContent();
         }
 
+        [HttpGet("countProductByShopId/{shopId}")]
+        public async Task<ActionResult> CountProductByShopId(int shopId)
+        {
+            int count = await _productService.CountProductAsync(shopId);
+
+            return Ok(count);
+        }
+
     }
 }

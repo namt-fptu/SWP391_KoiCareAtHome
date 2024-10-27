@@ -39,7 +39,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return koiVarietyModels;
         }
 
-        public async Task<KoiVarietyModel> GetKoiVarietyAsync(string variety)
+        public async Task<KoiVarietyModel?> GetKoiVarietyAsync(string variety)
         {
             var koiVariety = await _unitOfWork.KoiVarietys.GetByIdAsync(variety);
 

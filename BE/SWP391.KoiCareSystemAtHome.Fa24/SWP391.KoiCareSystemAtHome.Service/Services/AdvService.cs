@@ -47,7 +47,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return advModels;
         }
 
-        public async Task<AdvModel> GetAdvByIdAsync(int advId)
+        public async Task<AdvModel?> GetAdvByIdAsync(int advId)
         {
             var adv = await _unitOfWork.Advs.GetByIdAsync(advId);
 

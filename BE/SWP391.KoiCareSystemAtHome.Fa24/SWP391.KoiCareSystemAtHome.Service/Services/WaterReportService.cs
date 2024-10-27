@@ -44,7 +44,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return waterReportModels;
         }
 
-        public async Task<WaterReportModel> GetWarterReportByIdAsync (int reportId)
+        public async Task<WaterReportModel?> GetWarterReportByIdAsync (int reportId)
         {
             var waterReports = await _unitOfWork.WaterReports.GetAsync();
 
