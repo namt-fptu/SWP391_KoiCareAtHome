@@ -26,6 +26,8 @@ import KoiVariety from "./component/KoiVariety";
 import KoiGrowthStandard from "./component/KoiGrowthStandard";
 import ShopProfile from "./component/ShopProfile";
 import PaymentHistory from "./component/PaymentHistory";
+import SuccessPage from "./page/SuccessPage";
+import FailurePage from "./page/FailurePage";
 
 import ShopVipPackage from "./component/ShopVipPackage";
 import AdminSideBar from "./component/AdminSideBar";
@@ -86,6 +88,8 @@ const App = () => {
         { path: "ShopVipPackage", element: <ShopVipPackage /> },
         { path: "ShopProfile", element: <ShopProfile /> },
         { path: "PaymentHistory", element: <PaymentHistory /> },
+        { path: "FailurePage", element: <FailurePage /> },
+        { path: "SuccessPage", element: <SuccessPage /> },
       ],
     },
     {
