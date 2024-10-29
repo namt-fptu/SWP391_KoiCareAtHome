@@ -12,10 +12,6 @@ export const Middleware = ({ children }) => {
   const location = useLocation();
   const [searchParams] = useSearchParams();
 
-  console.log("user", isAuthenticated, authUser);
-  console.log("aaaa", sessionStorage.getItem("authToken"));
-  console.log("id", sessionStorage.getItem("id"));
-
   /**
    * Require Authenticated
    * avoid public path
@@ -24,6 +20,7 @@ export const Middleware = ({ children }) => {
   if (
     !isAuthenticated &&
     !(location.pathname === "/") &&
+    !(location.pathname === "/signup") &&
     ["signin"].find((route) => !location.pathname.includes(route))
     // !Object.values({ ...ROUTES, ...ROUTES.auth.children }).find(
     //   (route) =>
@@ -42,12 +39,6 @@ export const Middleware = ({ children }) => {
     );
   }
 
-  const accessRight = {
-    admin: ["Dashboard"],
-    pondOwner: ["Overview"],
-    shop: ["ShopOverview"],
-  };
-
   if (isAuthenticated && authUser) {
     if (["signin"].find((route) => location.pathname.includes(route))) {
       let path = "/";
@@ -63,8 +54,6 @@ export const Middleware = ({ children }) => {
       //   const pathState = searchParams.get("to");
 
       let hasAccess = false;
-
-      console.log("navigate");
 
       return (
         <Navigate

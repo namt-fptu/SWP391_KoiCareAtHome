@@ -2,21 +2,56 @@
 import React, { useState, useEffect } from "react";
 import { Card } from "antd";
 import { Link } from "react-router-dom";
+import api from "../../config/axios";
+import { useAuthStore } from "../../page/(auth)/store";
 
 const ShopOverview = () => {
-  const [data, setData] = useState({
-    newToday: 0,
-    posts: 0,
-    products: 0,
-  });
+  const [approvedAds, setApprovedAds] = useState(0);
+  const [draftedAds, setDraftedAds] = useState(0);
+  const [rejectedAds, setRejectedAds] = useState(0);
+  const [totalProduct, setTotalProduct] = useState(0);
+  const { authUser } = useAuthStore();
+  const id = authUser.id;
 
   useEffect(() => {
-    setData({
-      newToday: 3,
-      posts: 5,
-      products: 8,
-    });
+    if (!id) {
+      message.error("User not logged in. Unable to fetch posts.");
+      return;
+    }
+
+    const fetchAdCounts = async () => {
+      try {
+        const approvedResponse = await api.get(
+          "/Adv/countAdsByStatus/Approved"
+        );
+        const draftedResponse = await api.get("/Adv/countAdsByStatus/Drafted");
+        const rejectedResponse = await api.get(
+          "/Adv/countAdsByStatus/Rejected"
+        );
+
+        setApprovedAds(approvedResponse.data);
+        setDraftedAds(draftedResponse.data);
+        setRejectedAds(rejectedResponse.data);
+      } catch (error) {
+        console.error("Error fetching ad counts:", error);
+      }
+    };
+    fetchAdCounts();
   }, []);
+  useEffect(() => {
+    const fetchProductCounts = async () => {
+      try {
+        const productResponse = await api.get(
+          `/Product/countProductByShopId/${id}`
+        );
+
+        setTotalProduct(productResponse.data);
+      } catch (error) {
+        console.error("Error fetching product counts:", error);
+      }
+    };
+    fetchProductCounts();
+  }, [id]);
 
   return (
     <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
@@ -50,21 +85,46 @@ const ShopOverview = () => {
       <div className="flex flex-col justify-between mb-5 mt-14">
         <h2 className="text-white text-3xl font-bold">Overview Account</h2>
         <div className="grid grid-cols-2 gap-4 p-6 mt-8">
-          <Card className="shadow-md p-4">
-            <p className="text-lg font-semibold mb-2">Active Posts</p>
-            <p className="text-4xl font-bold">{data.posts}</p>
-            <a href="/ShopPost" className="text-blue-500">
-              Post a new one
-            </a>
-          </Card>
+          <div className="bg-gray-800 rounded-xl p-6 shadow-lg transform transition duration-500 hover:scale-105">
+            <h4 className="text-lg font-semibold text-gray-300">Total Post</h4>
+            <div className="mt-4 space-y-2 text-white">
+              <span className="text-4xl font-bold text-white">
+                {" "}
+                {approvedAds + draftedAds}
+              </span>
 
-          <Card className="shadow-md p-4">
+              <div>
+                <span className="font-bold">Approved:</span> {approvedAds}
+              </div>
+              <div>
+                <span className="font-bold">Rejected:</span> {rejectedAds}
+              </div>
+              <div>
+                <span className="font-bold">Drafted:</span> {draftedAds}
+              </div>
+            </div>
+          </div>
+          <div className="bg-gray-800 rounded-xl p-6 shadow-lg transform transition duration-500 hover:scale-105">
+            <h4 className="text-lg font-semibold text-gray-300">
+              Total Product
+            </h4>
+            <div className="mt-4 flex items-center space-x-4">
+              <span className="text-4xl font-bold text-white">
+                {totalProduct}
+              </span>
+              <div className="flex flex-col items-center justify-center text-green-400">
+                <i className="fas fa-user-plus text-2xl"></i>
+              </div>
+            </div>
+          </div>
+
+          {/* <Card className="shadow-md p-4">
             <p className="text-lg font-semibold mb-2">Products</p>
             <p className="text-4xl font-bold">{data.products}</p>
             <a href="/ShopProduct" className="text-blue-500">
               Add products
             </a>
-          </Card>
+          </Card> */}
         </div>
       </div>
     </div>
