@@ -18,27 +18,6 @@ const ShopOverview = () => {
       message.error("User not logged in. Unable to fetch posts.");
       return;
     }
-
-    const fetchAdCounts = async () => {
-      try {
-        const approvedResponse = await api.get(
-          "/Adv/countAdsByStatus/Approved"
-        );
-        const draftedResponse = await api.get("/Adv/countAdsByStatus/Drafted");
-        const rejectedResponse = await api.get(
-          "/Adv/countAdsByStatus/Rejected"
-        );
-
-        setApprovedAds(approvedResponse.data);
-        setDraftedAds(draftedResponse.data);
-        setRejectedAds(rejectedResponse.data);
-      } catch (error) {
-        console.error("Error fetching ad counts:", error);
-      }
-    };
-    fetchAdCounts();
-  }, []);
-  useEffect(() => {
     const fetchProductCounts = async () => {
       try {
         const productResponse = await api.get(
@@ -85,25 +64,7 @@ const ShopOverview = () => {
       <div className="flex flex-col justify-between mb-5 mt-14">
         <h2 className="text-white text-3xl font-bold">Overview Account</h2>
         <div className="grid grid-cols-2 gap-4 p-6 mt-8">
-          <div className="bg-gray-800 rounded-xl p-6 shadow-lg transform transition duration-500 hover:scale-105">
-            <h4 className="text-lg font-semibold text-gray-300">Total Post</h4>
-            <div className="mt-4 space-y-2 text-white">
-              <span className="text-4xl font-bold text-white">
-                {" "}
-                {approvedAds + draftedAds}
-              </span>
-
-              <div>
-                <span className="font-bold">Approved:</span> {approvedAds}
-              </div>
-              <div>
-                <span className="font-bold">Rejected:</span> {rejectedAds}
-              </div>
-              <div>
-                <span className="font-bold">Drafted:</span> {draftedAds}
-              </div>
-            </div>
-          </div>
+          
           <div className="bg-gray-800 rounded-xl p-6 shadow-lg transform transition duration-500 hover:scale-105">
             <h4 className="text-lg font-semibold text-gray-300">
               Total Product

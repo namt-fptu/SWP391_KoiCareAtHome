@@ -187,9 +187,7 @@ const ShopProduct = () => {
     <div className="flex-container">
       <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold mb-8 text-white p-8">
-            My Products
-          </h1>
+          <h2 className="text-white text-3xl font-bold mb-5">My Product</h2>
         </div>
         <Select
           placeholder="Select a post"

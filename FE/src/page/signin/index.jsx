@@ -1,4 +1,4 @@
-import { Form, Input, Checkbox } from "antd";
+import { Form, Input, Checkbox, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import signinimg from "../../assets/signin.png";
 import { useState } from "react";
@@ -16,11 +16,25 @@ const Signin = () => {
     mutationFn: login,
     onSuccess: () => {
       console.log("Login successful");
+      message.success("Login successful"); // Direct message for simplicity
     },
     onError: (error) => {
       console.log("Login failed", error);
+
+      // Show default error message if translation is missing
+      const errorMessage =
+        error.message === "username_or_password_incorrect"
+          ? "Incorrect username or password"
+          : "Account not found. Please try again.";
+
+      message.error(errorMessage); // Display the error message
     },
   });
+
+  // Handle form submission
+  const handleFinish = (values) => {
+    loginMutation.mutate(values); // Pass values to the mutate function
+  };
 
   return (
     <>

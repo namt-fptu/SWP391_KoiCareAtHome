@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
+import { Link, useNavigate, useLocation } from "react-router-dom"; // Import useNavigate
 import logoimg from "./../../assets/logo koi care.png";
 import controlButton from "./../../assets/control.png";
 import dashboardIcon from "./../../assets/Logo sidebar/AdminSideBar/dashboard.png"; // Icon for Dashboard
@@ -11,133 +11,93 @@ import logOutIcon from "./../../assets/Logo sidebar/AdminSideBar/logout.png"; //
 import { useAuthStore } from "../../page/(auth)/store";
 
 const AdminSideBar = () => {
+  const [open, setOpen] = useState(true);
+  const navigate = useNavigate();
+  const location = useLocation(); // Track current path
   const { logout } = useAuthStore();
 
-  const [open, setOpen] = useState(true);
-  const navigate = useNavigate(); // Create a navigate function
-
   const handleLogout = () => {
-    // Clear user data or tokens from local storage/session storage/context
-    localStorage.removeItem("token"); // Example: remove token from local storage
-    // If you're using a global state or context, reset that state accordingly
-    // For example, if using context:
-    // dispatch({ type: "LOGOUT" });
-
-    // Redirect to the landing page
+    localStorage.removeItem("token");
     navigate("/");
   };
+  const menuItems = [
+    { to: "Dashboard", icon: dashboardIcon, label: "Dashboard" },
+    { to: "UserProfile", icon: userProfileIcon, label: "User Profile" },
+    { to: "KoiVariety", icon: tableListIcon, label: "Koi Variety" },
+    {
+      to: "KoiGrowthStandard",
+      icon: typographyIcon,
+      label: "Koi Growth Standard",
+    },
+    {
+      to: "WaterParameterStandard",
+      icon: typographyIcon,
+      label: "Water Parameter Standard",
+    },
+    { to: "Posts", icon: postsIcon, label: "Posts" },
+    { to: "PostPackage", icon: tableListIcon, label: "Post Package" },
+  ];
 
   return (
     <div className="flex h-auto">
       <div
-        className={`sidebar ${open ? "w-72" : "w-20"
-          } bg-black h-full p-5 pt-8 relative duration-300`}
+        className={`sidebar ${
+          open ? "w-72" : "w-20"
+        } bg-black h-full p-5 pt-8 relative duration-300`}
       >
-        {/* Control Button */}
         <img
           src={controlButton}
-          className={`absolute cursor-pointer -right-3 top-9 w-7 border-black border-2 rounded-full ${!open && "rotate-180"
-            }`}
+          className={`absolute cursor-pointer -right-3 top-9 w-7 border-black border-2 rounded-full ${
+            !open && "rotate-180"
+          }`}
           onClick={() => setOpen(!open)}
-          alt="control"
         />
-
-        {/* Logo and Title */}
         <div className="flex gap-x-4 items-center">
           <Link to={"/"}>
             <img
               src={logoimg}
-              alt="logo"
+              alt=""
               width={60}
-              className={`cursor-pointer duration-500 ${open && "rotate-[360deg]"
-                }`}
+              className={`cursor-pointer duration-500 ${
+                open && "rotate-[360deg]"
+              }`}
             />
           </Link>
           <h1
-            className={`text-white origin-left font-medium text-xl duration-200 ${!open && "scale-0"
-              }`}
+            className={`text-white origin-left font-medium text-xl duration-200 ${
+              !open && "scale-0"
+            }`}
           >
             KoiF
           </h1>
         </div>
-
-        {/* Menu Items */}
         <ul className="pt-6">
-          {/* Dashboard */}
-          <Link to="Dashboard">
-            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
-              <img src={dashboardIcon} alt="Dashboard" />
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
-                Dashboard
-              </span>
-            </li>
-          </Link>
-
-          {/* User Profile */}
-          <Link to="UserProfile">
-            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
-              <img src={userProfileIcon} alt="User Profile" />
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
-                User Profile
-              </span>
-            </li>
-          </Link>
-
-          {/* KoiVariety */}
-          <Link to="KoiVariety">
-            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-9">
-              <img src={tableListIcon} alt="Table List" />
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
-                KoiVariety
-              </span>
-            </li>
-          </Link>
-
-          {/* KoiGrowthStandard */}
-          <Link to="KoiGrowthStandard">
-            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
-              <img src={typographyIcon} alt="Typography" />
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
-                KoiGrowthStandard
-              </span>
-            </li>
-          </Link>
-
-          {/* waterParameterStandard */}
-          <Link to="WaterParameterStandard">
-            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
-              <img src={typographyIcon} alt="Typography" />
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
-                WaterParameterStandard
-              </span>
-            </li>
-          </Link>
-
-          {/* Posts */}
-          <Link to="Posts">
-            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
-              <img src={postsIcon} alt="Posts" />
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
-                Posts
-              </span>
-            </li>
-          </Link>
-
-          {/* PostPackage */}
-          <Link to="PostPackage">
-            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-9">
-              <img src={tableListIcon} alt="Table List" />
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
-                PostPackage
-              </span>
-            </li>
-          </Link>
+          {menuItems.map((item) => (
+            <Link to={item.to} key={item.label}>
+              <li
+                className={`flex rounded-md p-2 cursor-pointer text-gray-300 text-sm items-center gap-x-4 mt-2 
+                  ${
+                    location.pathname.includes(item.to)
+                      ? "bg-blue-500 text-white"
+                      : "hover:bg-gray-500"
+                  }`}
+              >
+                <img src={item.icon} alt={item.label} />
+                <span
+                  className={`${!open && "hidden"} origin-left duration-200`}
+                >
+                  {item.label}
+                </span>
+              </li>
+            </Link>
+          ))}
 
           {/* Log Out */}
           <li
-            className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-9"
+            className="flex rounded-md p-2 cursor-pointer hover:bg-red-400 text-gray-300 text-sm items-center gap-x-4 mt-9"
             onClick={() => {
               logout();
+              handleLogout();
             }}
           >
             <img src={logOutIcon} alt="Log Out" />

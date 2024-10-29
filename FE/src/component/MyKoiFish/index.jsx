@@ -494,9 +494,7 @@ const MyKoiFish = () => {
           footer={null}
         >
           <Form layout="vertical" onFinish={onFinish}>
-            <Form.Item label="Selected Pond">
-              <Input value={pondId} disabled />
-            </Form.Item>
+            
 
             <Form.Item
               label="Upload Image"

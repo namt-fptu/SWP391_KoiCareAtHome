@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
+import { Link, useNavigate, useLocation } from "react-router-dom"; // Import useNavigate
 import logoimg from "./../../assets/logo koi care.png";
 import controlButton from "./../../assets/control.png";
 import shopPost from "./../../assets/Logo sidebar/ShopSidebar/post.png";
@@ -11,21 +11,23 @@ import { useAuthStore } from "../../page/(auth)/store";
 
 const ShopSideBar = () => {
   const [open, setOpen] = useState(true);
-  const navigate = useNavigate(); // Create a navigate function
+  const navigate = useNavigate();
+  const location = useLocation(); // Track current path
   const { logout } = useAuthStore();
 
-  
-
   const handleLogout = () => {
-    // Clear user data or tokens from local storage/session storage/context
-    localStorage.removeItem("token"); // Example: remove token from local storage
-    // If you're using a global state or context, reset that state accordingly
-    // For example, if using context:
-    // dispatch({ type: "LOGOUT" });
-
-    // Redirect to the landing page
+    localStorage.removeItem("token");
     navigate("/");
   };
+
+  const menuItems = [
+    { to: "ShopOverview", icon: overviewIcon, label: "Overview" },
+    { to: "ShopPost", icon: shopPost, label: "My Post" },
+    { to: "ShopProduct", icon: myPondIcon, label: "My Product" },
+    { to: "ShopVipPackage", icon: myPondIcon, label: "My Vip Package" },
+    { to: "PaymentHistory", icon: myPondIcon, label: "Payment History" },
+    { to: "ShopProfile", icon: myPondIcon, label: "Shop Profile" },
+  ];
 
   return (
     <div className="flex h-auto">
@@ -61,62 +63,39 @@ const ShopSideBar = () => {
           </h1>
         </div>
         <ul className="pt-6">
-          {/* Overview */}
-          <Link to="ShopOverview">
-            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
-              <img src={overviewIcon} alt="Overview" />
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
-                Overview
-              </span>
-            </li>
-          </Link>
+          {menuItems.map((item) => (
+            <Link to={item.to} key={item.label}>
+              <li
+                className={`flex rounded-md p-2 cursor-pointer text-gray-300 text-sm items-center gap-x-4 mt-2 
+                  ${
+                    location.pathname.includes(item.to)
+                      ? "bg-blue-500 text-white"
+                      : "hover:bg-gray-500"
+                  }`}
+              >
+                <img src={item.icon} alt={item.label} />
+                <span
+                  className={`${!open && "hidden"} origin-left duration-200`}
+                >
+                  {item.label}
+                </span>
+              </li>
+            </Link>
+          ))}
 
-          {/* Shop Post */}
-          <Link to="ShopPost">
-            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
-              <img src={shopPost} alt="My Post" />
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
-                My Post
-              </span>
-            </li>
-          </Link>
-
-          {/* Shop's Product */}
-          <Link to="ShopProduct">
-            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
-              <img src={myPondIcon} alt="My Product" />
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
-                My Product
-              </span>
-            </li>
-          </Link>
-
-          {/* Shop's Vip Package */}
-          <Link to="ShopVipPackage">
-            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
-              <img src={myPondIcon} alt="My Vip Package" />
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
-                My Vip Package
-              </span>
-            </li>
-          </Link>
-
-          
-         
           {/* Log Out */}
-          <Link to="#">
-            <li
-              className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-9"
-              onClick={() => {
-                logout();
-              }}
-            >
-              <img src={logOutIcon} alt="Log Out" />
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
-                Log Out
-              </span>
-            </li>
-          </Link>
+          <li
+            className="flex rounded-md p-2 cursor-pointer hover:bg-red-400 text-gray-300 text-sm items-center gap-x-4 mt-9"
+            onClick={() => {
+              logout();
+              handleLogout();
+            }}
+          >
+            <img src={logOutIcon} alt="Log Out" />
+            <span className={`${!open && "hidden"} origin-left duration-200`}>
+              Log Out
+            </span>
+          </li>
         </ul>
       </div>
 

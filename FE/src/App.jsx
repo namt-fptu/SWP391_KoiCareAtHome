@@ -6,6 +6,7 @@ import LandingPage from "./page/LandingPage";
 import Signin from "./page/signin";
 import Signup from "./page/signup";
 import Member from "./page/member";
+
 import MemberOverview from "./component/MemberOverview";
 import MyKoiFish from "./component/MyKoiFish";
 import MyPond from "./component/MyPond";
@@ -15,19 +16,17 @@ import AboutKoi from "./component/AboutKoi";
 import Statistics from "./component/Statistics";
 import FoodCalculator from "./component/FoodCalculator";
 import Blog from "./component/Blog";
-//    import Admin from "./page/admin";
+import MemberProfile from "./component/MemberProfile";
 
 import Shop from "./page/shop";
 import ShopOverview from "./component/ShopOverview";
 import ShopPost from "./component/ShopPost";
-import { Typography } from "antd";
 import ShopProduct from "./component/ShopProduct";
 import KoiVariety from "./component/KoiVariety";
 import KoiGrowthStandard from "./component/KoiGrowthStandard";
-import UserProfile from "./component/UserProfile";
-import PostPackage from "./component/PostPackage";
+import ShopProfile from "./component/ShopProfile";
+import PaymentHistory from "./component/PaymentHistory";
 
-// import ShopAds from "./component/ShopAds";
 import ShopVipPackage from "./component/ShopVipPackage";
 import AdminSideBar from "./component/AdminSideBar";
 import Dashboard from "./component/DashBoard";
@@ -35,9 +34,11 @@ import Admin from "./page/admin";
 import Posts from "./component/Posts";
 import KoiReport from "./component/KoiReport";
 import WaterParameterStandard from "./component/WaterParameterStandard";
+import UserProfile from "./component/UserProfile";
+import PostPackage from "./component/PostPackage";
+
 import { createRoutes } from "./routes/utils";
 import { useAuthStore } from "./page/(auth)/store";
-import { elements } from "chart.js";
 const App = () => {
   const { authUser } = useAuthStore();
 
@@ -72,6 +73,7 @@ const App = () => {
         { path: "FoodCalculator", element: <FoodCalculator /> },
         { path: "MyKoiFish", element: <MyKoiFish /> },
         { path: "Blog", element: <Blog /> },
+        { path: "MemberProfile", element: <MemberProfile /> },
       ],
     },
     {
@@ -82,6 +84,8 @@ const App = () => {
         { path: "ShopPost", element: <ShopPost /> },
         { path: "ShopProduct", element: <ShopProduct /> },
         { path: "ShopVipPackage", element: <ShopVipPackage /> },
+        { path: "ShopProfile", element: <ShopProfile /> },
+        { path: "PaymentHistory", element: <PaymentHistory /> },
       ],
     },
     {
@@ -94,7 +98,7 @@ const App = () => {
         { path: "KoiGrowthStandard", element: <KoiGrowthStandard /> },
         { path: "Posts", element: <Posts /> },
         { path: "WaterParameterStandard", element: <WaterParameterStandard /> },
-        { path: "PostPackage", element: <PostPackage /> }
+        { path: "PostPackage", element: <PostPackage /> },
       ],
     },
   ];
@@ -102,7 +106,6 @@ const App = () => {
   const content = useRoutes(
     createRoutes({ routes: router, userRole: authUser?.role })
   );
-  console.log("cc", content);
   return content;
   // return <RouterProvider router={router} />;
 };

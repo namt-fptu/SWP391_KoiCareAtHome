@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
+import { Link, useNavigate, useLocation } from "react-router-dom"; // Import useNavigate
 import logoimg from "./../../assets/logo koi care.png";
 import controlButton from "./../../assets/control.png";
 import overviewIcon from "./../../assets/Logo sidebar/overview.png"; // Thêm icon cho Overview
@@ -15,32 +15,27 @@ import { useAuthStore } from "../../page/(auth)/store";
 
 const MemberSideBar = () => {
   const [open, setOpen] = useState(true);
-  const navigate = useNavigate(); // Create a navigate function
+  const navigate = useNavigate();
+  const location = useLocation(); // Track current path
   const { logout } = useAuthStore();
 
-  // const Menus = [
-  //   { title: "Overview", path: "Overview", src: "logo sidebar" },
-  //   { title: "My Pond", path: "MyPond", src: "logo sidebar" },
-  //   { title: "My Koi Fish", path: "MyKoiFish", gap: true, src: "logo sidebar" },
-  //   { title: "Water Parameter", path: "WaterParameter", src: "logo sidebar" },
-  //   { title: "Food Calculator", path: "FoodCalculator", src: "logo sidebar" },
-  //   { title: "Salt Calculator", path: "SaltCalculator", src: "logo sidebar" },
-  //   { title: "Statistics", path: "Statistics", gap: true, src: "logo sidebar" },
-  //   { title: "About Koi", path: "AboutKoi", src: "logo sidebar" },
-  //   { title: "Log Out", path: "/", gap: true, src: "logo sidebar" }, // Add Log Out item
-  // ];
-
   const handleLogout = () => {
-    // Clear user data or tokens from local storage/session storage/context
-    localStorage.removeItem("token"); // Example: remove token from local storage
-    // If you're using a global state or context, reset that state accordingly
-    // For example, if using context:
-    // dispatch({ type: "LOGOUT" });
-
-    // Redirect to the landing page
+    localStorage.removeItem("token");
     navigate("/");
   };
 
+  const menuItems = [
+    { to: "Overview", icon: overviewIcon, label: "Overview" },
+    { to: "MyPond", icon: myPondIcon, label: "My Pond" },
+    { to: "MyKoiFish", icon: myKoiFishIcon, label: "My Koi Fish" },
+    { to: "WaterParameter", icon: waterParamIcon, label: "Water Parameter" },
+    { to: "KoiReport", icon: waterParamIcon, label: "Koi Report" },
+    { to: "FoodCalculator", icon: foodCalcIcon, label: "Food Calculator" },
+    { to: "SaltCalculator", icon: saltCalcIcon, label: "Salt Calculator" },
+    { to: "Statistics", icon: statsIcon, label: "Statistics" },
+    { to: "Blog", icon: aboutKoiIcon, label: "Blog" },
+    { to: "AboutKoi", icon: aboutKoiIcon, label: "About Koi" },
+  ];
   return (
     <div className="flex h-auto">
       <div
@@ -75,120 +70,39 @@ const MemberSideBar = () => {
           </h1>
         </div>
         <ul className="pt-6">
-          {/* Overview */}
-          <Link to="Overview">
-            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
-              <img src={overviewIcon} alt="Overview" />
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
-                Overview
-              </span>
-            </li>
-          </Link>
-
-          {/* My Pond */}
-          <Link to="MyPond">
-            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
-              <img src={myPondIcon} alt="My Pond" />
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
-                My Pond
-              </span>
-            </li>
-          </Link>
-
-          {/* My Koi Fish */}
-          <Link to="MyKoiFish">
-            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-9">
-              <img src={myKoiFishIcon} alt="My Koi Fish" />
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
-                My Koi Fish
-              </span>
-            </li>
-          </Link>
-
-          {/* Water Parameter */}
-          <Link to="WaterParameter">
-            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
-              <img src={waterParamIcon} alt="Water Parameter" />
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
-                Water Parameter
-              </span>
-            </li>
-          </Link>
-
-          {/* Koi Report */}
-          <Link to="KoiReport">
-            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
-              <img src={waterParamIcon} alt="Water Parameter" />
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
-                Koi Report
-              </span>
-            </li>
-          </Link>
-
-          {/* Food Calculator */}
-          <Link to="FoodCalculator">
-            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
-              <img src={foodCalcIcon} alt="Food Calculator" />
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
-                Food Calculator
-              </span>
-            </li>
-          </Link>
-
-          {/* Salt Calculator */}
-          <Link to="SaltCalculator">
-            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
-              <img src={saltCalcIcon} alt="Salt Calculator" />
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
-                Salt Calculator
-              </span>
-            </li>
-          </Link>
-
-          {/* About Koi */}
-          <Link to="Blog">
-            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
-              <img src={aboutKoiIcon} alt="About Koi" />
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
-                Blog !!!
-              </span>
-            </li>
-          </Link>
-
-          {/* Statistics */}
-          <Link to="Statistics">
-            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-9">
-              <img src={statsIcon} alt="Statistics" />
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
-                Statistics
-              </span>
-            </li>
-          </Link>
-
-          {/* About Koi */}
-          <Link to="AboutKoi">
-            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
-              <img src={aboutKoiIcon} alt="About Koi" />
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
-                About Koi
-              </span>
-            </li>
-          </Link>
+          {menuItems.map((item) => (
+            <Link to={item.to} key={item.label}>
+              <li
+                className={`flex rounded-md p-2 cursor-pointer text-gray-300 text-sm items-center gap-x-4 mt-2 
+                  ${
+                    location.pathname.includes(item.to)
+                      ? "bg-blue-500 text-white"
+                      : "hover:bg-gray-500"
+                  }`}
+              >
+                <img src={item.icon} alt={item.label} />
+                <span
+                  className={`${!open && "hidden"} origin-left duration-200`}
+                >
+                  {item.label}
+                </span>
+              </li>
+            </Link>
+          ))}
 
           {/* Log Out */}
-          <Link to="#">
-            <li
-              className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-9"
-              onClick={() => {
-                logout();
-              }}
-            >
-              <img src={logOutIcon} alt="Log Out" />
-              <span className={`${!open && "hidden"} origin-left duration-200`}>
-                Log Out
-              </span>
-            </li>
-          </Link>
+          <li
+            className="flex rounded-md p-2 cursor-pointer hover:bg-red-400 text-gray-300 text-sm items-center gap-x-4 mt-9"
+            onClick={() => {
+              logout();
+              handleLogout();
+            }}
+          >
+            <img src={logOutIcon} alt="Log Out" />
+            <span className={`${!open && "hidden"} origin-left duration-200`}>
+              Log Out
+            </span>
+          </li>
         </ul>
       </div>
 

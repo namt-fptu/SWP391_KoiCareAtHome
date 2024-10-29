@@ -19,7 +19,7 @@ const VipPackage = () => {
 
   return (
     <div className="max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16 text-white">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:items-stretch md:grid-cols-2 md:gap-8">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 md:gap-8">
         {packages.map((pkg) => (
           <div
             key={pkg.id}
@@ -64,26 +64,8 @@ const VipPackage = () => {
                     />
                   </svg>
                   <span className="text-white-700">Duration: {pkg.duration} days</span>
-                </li>
-                {/* Additional details can go here, based on pkg properties */}
-                <li className="flex items-center gap-1">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="size-5 text-indigo-700"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M4.5 12.75l6 6 9-13.5"
-                    />
-                  </svg>
-                  <span className="text-white-700">Community access</span>
-                </li>
-              </ul>
+                </li>                
+              </ul> 
             </div>
           </div>
         ))}
