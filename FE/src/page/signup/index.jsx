@@ -167,7 +167,7 @@ const Signup = () => {
                 className="mb-2"
               >
                 <Radio.Group onChange={onRoleChange}>
-                  <Radio value="Member">Member</Radio>
+                  <Radio value="PondOwner">Member</Radio>
                   <Radio value="Shop">Shop</Radio>
                 </Radio.Group>
               </Form.Item>

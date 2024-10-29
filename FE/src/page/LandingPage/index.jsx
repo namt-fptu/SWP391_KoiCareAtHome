@@ -50,8 +50,9 @@ const Home = () => {
             Manage & monitor your Koi
           </Title>
           <Paragraph style={{ color: "#d1d5db", fontSize: "18px" }}>
-            Would you like to monitor the growth, feeding and health of your Koi?
-            Log from anywhere, always available, including photos and easy charts.
+            Would you like to monitor the growth, feeding and health of your
+            Koi? Log from anywhere, always available, including photos and easy
+            charts.
           </Paragraph>
           <Button
             type="primary"
@@ -95,33 +96,40 @@ const Home = () => {
         </Row>
       </div>
 
-      <div id="advertisements" className="flex flex-col mt-8 items-center pt-24 px-8">
+      <div
+        id="advertisements"
+        className="flex flex-col mt-8 items-center pt-24 px-8"
+      >
         <Title level={1} style={{ color: "#fff" }}>
           Advertisements
         </Title>
         <VipPackage />
       </div>
 
-      <div id="aboutus" className="pt-24 px-8 flex flex-col items-center justify-center">
+      <div
+        id="aboutus"
+        className="pt-24 px-8 flex flex-col items-center justify-center"
+      >
         <Title level={1} style={{ color: "#fff" }}>
           About Us
         </Title>
         <Paragraph style={{ color: "#d1d5db", textIndent: "2em" }}>
-          Welcome to < strong>KoiF</strong>, your trusted partner for Koi fish
-          care services at home. We understand the passion and dedication required
-          to maintain the beauty and health of Koi fish, and {`we're`} here to
-          make that journey easier for you.
+          Welcome to <strong>KoiF</strong>, your trusted partner for Koi fish
+          care services at home. We understand the passion and dedication
+          required to maintain the beauty and health of Koi fish, and {`we're`}{" "}
+          here to make that journey easier for you.
         </Paragraph>
         <Paragraph style={{ color: "#d1d5db", textIndent: "2em" }}>
           Our platform acts as a bridge between Koi enthusiasts and professional
-          care solutions. With our advanced tools, we help you accurately calculate
-          key parameters for your Koi fish and pond, ensuring a thriving aquatic
-          environment.
+          care solutions. With our advanced tools, we help you accurately
+          calculate key parameters for your Koi fish and pond, ensuring a
+          thriving aquatic environment.
         </Paragraph>
         <Paragraph style={{ color: "#d1d5db", textIndent: "2em" }}>
-          Whether {`you're`} a seasoned Koi keeper or just starting out, < strong>KoiF</strong>{" "}
-          is here to support you every step of the way. Let us take the guesswork
-          out of Koi care, so you can focus on enjoying the vibrant beauty of your fish.
+          Whether {`you're`} a seasoned Koi keeper or just starting out,{" "}
+          <strong>KoiF</strong> is here to support you every step of the way.
+          Let us take the guesswork out of Koi care, so you can focus on
+          enjoying the vibrant beauty of your fish.
         </Paragraph>
       </div>
       <Footer />
