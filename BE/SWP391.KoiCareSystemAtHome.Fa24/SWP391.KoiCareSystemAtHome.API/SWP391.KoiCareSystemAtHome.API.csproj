@@ -17,4 +17,10 @@
     <ProjectReference Include="..\SWP391.KoiCareSystemAtHome.Service\SWP391.KoiCareSystemAtHome.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
