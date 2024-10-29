@@ -134,5 +134,21 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return count;
         }
 
+        public async Task<bool> ChangePasswordAsync(int id, ChangePasswordModel changePasswordModel)
+        {
+            var account = await _unitOfWork.Accounts.GetByIdAsync(id);
+            if (account == null || !BCrypt.Net.BCrypt.Verify(changePasswordModel.OldPassword, account.Password))
+                return false;
+
+
+            var passwordHash = BCrypt.Net.BCrypt.HashPassword(changePasswordModel.NewPassword);
+
+            account.Password = passwordHash;
+
+            _unitOfWork.Accounts.UpdateAsync(account);
+            await _unitOfWork.SaveAsync();
+            return true;
+        }
+
     }
 }

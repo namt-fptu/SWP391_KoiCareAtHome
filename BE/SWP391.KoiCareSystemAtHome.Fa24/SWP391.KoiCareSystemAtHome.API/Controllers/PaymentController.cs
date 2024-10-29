@@ -162,11 +162,12 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
 
                 //Console.WriteLine(paymentModel.PackageId + " " + paymentModel.PostId );
 
-                if (response.Success)
+                if (response.Success && response.TransactionId != "0")
                 {
                     //success = await _paymentService.CreatePaymentAsync(paymentModel);
                     await _paymentService.CreatePaymentAsync(paymentModel);
                     await _advService.UpdateAdsPaymentAsync(advModel);
+                    return Redirect("http://localhost:5173/SuccessPage");
                 }
 
                 //return Ok(response);

@@ -344,5 +344,27 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(count);
         }
 
+        [HttpPost("changePassword/{accountId}")]
+        public async Task<ActionResult> ChangePassword(int accountId, ChangePasswordRequestModel request)
+        {
+            if (request == null)
+                return NotFound();
+
+            if (!request.NewPassword.Equals(request.ConfirmPassword))
+                return BadRequest("Confirm password not match");
+
+            ChangePasswordModel account = new ChangePasswordModel{
+                NewPassword = request.NewPassword,
+                OldPassword = request.OldPassword,
+            };
+
+            bool success = await _accountService.ChangePasswordAsync(accountId, account);
+            
+            if (!success)
+                return NotFound();
+
+            return NoContent();
+        }
+
     }
 }
