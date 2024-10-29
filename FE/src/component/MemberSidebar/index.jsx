@@ -145,7 +145,7 @@ const MemberSideBar = () => {
             </li>
           </Link>
 
-          {/* About Koi */}
+          {/* Blog */}
           <Link to="Blog">
             <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
               <img src={aboutKoiIcon} alt="About Koi" />
@@ -164,7 +164,14 @@ const MemberSideBar = () => {
               </span>
             </li>
           </Link>
-
+          <Link to="MemberProfile">
+            <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">
+              <img src={aboutKoiIcon} alt="About Koi" />
+              <span className={`${!open && "hidden"} origin-left duration-200`}>
+              Member Profile
+              </span>
+            </li>
+          </Link>
           {/* About Koi */}
           <Link to="AboutKoi">
             <li className="flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2">

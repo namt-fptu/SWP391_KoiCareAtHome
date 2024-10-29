@@ -27,11 +27,12 @@ import KoiGrowthStandard from "./component/KoiGrowthStandard";
 import UserProfile from "./component/UserProfile";
 import PostPackage from "./component/PostPackage";
 import SuccessPage from "./page/SuccessPage";
-
+import PaymentHistory from "./component/PaymentHistory";
 // import ShopAds from "./component/ShopAds";
 import ShopVipPackage from "./component/ShopVipPackage";
 import AdminSideBar from "./component/AdminSideBar";
 import Dashboard from "./component/DashBoard";
+import MemberProfile from "./component/MemberProfile";
 import Admin from "./page/admin";
 import Posts from "./component/Posts";
 import KoiReport from "./component/KoiReport";
@@ -72,7 +73,9 @@ const App = () => {
         { path: "MyPond", element: <MyPond /> },
         { path: "FoodCalculator", element: <FoodCalculator /> },
         { path: "MyKoiFish", element: <MyKoiFish /> },
+        { path: "MemberProfile", element: <MemberProfile /> },
         { path: "Blog", element: <Blog /> },
+
       ],
     },
     {
@@ -83,6 +86,7 @@ const App = () => {
         { path: "ShopPost", element: <ShopPost /> },
         { path: "ShopProduct", element: <ShopProduct /> },
         { path: "ShopVipPackage", element: <ShopVipPackage /> },
+        { path: "PaymentHistory", element: <PaymentHistory /> },
         { path: "SuccessPage", element: <SuccessPage /> },
       ],
     },

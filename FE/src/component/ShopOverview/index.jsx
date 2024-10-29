@@ -18,9 +18,6 @@ const ShopOverview = () => {
       message.error("User not logged in. Unable to fetch posts.");
       return;
     }
-
-    
-  
     const fetchProductCounts = async () => {
       try {
         const productResponse = await api.get(
