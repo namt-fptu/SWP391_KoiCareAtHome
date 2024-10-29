@@ -122,14 +122,7 @@ const Signup = () => {
                 className="mb-2"
               >
                 <Input type="password" placeholder="••••••••••••" />
-                {/* <Space direction="vertical">
-                  <Input.Password
-                    placeholder="•••••••••••"
-                    iconRender={(visible) =>
-                      visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                    }
-                  />
-                </Space> */}
+                
               </Form.Item>
               <Form.Item
                 label="Confirm Password"
@@ -167,7 +160,7 @@ const Signup = () => {
                 className="mb-2"
               >
                 <Radio.Group onChange={onRoleChange}>
-                  <Radio value="Member">Member</Radio>
+                  <Radio value="PondOwner">Member</Radio>
                   <Radio value="Shop">Shop</Radio>
                 </Radio.Group>
               </Form.Item>
@@ -197,14 +190,7 @@ const Signup = () => {
                   CREATE ACOUNT
                 </Button>
               </Form.Item>
-              {/* Divider */}
-              {/* <Form.Item>
-                <div className="flex items-center my-6">
-                  <hr className="w-full border-gray-300" />
-                  <span className="px-2 text-gray-400">OR</span>
-                  <hr className="w-full border-gray-300" />
-                </div>
-              </Form.Item> */}
+              
               <Form.Item>
                 <p className="text-xs text-gray-500">
                   By clicking {`"Create account"`} or {`"Sign Up with Google"`},

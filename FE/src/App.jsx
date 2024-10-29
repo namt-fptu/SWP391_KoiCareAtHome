@@ -26,6 +26,7 @@ import KoiVariety from "./component/KoiVariety";
 import KoiGrowthStandard from "./component/KoiGrowthStandard";
 import UserProfile from "./component/UserProfile";
 import PostPackage from "./component/PostPackage";
+import SuccessPage from "./page/SuccessPage";
 
 // import ShopAds from "./component/ShopAds";
 import ShopVipPackage from "./component/ShopVipPackage";
@@ -82,6 +83,7 @@ const App = () => {
         { path: "ShopPost", element: <ShopPost /> },
         { path: "ShopProduct", element: <ShopProduct /> },
         { path: "ShopVipPackage", element: <ShopVipPackage /> },
+        { path: "SuccessPage", element: <SuccessPage /> },
       ],
     },
     {
@@ -102,7 +104,7 @@ const App = () => {
   const content = useRoutes(
     createRoutes({ routes: router, userRole: authUser?.role })
   );
-  console.log("cc", content);
+  
   return content;
   // return <RouterProvider router={router} />;
 };
