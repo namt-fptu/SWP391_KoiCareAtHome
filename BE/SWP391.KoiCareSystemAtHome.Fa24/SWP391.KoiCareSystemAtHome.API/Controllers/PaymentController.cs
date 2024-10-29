@@ -171,7 +171,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 }
 
                 //return Ok(response);
-                return Redirect("http://localhost:5173/SuccessPage");
+                return Redirect("http://localhost:5173/FailurePage");
             }
             catch (Exception ex)
             {
