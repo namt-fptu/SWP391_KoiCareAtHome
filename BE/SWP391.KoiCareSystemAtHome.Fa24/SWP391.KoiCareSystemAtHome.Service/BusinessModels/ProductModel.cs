@@ -13,5 +13,7 @@ public partial class ProductModel
 
     public string Url { get; set; } = null!;
 
+    public string ImageUrl { get; set; } = null!;
+
     public string? Description { get; set; }
 }

@@ -13,6 +13,8 @@ public partial class Product
 
     public string Url { get; set; } = null!;
 
+    public string ImageUrl { get; set; } = null!;
+
     public string? Description { get; set; }
 
     public virtual Adv Post { get; set; } = null!;
