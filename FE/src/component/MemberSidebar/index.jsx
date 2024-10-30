@@ -34,6 +34,7 @@ const MemberSideBar = () => {
     { to: "SaltCalculator", icon: saltCalcIcon, label: "Salt Calculator" },
     { to: "Statistics", icon: statsIcon, label: "Statistics" },
     { to: "Blog", icon: aboutKoiIcon, label: "Blog" },
+    { to: "Recomendations", icon: aboutKoiIcon, label: "Recomendations" },
     { to: "AboutKoi", icon: aboutKoiIcon, label: "About Koi" },
   ];
   return (

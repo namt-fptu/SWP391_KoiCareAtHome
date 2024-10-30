@@ -24,7 +24,7 @@ const ShopProduct = () => {
   const [posts, setPosts] = useState([]);
 
   const { Option } = Select;
-  // const id = sessionStorage.getItem("id");
+ 
   const { authUser } = useAuthStore();
   const id = authUser.id;
 

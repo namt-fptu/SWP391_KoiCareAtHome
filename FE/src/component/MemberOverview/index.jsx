@@ -44,6 +44,11 @@ const MemberOverview = () => {
             Blog
           </button>
         </Link>
+        <Link to="/Recomendations">
+          <button className="bg-blue-600 rounded-md text-white p-4 hover:bg-blue-700 w-full">
+          Recomendations
+          </button>
+        </Link>
         <Link to="/Statistics">
           <button className="bg-blue-600 rounded-md text-white p-4 hover:bg-blue-700 w-full">
             Statistics
@@ -54,6 +59,7 @@ const MemberOverview = () => {
             About Koi
           </button>
         </Link>
+
       </div>
     </div>
   );

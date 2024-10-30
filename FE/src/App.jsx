@@ -17,7 +17,7 @@ import Statistics from "./component/Statistics";
 import FoodCalculator from "./component/FoodCalculator";
 import Blog from "./component/Blog";
 import MemberProfile from "./component/MemberProfile";
-
+import Recomendations from "./component/Recomendations";
 import Shop from "./page/shop";
 import ShopOverview from "./component/ShopOverview";
 import ShopPost from "./component/ShopPost";
@@ -76,6 +76,7 @@ const App = () => {
         { path: "MyKoiFish", element: <MyKoiFish /> },
         { path: "Blog", element: <Blog /> },
         { path: "MemberProfile", element: <MemberProfile /> },
+        { path: "Recomendations", element: <Recomendations /> },
       ],
     },
     {
