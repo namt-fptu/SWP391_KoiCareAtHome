@@ -31,6 +31,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                 PostId = p.PostId,
                 Title = p.Title,
                 Url = p.Url,
+                ImageUrl = p.ImageUrl,
                 Description = p.Description,
 
             });
@@ -53,6 +54,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                 PostId = product.PostId,
                 Title = product.Title,
                 Url = product.Url,
+                ImageUrl = product.ImageUrl,
                 Description = product.Description,
 
             };
@@ -66,6 +68,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                 PostId = productModel.PostId,
                 Title = productModel.Title,
                 Url = productModel.Url,
+                ImageUrl = productModel.ImageUrl,
                 Description = productModel.Description,
             };
 
@@ -85,6 +88,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
 
             product.Title = productModel.Title;
             product.Url = productModel.Url;
+            product.ImageUrl = productModel.ImageUrl;
             product.Description = productModel.Description;
 
             _unitOfWork.Products.UpdateAsync(product);
@@ -156,7 +160,31 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             var fillteredProduct = products.Where(p => advIds.Contains(p.PostId));
 
             return fillteredProduct.Count();
+        }
 
+        public async Task<IEnumerable<ProductModel>> RecommendationsProductAsync()
+        {
+            var advs = await _unitOfWork.Advs.GetAsync();
+            var approvedAdvs = advs.Where(a => a.Status.Equals("Approved")).ToList();
+
+            if (!approvedAdvs.Any())
+                return Enumerable.Empty<ProductModel>();
+
+            var products = await _unitOfWork.Products.GetAsync();
+
+            var productModels = products
+                .Where(product => approvedAdvs.Any(adv => adv.Id == product.PostId))
+                .Select(p => new ProductModel
+                {
+                    Id = p.Id,
+                    PostId = p.PostId,
+                    Title = p.Title,
+                    Url = p.Url,
+                    ImageUrl = p.ImageUrl,
+                    Description = p.Description,
+                });
+
+            return productModels;
         }
 
     }

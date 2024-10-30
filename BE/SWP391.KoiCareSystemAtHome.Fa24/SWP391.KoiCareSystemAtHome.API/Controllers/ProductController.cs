@@ -31,6 +31,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 PostId = product.PostId,
                 Title = product.Title,
                 Url = product.Url,
+                ImageUrl = product.ImageUrl,
                 Description = product.Description,
             });
 
@@ -51,6 +52,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 PostId = product.PostId,
                 Title = product.Title,
                 Url = product.Url,
+                ImageUrl = product.ImageUrl,
                 Description = product.Description,
             };
 
@@ -70,6 +72,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                     PostId = request.PostId,
                     Title = request.Title,
                     Url = request.Url,
+                    ImageUrl = request.ImageUrl,
                     Description = request.Description,
                 };
 
@@ -86,6 +89,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                     PostId = product.PostId,
                     Title = product.Title,
                     Url = product.Url,
+                    ImageUrl = product.ImageUrl,
                     Description = product.Description,
                 };
 
@@ -111,6 +115,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             {
                 product.Title = request.Title;
                 product.Url = request.Url;
+                product.ImageUrl = request.ImageUrl;
                 product.Description = request.Description;
 
                 bool success = await _productService.UpdateProductAsync(productId, product);
@@ -129,6 +134,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                     PostId = productResponse.PostId,
                     Title = productResponse.Title,
                     Url = productResponse.Url,
+                    ImageUrl = productResponse.ImageUrl,
                     Description = productResponse.Description,
                 };
 
@@ -168,6 +174,27 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             int count = await _productService.CountProductAsync(shopId);
 
             return Ok(count);
+        }
+
+        [HttpGet("getRecommendationsProduct")]
+        public async Task<ActionResult<IEnumerable<ProductResponseModel>>> GetRecommendationsProduct()
+        {
+            var products = await _productService.RecommendationsProductAsync();
+
+            if (products == null || !products.Any())
+                return NotFound();
+
+            var response = products.Select(product => new ProductResponseModel
+            {
+                Id = product.Id,
+                PostId = product.PostId,
+                Title = product.Title,
+                Url = product.Url,
+                ImageUrl = product.ImageUrl,
+                Description = product.Description,
+            });
+
+            return Ok(response);
         }
 
     }
