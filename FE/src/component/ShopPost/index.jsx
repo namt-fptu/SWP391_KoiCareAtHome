@@ -30,6 +30,8 @@ import {
 } from "firebase/storage";
 // import { getFirestore, addDoc, collection, getDocs } from "firebase/firestore";
 import api from "../../config/axios";
+import moment from "moment";
+import dayjs from "dayjs";
 import { useAuthStore } from "../../page/(auth)/store";
 
 // Firebase configuration
@@ -62,8 +64,6 @@ const ShopPost = () => {
   const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false); // State for update modal
   const [currentPostId, setCurrentPostId] = useState(null);
   const [shortContents, setShortContents] = useState({});
-  // Retrieve pondOwnerId from sessionStorage
-  // const id = sessionStorage.getItem("id");
   const { authUser } = useAuthStore();
   const id = authUser.id;
 
@@ -294,6 +294,7 @@ const ShopPost = () => {
       handleExtend(post.id);
     }
   };
+  const currentDate = moment();
   const menu = (post) => (
     <Menu onClick={(e) => handleMenuClick(e, post)}>
       {post.status !== "Reject" && (
@@ -301,7 +302,7 @@ const ShopPost = () => {
           Update
         </Menu.Item>
       )}
-      {post.status === "Drafted" && (
+      {(post.status === "Drafted" || currentDate.isAfter(post.expiredDate)) && (
         <Menu.Item key="extend" icon={<PlusOutlined />}>
           Extend
         </Menu.Item>
@@ -556,7 +557,10 @@ const ShopPost = () => {
                   >
                     <div style={{ width: "60%" }}>
                       <p>
-                        <strong>Created Date:</strong> {post.advDate || "-"}
+                        <strong>Created Date:</strong>{" "}
+                        {post.advDate
+                          ? dayjs(post.advDate).format("DD-MM-YYYY, HH:mm")
+                          : "-"}
                       </p>
                       <p>
                         <strong>Duration:</strong> {post.duration || "-"}
@@ -583,20 +587,26 @@ const ShopPost = () => {
                       </p>
                       <p>
                         <strong>Edited Date:</strong> <br />
-                        {post.editedDate || "-"}
+                        {post.editedDate
+                          ? dayjs(post.editedDate).format("DD-MM-YYYY, HH:mm")
+                          : "-"}
                       </p>
                       <p>
                         <strong>Expired Date:</strong> <br />
-                        {post.expiredDate || "-"}
+                        {post.expiredDate
+                          ? dayjs(post.expiredDate).format("DD-MM-YYYY, HH:mm")
+                          : "-"}
                       </p>
                     </div>
                   </div>
-
                   <div
                     style={{
+                      position: "absolute", // Set position absolute
+                      bottom: "10px", // Distance from the bottom
+                      left: "10px", // Distance from the left
+                      right: "10px", // Distance from the right
                       display: "flex",
                       justifyContent: "space-between",
-                      marginTop: "10px",
                     }}
                   >
                     <Button onClick={() => handleShowDetail(post)}>

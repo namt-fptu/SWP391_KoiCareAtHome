@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 import React from "react";
 import { Card, Avatar, Row, Col, Typography } from "antd";
 import nam from "./../../assets/1.jpg";
@@ -25,7 +24,7 @@ const TeamSection = () => {
           My Team
         </Title>
         <hr className="w-24 my-3 mx-auto" />
-        
+
         <Row gutter={[16, 16]} justify="center">
           {teamMembers.map((member, index) => (
             <Col xs={24} sm={12} md={8} lg={6} key={index}>
