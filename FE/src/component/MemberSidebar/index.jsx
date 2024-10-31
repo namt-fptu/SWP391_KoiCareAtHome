@@ -33,9 +33,9 @@ const MemberSideBar = () => {
     { to: "FoodCalculator", icon: foodCalcIcon, label: "Food Calculator" },
     { to: "SaltCalculator", icon: saltCalcIcon, label: "Salt Calculator" },
     { to: "Statistics", icon: statsIcon, label: "Statistics" },
-    { to: "Blog", icon: aboutKoiIcon, label: "Blog" },
+    { to: "Blog", icon: overviewIcon, label: "Blog" },
     { to: "Recomendations", icon: aboutKoiIcon, label: "Recomendations" },
-    { to: "UserProfile", icon: aboutKoiIcon, label: "UserProfile" },
+    { to: "MemberProfile", icon: waterParamIcon, label: "MemberProfile" },
     { to: "AboutKoi", icon: aboutKoiIcon, label: "About Koi" },
   ];
   return (

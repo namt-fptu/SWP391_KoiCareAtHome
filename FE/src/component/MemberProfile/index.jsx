@@ -125,8 +125,9 @@ const MemberProfile = () => {
                 Save
               </Button>
               <Button
-                style={{ marginLeft: "10px" }}
-                onClick={() => setIsEditing(false)} style={{ marginLeft: "10px" }} size="large">
+                
+                onClick={() => setIsEditing(false)}
+                style={{ marginLeft: "10px" }} size="large">
             
                 Cancel
               </Button>
