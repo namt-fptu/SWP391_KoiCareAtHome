@@ -173,7 +173,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             var products = await _unitOfWork.Products.GetAsync();
 
             var productModels = products
-                .Where(product => approvedAdvs.Any(adv => adv.Id == product.PostId))
+                .Where(product => approvedAdvs.Any(adv => adv.Id == product.PostId && adv.ExpiredDate >= DateTime.Now))
                 .Select(p => new ProductModel
                 {
                     Id = p.Id,
