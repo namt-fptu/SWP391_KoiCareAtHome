@@ -35,6 +35,7 @@ const MemberSideBar = () => {
     { to: "Statistics", icon: statsIcon, label: "Statistics" },
     { to: "Blog", icon: aboutKoiIcon, label: "Blog" },
     { to: "Recomendations", icon: aboutKoiIcon, label: "Recomendations" },
+    { to: "UserProfile", icon: aboutKoiIcon, label: "UserProfile" },
     { to: "AboutKoi", icon: aboutKoiIcon, label: "About Koi" },
   ];
   return (

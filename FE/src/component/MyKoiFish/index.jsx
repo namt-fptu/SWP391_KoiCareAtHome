@@ -297,15 +297,7 @@ const MyKoiFish = () => {
                           boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                           borderRadius: "8px",
                         }}
-                        // extra={
-                        //   <Button
-                        //     type="danger"
-                        //     icon={<DeleteOutlined />}
-                        //     onClick={() => showDeleteModal(koi)}
-                        //   >
-                        //     Delete
-                        //   </Button>
-                        // }
+                       
                       >
                         <img
                           src={koi.imageUrl || "default-koi-image-url"} // Default koi image
@@ -345,20 +337,16 @@ const MyKoiFish = () => {
                             type="danger"
                             icon={<DeleteOutlined />}
                             onClick={() => showDeleteModal(koi)}
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              marginTop: "10px",
+                            }}
                           >
                             Delete
                           </Button>
                         </div>
-                        {/* <div className="absolute bottom-10 right-10">
-                          <Button
-                            type="primary"
-                            icon={<EditOutlined />}
-                            onClick={() => showUpdateModal(koi)}
-                            style={{ marginRight: 10 }}
-                          >
-                            Update
-                          </Button>
-                        </div> */}
+                        
                       </Card>
                     </Col>
                   );

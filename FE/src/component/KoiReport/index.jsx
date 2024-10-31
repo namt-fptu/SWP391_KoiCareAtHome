@@ -214,7 +214,7 @@ const KoiReport = () => {
                   setSelectedKoiId(value);
                   fetchGrowthReports(value); // Fetch growth reports when koi is selected
                 }}
-                style={{ width: "20%", marginTop: "20px" }}
+                style={{ width: "10%", marginTop: "20px" }}
               >
                 {kois.map((koi) => (
                   <Select.Option key={koi.id} value={koi.id}>

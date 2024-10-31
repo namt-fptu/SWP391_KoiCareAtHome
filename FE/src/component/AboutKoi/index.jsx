@@ -4,7 +4,6 @@ import nam from "./../../assets/1.jpg";
 import tien from "./../../assets/2.jpg";
 import anh from "./../../assets/3.jpg";
 import nguyen from "./../../assets/4.jpg";
-import tri from "./../../assets/5.jpg";
 
 const { Title, Text } = Typography;
 
@@ -13,7 +12,6 @@ const teamMembers = [
   { name: "Tien", role: "Back-End", image: tien },
   { name: "Vy Anh", role: "Front-End", image: anh },
   { name: "Nguyen", role: "Front-End", image: nguyen },
-  { name: "Tri", role: "Back-End", image: tri },
 ];
 
 const TeamSection = () => {

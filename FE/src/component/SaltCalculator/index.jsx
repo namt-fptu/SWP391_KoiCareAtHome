@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { message, Select, Button, Typography, Card } from "antd";
-import api from "../../config/axios"; // Update with your actual API import
+import api from "../../config/axios";
 import { useAuthStore } from "../../page/(auth)/store";
 
 const { Title, Text } = Typography;
@@ -9,10 +9,9 @@ const SaltCalculator = () => {
   const [ponds, setPonds] = useState([]);
   const [pondVolume, setPondVolume] = useState(0);
   const [selectedPond, setSelectedPond] = useState("");
-  const [saltAmount, setSaltAmount] = useState(0); // State to store calculated salt amount
-  const [selectedSaltLevel, setSelectedSaltLevel] = useState("medium"); // State for salt level selection
+  const [saltAmount, setSaltAmount] = useState(0);
+  const [selectedSaltLevel, setSelectedSaltLevel] = useState("medium");
 
-  // const id = sessionStorage.getItem("id"); // Get user ID from sessionStorage
   const { authUser } = useAuthStore();
   const id = authUser.id;
 
@@ -46,23 +45,22 @@ const SaltCalculator = () => {
 
   useEffect(() => {
     if (selectedPond) {
-      fetchPondDetails(selectedPond); // Fetch pond details when a pond is selected
+      fetchPondDetails(selectedPond);
     }
   }, [selectedPond]);
 
-  // Function to calculate the amount of salt based on the selected level
   const calculateSaltAmount = () => {
     let percentage = 0;
 
     switch (selectedSaltLevel) {
       case "low":
-        percentage = 0.003; // 30%
+        percentage = 0.003;
         break;
       case "medium":
-        percentage = 0.005; // 50%
+        percentage = 0.005;
         break;
       case "high":
-        percentage = 0.007; // 70%
+        percentage = 0.007;
         break;
       default:
         break;
@@ -77,7 +75,7 @@ const SaltCalculator = () => {
       {/* Salt Calculator Section */}
       <div className="w-1/2 pr-4">
         <Card>
-          <Title level={3}>Salt Calculator</Title>
+          <h1 className="text-3xl font-bold mb-8">Salt Calculator</h1>
 
           {/* Pond Selector */}
           <div className="mb-8">
@@ -85,7 +83,7 @@ const SaltCalculator = () => {
             <Select
               className="mt-2 w-full"
               onChange={(value) => setSelectedPond(value)}
-              value={selectedPond} // Set value to reflect selection
+              value={selectedPond}
               placeholder="Select a pond"
             >
               {ponds.map((pond) => (
@@ -98,12 +96,13 @@ const SaltCalculator = () => {
 
           {/* Pond Volume Display */}
           <div className="mb-8">
-            <Text className="text-lg">
-              Pond Volume:{" "}
-              {typeof pondVolume === "number"
-                ? `${pondVolume} liters`
-                : "Not available"}
-            </Text>
+            <Text strong>Pond Volume:</Text>
+            <div
+              className="bg-white text-black p-2 rounded mt-2 inline-block"
+              style={{ minWidth: "100px", textAlign: "center" }}
+            >
+              {typeof pondVolume === "number" ? `${pondVolume} liters` : "Select a pond"}
+            </div>
           </div>
 
           {/* Salt Level Selection */}
@@ -121,17 +120,7 @@ const SaltCalculator = () => {
               ))}
             </div>
           </div>
-
-          {/* Calculate Salt Amount Button */}
-          <div className="text-center mb-8">
-            <Button
-              type="primary"
-              onClick={calculateSaltAmount} // Calculate salt when button is clicked
-            >
-              Calculate
-            </Button>
-          </div>
-
+        
           {/* Display Calculated Salt Amount */}
           <div className="mb-8">
             <Text strong>Calculated Salt Amount:</Text>
@@ -139,30 +128,29 @@ const SaltCalculator = () => {
               className="bg-white text-black p-2 rounded mt-2 inline-block"
               style={{ minWidth: "100px", textAlign: "center" }}
             >
-              {saltAmount > 0
-                ? `${saltAmount.toFixed(2)} kg`
-                : "Select salt level"}
+              {saltAmount > 0 ? `${saltAmount.toFixed(2)} kg` : "Select salt level"}
             </div>
           </div>
+          <Button
+              type="primary"
+              onClick={calculateSaltAmount}
+            >
+              Calculate
+            </Button>
         </Card>
       </div>
 
-      {/* Feeding Information Section */}
+      {/* Salt Information Section */}
       <div className="w-1/2 pl-4">
         <Card>
-          <Title level={4}>Salt Information</Title>
-          <Text>
-            The recommended amount of salt should be split evenly into 3-7 % per
-            liter. This way, the koi will ingest the food better.
-          </Text>
-          <Title level={4} className="mt-6">
-            Instructions
-          </Title>
-          <Text>1. Select a pond to get the volume of Koi.</Text>
-          <br />
-          <Text>2. Choose the desired salt level.</Text>
-          <br />
-          <Text>3. Check the calculated salt amount.</Text>
+          <h2 className="text-lg font-bold">Salt Information</h2>
+          <p>
+            The recommended amount of salt should be between 3-7% per liter. This ensures the best environment for koi.
+          </p>
+          <h2 className="text-lg font-bold mt-6">Instructions</h2>
+          <p>1. Select a pond to get the volume of water.</p>
+          <p>2. Choose the desired salt level.</p>
+          <p>3. Click Calculate to view the recommended salt amount.</p>
         </Card>
       </div>
     </div>

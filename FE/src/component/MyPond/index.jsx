@@ -9,7 +9,6 @@ import {
   Col,
   Upload,
   message,
-  Popconfirm,
 } from "antd";
 import {
   UploadOutlined,
@@ -41,6 +40,8 @@ const MyPond = () => {
   const [imageUrl, setImageUrl] = useState(null);
   const [fileList, setFileList] = useState([]);
   const [editingPond, setEditingPond] = useState(null);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const [pondToDelete, setPondToDelete] = useState(null);
 
   // const id = sessionStorage.getItem("id");
   const { authUser } = useAuthStore();
@@ -134,6 +135,7 @@ const MyPond = () => {
           setPonds([...ponds, response.data]);
           message.success("Pond added successfully!");
         }
+
         setIsModalVisible(false);
       } catch (error) {
         message.error(
@@ -296,31 +298,58 @@ const MyPond = () => {
                     cover={<img alt={pond.name} src={pond.imageUrl} />}
                   >
                     <Card.Meta title={pond.name} />
-                    <p>Volume: {pond.volume} liters</p>
-                    <p>Depth: {pond.depth} meters</p>
-                    <p>Drain Count: {pond.draimCount}</p>
-                    <p>Skimmer Count: {pond.skimmerCount}</p>
-                    <p>Pumping Capacity: {pond.pumpingCapacity} L/min</p>
-                    <div className="card-buttons">
+                    <p><strong>Volume: </strong>{pond.volume} liters</p>
+                    <p><strong>Depth: </strong>{pond.depth} meters</p>
+                    <p><strong>Drain Count: </strong>{pond.drainCount}</p>
+                    <p><strong>Skimmer Count: </strong>{pond.skimmerCount}</p>
+                    <p><strong>Pumping Capacity: </strong>{pond.pumpingCapacity} L/min</p>
+                    <div className="card-buttons" style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          marginTop: "10px",
+                        }}>
                       {/* Update button */}
                       <Button
                         type="primary"
                         icon={<EditOutlined />}
                         onClick={() => showModal(pond)}
-                        style={{ marginRight: "10px" }}
                       >
                         Update
                       </Button>
-                      {/* Delete button */}
-                      <Popconfirm
-                        title="Are you sure you want to delete this pond?" // This text can be changed
-                        onConfirm={() => deletePond(pond.id)}
-                        okText="Yes"
-                        cancelText="Cancel"
+                      <Button
+                        type="danger"
+                        danger
+                        icon={<DeleteOutlined />}
+                        onClick={() => {
+                          setPondToDelete(pond.id);
+                          setIsDeleteModalVisible(true);
+                        }}
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          marginTop: "10px",
+                        }}
                       >
-                        <Button type="danger" icon={<DeleteOutlined />} />
                         Delete
-                      </Popconfirm>
+                      </Button>
+                      {/* Modal for delete confirmation */}
+                      <Modal
+                        title="Confirm Deletion"
+                        visible={isDeleteModalVisible}
+                        onOk={() => {
+                          deletePond(pondToDelete);
+                          setIsDeleteModalVisible(false);
+                          setPondToDelete(null);
+                        }}
+                        onCancel={() => {
+                          setIsDeleteModalVisible(false);
+                          setPondToDelete(null);
+                        }}
+                        okText="Delete"
+                        okButtonProps={{ danger: true }}
+                      >
+                        <p>Are you sure you want to delete this pond?</p>
+                      </Modal>
                     </div>
                   </Card>
                 </Col>

@@ -54,6 +54,11 @@ const MemberOverview = () => {
             Statistics
           </button>
         </Link>
+        <Link to="/UserProfile">
+          <button className="bg-blue-600 rounded-md text-white p-4 hover:bg-blue-700 w-full">
+          User Profile
+          </button>
+        </Link>
         <Link to="/AboutKoi">
           <button className="bg-blue-600 rounded-md text-white p-4 hover:bg-blue-700 w-full">
             About Koi

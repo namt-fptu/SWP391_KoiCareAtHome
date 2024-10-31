@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Card, Input, Button, Form, message, Avatar, Typography } from "antd";
-import { EditOutlined, UserOutlined } from "@ant-design/icons";
+import { Card, Input, Button, Form, message, Avatar, Typography ,Divider} from "antd";
+import { EditOutlined, UserOutlined, MailOutlined, PhoneOutlined } from "@ant-design/icons";
 import api from "../../config/axios";
 import { useAuthStore } from "../../page/(auth)/store";
 
@@ -77,19 +77,25 @@ const MemberProfile = () => {
   }
 
   return (
-    <div className="p-5 bg-gray-900 min-h-screen flex justify-center items-center">
+    <div className="flex justify-center items-center min-h-screen bg-gray-900">
       <Card
         title="User Profile"
-        className="bg-gray-800 text-white w-full max-w-md"
-        headStyle={{ backgroundColor: "#1f2937", color: "#ffffff" }}
-        style={{ borderRadius: "10px", overflow: "hidden" }}
+        className="w-full max-w-4xl"
+        headStyle={{ backgroundColor: "#f0f0f0", color: "#000", textAlign: "center" }}
+        style={{
+          borderRadius: "16px",
+          padding: "30px",
+          backgroundColor: "#ffffff",
+          boxShadow: "0 8px 24px rgba(0, 0, 0, 0.15)",
+        }}
       >
-        <div className="flex justify-center mb-4">
-          <Avatar size={80} icon={<UserOutlined />} />
+        <div className="flex justify-center mb-6">
+        <Avatar size={120} icon={<UserOutlined />} />
         </div>
-        <Title level={4} style={{ textAlign: "center", color: "#ffffff" }}>
+        <Title level={3} style={{ textAlign: "center", color: "#333" }}>
           {profile.name}
         </Title>
+        <Divider />
         {isEditing ? (
           <Form
             layout="vertical"
@@ -97,40 +103,51 @@ const MemberProfile = () => {
             onFinish={handleUpdateProfile}
             style={{ marginTop: "20px" }}
           >
-            <Form.Item label="Email" name="email">
-              <Input />
+            <Form.Item
+              label="Email"
+              name="email"
+              rules={[{ type: "email", message: "Please enter a valid email!" }]}
+            >
+              <Input prefix={<MailOutlined />} size="large" />
             </Form.Item>
-            <Form.Item label="Phone" name="phone">
-              <Input />
+            <Form.Item
+              label="Phone"
+              name="phone"
+              rules={[{ required: true, message: "Phone number is required!" }]}
+            >
+              <Input prefix={<PhoneOutlined />} size="large" />
             </Form.Item>
             <Form.Item label="Name" name="name">
-              <Input />
+              <Input size="large" />
             </Form.Item>
-            <Form.Item style={{ textAlign: "center" }}>
-              <Button type="primary" htmlType="submit">
+            <Form.Item style={{ textAlign: "center", marginTop: "20px" }}>
+              <Button type="primary" htmlType="submit" size="large">
                 Save
               </Button>
               <Button
                 style={{ marginLeft: "10px" }}
-                onClick={() => setIsEditing(false)}
-              >
+                onClick={() => setIsEditing(false)} style={{ marginLeft: "10px" }} size="large">
+            
                 Cancel
               </Button>
             </Form.Item>
           </Form>
         ) : (
           <div style={{ textAlign: "center" }}>
-            <Text strong style={{ display: "block", color: "#ffffff" }}>
+            <Text strong style={{ display: "block", color: "#333", fontSize: "16px", marginTop: "10px" }}>
+              <MailOutlined style={{ marginRight: "8px" }} />
               Email: {profile.email}
             </Text>
-            <Text strong style={{ display: "block", color: "#ffffff" }}>
+            <Text strong style={{ display: "block", color: "#333", fontSize: "16px", marginTop: "10px" }}>
+              <PhoneOutlined style={{ marginRight: "8px" }} />
               Phone: {profile.phone}
             </Text>
             <Button
               type="primary"
               icon={<EditOutlined />}
               onClick={() => setIsEditing(true)}
-              style={{ marginTop: "20px" }}
+              style={{ marginTop: "20px", width: "50%" }}
+              size="large"
             >
               Edit Profile
             </Button>

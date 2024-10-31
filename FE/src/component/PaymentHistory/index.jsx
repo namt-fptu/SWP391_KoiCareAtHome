@@ -118,7 +118,7 @@ const PaymentHistory = () => {
         columns={columns}
         dataSource={paymentHistory}
         rowKey="transactionId"
-        pagination={{ pageSize: 5 }}
+        pagination={false} // Remove pagination for full-screen display
         className="bg-gray-800 text-white"
       />
     </div>
