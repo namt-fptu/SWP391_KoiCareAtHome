@@ -27,7 +27,7 @@ const DashBoard = () => {
         const fetchRevenueData = async () => {
             try {
                 const response = await api.get('/Admin/getRevenueStatistic');
-                
+
                 const monthlyRevenue = Array(12).fill(0);
                 response.data.forEach(item => {
                     const monthIndex = item.month - 1;
@@ -82,7 +82,7 @@ const DashBoard = () => {
         revenueData.slice(6, 9).reduce((a, b) => a + b, 0), // Q3
         revenueData.slice(9, 12).reduce((a, b) => a + b, 0), // Q4
     ];
-    
+
 
     return (
         <div className="dashboard-container flex-1 h-full p-8 bg-gradient-to-r from-gray-800 via-gray-900 to-black min-h-screen text-white">
@@ -103,9 +103,9 @@ const DashBoard = () => {
                 <div className="bg-gray-800 rounded-xl p-6 shadow-lg transform transition duration-500 hover:scale-105">
                     <h4 className="text-lg font-semibold text-gray-300">Total Post</h4>
                     <div className="mt-4 space-y-2 text-white">
-                        
-                    <span className="text-4xl font-bold text-white"> {approvedAds + draftedAds}</span>
-                        
+
+                        <span className="text-4xl font-bold text-white"> {approvedAds + draftedAds}</span>
+
                         <div>
                             <span className="font-bold">Approved:</span> {approvedAds}
                         </div>
@@ -119,8 +119,8 @@ const DashBoard = () => {
             {/* Revenue Bar Chart */}
             <div className="bg-gray-800 rounded-xl p-8 shadow-lg">
                 <h4 className="text-xl font-semibold text-gray-300 mb-6">Revenue Overview</h4>
-                <Bar 
-                    data={barChartData} 
+                <Bar
+                    data={barChartData}
                     options={{
                         responsive: true,
                         plugins: {
@@ -149,7 +149,7 @@ const DashBoard = () => {
                                 }
                             }
                         }
-                    }} 
+                    }}
                 />
             </div>
         </div>
