@@ -1,10 +1,16 @@
 import { Link } from "react-router-dom";
-
+import backgroud from "./../../assets/wallpaper.jpg";
 const MemberOverview = () => {
   return (
-    <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
+    <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen"
+    style={{
+      backgroundImage: `url(${backgroud})`, // Set the background image
+      backgroundSize: "cover", // Cover the entire container
+      backgroundPosition: "center", // Center the image
+    }}
+    >
       <div className="flex items-center justify-between mb-5">
-        <h2 className="text-white text-3xl font-bold">Overview</h2>
+        <h2 className="text-black text-3xl font-bold \">Overview</h2>
       </div>
 
       <div className="grid grid-cols-2 gap-5 mt-8">

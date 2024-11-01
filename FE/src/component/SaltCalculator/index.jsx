@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { message, Select, Button, Typography, Card } from "antd";
 import api from "../../config/axios";
 import { useAuthStore } from "../../page/(auth)/store";
-
+import backgroud from "./../../assets/wallpaper.jpg";
 const { Title, Text } = Typography;
 
 const SaltCalculator = () => {
@@ -71,7 +71,12 @@ const SaltCalculator = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-900 text-white p-8">
+    <div className="flex h-screen bg-gray-900 text-white p-8"
+    style={{
+      backgroundImage: `url(${backgroud})`, // Set the background image
+      backgroundSize: "cover", // Cover the entire container
+      backgroundPosition: "center", // Center the image
+    }}>
       {/* Salt Calculator Section */}
       <div className="w-1/2 pr-4">
         <Card>

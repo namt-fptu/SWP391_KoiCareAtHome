@@ -3,7 +3,7 @@ import { Button, Card, Row, Col, message, notification, Modal } from "antd";
 import api from "../../config/axios";
 import { initializeApp } from "firebase/app";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
-
+import backgroud from "./../../assets/wallpaper.jpg";
 // Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBIcvSZRnSTBxw8yrLcq7AqLjqNhvaUQyk",
@@ -50,7 +50,12 @@ const Recomendations = () => {
   };
 
   return (
-    <div className="bg-gray-900 p-10 min-h-screen text-white">
+    <div className="bg-gray-900 p-10 min-h-screen text-white"
+    style={{
+      backgroundImage: `url(${backgroud})`, // Set the background image
+      backgroundSize: "cover", // Cover the entire container
+      backgroundPosition: "center", // Center the image
+    }}>
       <h2 className="text-3xl font-bold mb-6">Product Recommendations</h2>
       <p className="text-lg mb-10">
         We offer effective solutions for targeted treatment of water problems.

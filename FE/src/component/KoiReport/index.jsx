@@ -19,7 +19,7 @@ import {
 import api from "../../config/axios"; // Axios instance configuration
 import moment from "moment";
 import { useAuthStore } from "../../page/(auth)/store";
-
+import backgroud from "./../../assets/wallpaper.jpg";
 const KoiReport = () => {
   const [kois, setKois] = useState([]); // Array to store Koi fish details
   const [pondId, setPondId] = useState(null); // Selected pond ID
@@ -183,7 +183,12 @@ const KoiReport = () => {
 
   return (
     <div className="flex-container">
-      <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
+      <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen"
+       style={{
+        backgroundImage: `url(${backgroud})`, // Set the background image
+        backgroundSize: "cover", // Cover the entire container
+        backgroundPosition: "center", // Center the image
+      }}>
       <h1 className="text-3xl font-bold mb-8 text-white">Koi Report</h1>
       <p className="text-white"> Report about your Koi.</p>
         {/* Pond Selection */}
@@ -314,11 +319,11 @@ const KoiReport = () => {
             </Form.Item>
 
             <Form.Item
-              name="wetight"
-              label="Weight (g)"
+              name="weight"
+              label="weight (g)"
               rules={[{ required: true, message: "Please enter the weight" }]}
             >
-              <Input placeholder="Weight" />
+              <Input placeholder="wetight" />
             </Form.Item>
 
             <Form.Item
@@ -339,20 +344,35 @@ const KoiReport = () => {
 
         {/* Display Koi Growth Reports */}
         {koiGrowthReports.length > 0 ? (
-          <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
+          <Row gutter={[16, 16]} style={{ marginTop: "20px" }}
+          >
             {koiGrowthReports.map((report) => (
-              <Col span={8} key={report.id}>
+              <Col span={8} key={report.id} xs={24} sm={12} md={8} lg={6}
+              style={{
+                width: "100%",
+                height: "100%",
+                marginBottom: "20px",
+              }}>
                 <Card
                   title={`Report - ${moment(report.date).format(
                     "MMMM Do, YYYY"
                   )}`}
-                  // actions={[
-                  //   <EditOutlined onClick={() => handleUpdate(report)} />,
-                  //   <DeleteOutlined onClick={() => handleDelete(report.id)} />,
-                  // ]}
+                 
                 >
-                  <p>Length: {report.length} cm</p>
-                  <p>Weight: {report.weight} g</p>
+                  <Row gutter={[16, 16]}>
+                    
+                    <Col span={12}>
+                      <p>
+                        <strong>Length:</strong> {report.length}
+                      </p>
+                    </Col>
+                    <Col span={12}>
+                      <p>
+                        <strong>Weight (NO₂):</strong> {report.weight}
+                      </p>
+                    </Col>
+                                                        
+                  </Row>                
                   <div
                     style={{
                       display: "flex",

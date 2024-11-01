@@ -28,6 +28,7 @@ import {
 import { initializeApp } from "firebase/app";
 import api from "../../config/axios"; // Axios instance configuration
 import { useAuthStore } from "../../page/(auth)/store";
+import backgroud from "./../../assets/wallpaper.jpg";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBIcvSZRnSTBxw8yrLcq7AqLjqNhvaUQyk",
@@ -259,7 +260,12 @@ const MyKoiFish = () => {
 
   return (
     <div className="flex-container">
-      <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
+      <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen"
+       style={{
+        backgroundImage: `url(${backgroud})`, // Set the background image
+        backgroundSize: "cover", // Cover the entire container
+        backgroundPosition: "center", // Center the image
+      }}>
         <h1 className="text-3xl font-bold mb-8 text-white">My Koi Fish</h1>
         <p className="text-white">Information about your Fish.</p>
 

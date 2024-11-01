@@ -86,9 +86,9 @@ const Signup = () => {
                 rules={[
                   { required: true, message: "Please enter your Phone!" },
                   {
-                    pattern: /^\d{10,15}$/,
-                    message: "Please enter a valid phone number!",
-                  },
+                    pattern: /^0\d{9}$/,
+                    message: "Please enter a valid phone number starting with 0 and followed by 9 digits!",
+                }
                 ]}
                 className="mb-2"
               >

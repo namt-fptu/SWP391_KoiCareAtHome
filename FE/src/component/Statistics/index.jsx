@@ -3,7 +3,7 @@ import LineChart from "../Chart";
 import api from "../../config/axios";
 import { message, Row, Col } from "antd";
 import { useAuthStore } from "../../page/(auth)/store";
-
+import backgroud from "./../../assets/wallpaper.jpg";
 const Statistics = () => {
   const [lengthData, setLengthData] = useState({ labels: [], datasets: [] });
   const [weightData, setWeightData] = useState({ labels: [], datasets: [] });
@@ -496,9 +496,14 @@ const Statistics = () => {
     setSelectedDataType(type);
   };
   return (
-    <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen flex flex-col">
-      <h1 className="text-3xl font-bold mb-4 text-white">Statistics</h1>
-      <p className="text-white mb-8">
+    <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen flex flex-col"
+    style={{
+      backgroundImage: `url(${backgroud})`, // Set the background image
+      backgroundSize: "cover", // Cover the entire container
+      backgroundPosition: "center", // Center the image
+    }}>
+      <h1 className="text-3xl font-bold mb-4 text-black">Statistics</h1>
+      <p className="text-black mb-8">
         Statistics about your fish tank and Koi fish.
       </p>
       {/* Pond and Fish selection */}

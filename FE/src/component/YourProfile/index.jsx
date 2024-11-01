@@ -20,7 +20,7 @@ import {
 } from "@ant-design/icons";
 import api from "../../config/axios";
 import { useAuthStore } from "../../page/(auth)/store";
-
+import backgroud from "./../../assets/wallpaper.jpg";
 const { Title, Text } = Typography;
 
 const YourProfile = () => {
@@ -112,7 +112,12 @@ const YourProfile = () => {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-900">
+    <div className="flex justify-center items-center min-h-screen bg-gray-900"
+    style={{
+      backgroundImage: `url(${backgroud})`, // Set the background image
+      backgroundSize: "cover", // Cover the entire container
+      backgroundPosition: "center", // Center the image
+    }}>
       <Card
         title="Your Profile"
         className="w-full max-w-4xl"
@@ -154,7 +159,12 @@ const YourProfile = () => {
             <Form.Item
               label="Phone"
               name="phone"
-              rules={[{ required: true, message: "Phone number is required!" }]}
+              rules={[{ required: true, message: "Phone number is required!" },
+                {
+                  pattern: /^0\d{9}$/,
+                  message: "Please enter a valid phone number starting with 0 and followed by 9 digits!",
+              }
+              ]}
             >
               <Input prefix={<PhoneOutlined />} size="large" />
             </Form.Item>
@@ -247,6 +257,10 @@ const YourProfile = () => {
             name="newPassword"
             rules={[
               { required: true, message: "Please input your new password!" },
+              {
+                min: 8,
+                message: "Password must be at least 8 characters!",
+              },
             ]}
           >
             <Input.Password />
