@@ -88,7 +88,7 @@ const Signup = () => {
                   {
                     pattern: /^0\d{9}$/,
                     message: "Please enter a valid phone number starting with 0 and followed by 9 digits!",
-                }
+                  }
                 ]}
                 className="mb-2"
               >

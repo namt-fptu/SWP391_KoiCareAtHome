@@ -1,76 +1,101 @@
 import { Link } from "react-router-dom";
-import backgroud from "./../../assets/wallpaper.jpg";
+import {
+  FaFish,
+  FaUniversity,
+  FaWater,
+  FaClipboard,
+  FaCalculator,
+  FaChartBar,
+  FaBlog,
+  FaThumbsUp,
+  FaUser,
+  FaInfoCircle
+} from "react-icons/fa"; // Add icons for each button as needed
+import background from "./../../assets/wallpaper.jpg";
+
 const MemberOverview = () => {
   return (
-    <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen"
-    style={{
-      backgroundImage: `url(${backgroud})`, // Set the background image
-      backgroundSize: "cover", // Cover the entire container
-      backgroundPosition: "center", // Center the image
-    }}
+    <div
+      className="flex flex-col items-center justify-center min-h-screen"
+      style={{
+        backgroundImage: `url(${background})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.5)", // Adds a dark overlay
+        backgroundBlendMode: "overlay",
+      }}
     >
-      <div className="flex items-center justify-between mb-5">
-        <h2 className="text-black text-3xl font-bold \">Overview</h2>
-      </div>
+      {/* Centered Overview Title */}
+      <h2 className="text-white text-4xl font-bold text-center mb-10">Overview</h2>
 
-      <div className="grid grid-cols-2 gap-5 mt-8">
+      {/* Button Grid Layout */}
+      <div className="grid grid-cols-3 gap-5 w-full max-w-3xl">
         <Link to="/MyPond">
-          <button className="bg-blue-600 rounded-md text-white p-4 hover:bg-blue-700 w-full">
-            My Pond
+          <button className="bg-blue-600 rounded-lg text-white h-32 w-full hover:bg-blue-700 shadow-md flex flex-col items-center justify-center">
+            <FaUniversity size={30} />
+            <span className="mt-2">My Pond</span>
           </button>
         </Link>
         <Link to="/MyKoiFish">
-          <button className="bg-blue-600 rounded-md text-white p-4 hover:bg-blue-700 w-full">
-            My Koi Fish
+          <button className="bg-blue-600 rounded-lg text-white h-32 w-full hover:bg-blue-700 shadow-md flex flex-col items-center justify-center">
+            <FaFish size={30} />
+            <span className="mt-2">My Koi Fish</span>
           </button>
         </Link>
         <Link to="/WaterParameter">
-          <button className="bg-blue-600 rounded-md text-white p-4 hover:bg-blue-700 w-full">
-            Water Parameters
+          <button className="bg-blue-600 rounded-lg text-white h-32 w-full hover:bg-blue-700 shadow-md flex flex-col items-center justify-center">
+            <FaWater size={30} />
+            <span className="mt-2">Water Parameters</span>
           </button>
         </Link>
-        
         <Link to="/KoiReport">
-          <button className="bg-blue-600 rounded-md text-white p-4 hover:bg-blue-700 w-full">
-          Koi Report
+          <button className="bg-blue-600 rounded-lg text-white h-32 w-full hover:bg-blue-700 shadow-md flex flex-col items-center justify-center">
+            <FaClipboard size={30} />
+            <span className="mt-2">Koi Report</span>
           </button>
         </Link>
         <Link to="/FoodCalculator">
-          <button className="bg-blue-600 rounded-md text-white p-4 hover:bg-blue-700 w-full">
-            Food Calculator
+          <button className="bg-blue-600 rounded-lg text-white h-32 w-full hover:bg-blue-700 shadow-md flex flex-col items-center justify-center">
+            <FaCalculator size={30} />
+            <span className="mt-2">Food Calculator</span>
           </button>
         </Link>
         <Link to="/SaltCalculator">
-          <button className="bg-blue-600 rounded-md text-white p-4 hover:bg-blue-700 w-full">
-            Salt Calculator
+          <button className="bg-blue-600 rounded-lg text-white h-32 w-full hover:bg-blue-700 shadow-md flex flex-col items-center justify-center">
+            <FaCalculator size={30} />
+            <span className="mt-2">Salt Calculator</span>
           </button>
         </Link>
         <Link to="/Blog">
-          <button className="bg-blue-600 rounded-md text-white p-4 hover:bg-blue-700 w-full">
-            Blog
+          <button className="bg-blue-600 rounded-lg text-white h-32 w-full hover:bg-blue-700 shadow-md flex flex-col items-center justify-center">
+            <FaBlog size={30} />
+            <span className="mt-2">Blog</span>
           </button>
         </Link>
-        <Link to="/Recomendations">
-          <button className="bg-blue-600 rounded-md text-white p-4 hover:bg-blue-700 w-full">
-          Recomendations
+        <Link to="/Recommendations">
+          <button className="bg-blue-600 rounded-lg text-white h-32 w-full hover:bg-blue-700 shadow-md flex flex-col items-center justify-center">
+            <FaThumbsUp size={30} />
+            <span className="mt-2">Recommendations</span>
           </button>
         </Link>
         <Link to="/Statistics">
-          <button className="bg-blue-600 rounded-md text-white p-4 hover:bg-blue-700 w-full">
-            Statistics
+          <button className="bg-blue-600 rounded-lg text-white h-32 w-full hover:bg-blue-700 shadow-md flex flex-col items-center justify-center">
+            <FaChartBar size={30} />
+            <span className="mt-2">Statistics</span>
           </button>
         </Link>
         <Link to="/MemberProfile">
-          <button className="bg-blue-600 rounded-md text-white p-4 hover:bg-blue-700 w-full">
-          Member Profile
+          <button className="bg-blue-600 rounded-lg text-white h-32 w-full hover:bg-blue-700 shadow-md flex flex-col items-center justify-center">
+            <FaUser size={30} />
+            <span className="mt-2">Member Profile</span>
           </button>
         </Link>
         <Link to="/AboutKoi">
-          <button className="bg-blue-600 rounded-md text-white p-4 hover:bg-blue-700 w-full">
-            About Koi
+          <button className="bg-blue-600 rounded-lg text-white h-32 w-full hover:bg-blue-700 shadow-md flex flex-col items-center justify-center">
+            <FaInfoCircle size={30} />
+            <span className="mt-2">About Koi</span>
           </button>
         </Link>
-
       </div>
     </div>
   );

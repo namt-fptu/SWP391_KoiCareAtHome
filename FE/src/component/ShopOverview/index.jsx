@@ -64,7 +64,7 @@ const ShopOverview = () => {
       <div className="flex flex-col justify-between mb-5 mt-14">
         <h2 className="text-white text-3xl font-bold">Overview Account</h2>
         <div className="grid grid-cols-2 gap-4 p-6 mt-8">
-          
+
           <div className="bg-gray-800 rounded-xl p-6 shadow-lg transform transition duration-500 hover:scale-105">
             <h4 className="text-lg font-semibold text-gray-300">
               Total Product
