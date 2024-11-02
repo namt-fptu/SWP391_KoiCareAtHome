@@ -87,11 +87,7 @@ const Signin = () => {
                   { required: true, message: "Please enter your Password !!" },
                 ]}
               >
-                <Input
-                  type="password"
-                  placeholder="••••••••••••"
-                  aria-label="Password"
-                />
+                <Input.Password placeholder="••••••••" aria-label="Password" />
               </Form.Item>
               <Form.Item>
                 <div className="flex items-center mb-6">
@@ -116,13 +112,6 @@ const Signin = () => {
                 <button className="w-full bg-blue-500 text-white p-3 rounded-lg font-semibold hover:bg-blue-600 transition">
                   SIGN IN
                 </button>
-              </Form.Item>
-              <Form.Item>
-                <div className="flex items-center my-6">
-                  <hr className="w-full border-gray-300" />
-                  <span className="px-2 text-gray-400">OR</span>
-                  <hr className="w-full border-gray-300" />
-                </div>
               </Form.Item>
             </Form>
           </div>

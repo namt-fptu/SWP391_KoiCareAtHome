@@ -75,7 +75,9 @@ const ShopProduct = () => {
         setProducts([]);
         console.warn("No product found for this post.");
         console.error("Error fetching products:", error);
-        message.error("Failed to fetch products.");
+        message.error(
+          "Failed to load products. Maybe there are no products yet."
+        );
       }
     }
   };
@@ -91,7 +93,7 @@ const ShopProduct = () => {
       }
     } catch (error) {
       console.error("Error fetching posts:", error);
-      message.error("Failed to fetch posts.");
+      message.warning("Please add a post first.");
       setPosts([]); // Đảm bảo posts luôn là mảng ngay cả khi có lỗi
     }
   };

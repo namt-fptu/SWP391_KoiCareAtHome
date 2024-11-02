@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { Form, Input, Radio, message, Button } from "antd";
+import { Form, Input, Radio, message, Button, Modal } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import signupimg from "../../assets/signin.png";
 import api from "../../config/axios";
 
 const Signup = () => {
   const [role, setRole] = useState("");
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const navigate = useNavigate();
 
   const handleSignup = async (values) => {
@@ -33,6 +34,13 @@ const Signup = () => {
 
   const onRoleChange = (e) => {
     setRole(e.target.value);
+  };
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
   };
 
   return (
@@ -87,8 +95,9 @@ const Signup = () => {
                   { required: true, message: "Please enter your Phone!" },
                   {
                     pattern: /^0\d{9}$/,
-                    message: "Please enter a valid phone number starting with 0 and followed by 9 digits!",
-                  }
+                    message:
+                      "Please enter a valid phone number starting with 0 and followed by 9 digits!",
+                  },
                 ]}
                 className="mb-2"
               >
@@ -169,14 +178,104 @@ const Signup = () => {
 
               <Form.Item>
                 <p className="text-xs text-gray-500">
-                  By clicking "Create account", you agree to the KoiF Privacy
-                  Policy.
+                  By clicking "Create account", you agree to the KoiF{" "}
+                  <span
+                    onClick={showModal}
+                    className="text-blue-500 cursor-pointer"
+                  >
+                    Privacy Policy
+                  </span>
+                  .
                 </p>
               </Form.Item>
             </Form>
           </div>
         </div>
       </div>
+      <Modal
+        title="Privacy Policy for KoiF"
+        visible={isModalVisible}
+        onCancel={handleCancel}
+        footer={[
+          <Button key="close" onClick={handleCancel}>
+            Close
+          </Button>,
+        ]}
+      >
+        <p>
+          Welcome to Koi Care System at Home! Your privacy is very important to
+          us. This Privacy Policy outlines how we collect, use, and safeguard
+          your personal information when you visit our website or use our
+          services. By accessing or using our website, you agree to the terms
+          outlined below.
+        </p>
+        <h3 style={{ marginTop: "20px", fontSize: "20px", fontWeight: "bold" }}>
+          1. Information Collection
+        </h3>
+        <p>
+          We collect personal information such as name, contact details, and
+          email when you register. Usage data and interaction details are
+          collected to enhance service quality.
+        </p>
+
+        <h3 style={{ marginTop: "20px", fontSize: "20px", fontWeight: "bold" }}>
+          2. Use of Information
+        </h3>
+        <p>
+          Your information helps us deliver services, respond to inquiries,
+          personalize experiences, and improve our services. For marketing, you
+          may opt out of communications.
+        </p>
+
+        <h3 style={{ marginTop: "20px", fontSize: "20px", fontWeight: "bold" }}>
+          3. Information Sharing
+        </h3>
+        <p>
+          We respect your privacy and only share information with trusted
+          third-party service providers under strict confidentiality. Your data
+          is not sold to third parties.
+        </p>
+
+        <h3 style={{ marginTop: "20px", fontSize: "20px", fontWeight: "bold" }}>
+          4. Data Security
+        </h3>
+        <p>
+          We prioritize data security by using secure measures to protect your
+          information. However, no transmission is entirely secure, and you
+          share information at your own risk.
+        </p>
+
+        <h3 style={{ marginTop: "20px", fontSize: "20px", fontWeight: "bold" }}>
+          5. Third-Party Links
+        </h3>
+        <p>
+          Our website may link to external sites. We are not responsible for
+          their content or practices. Review their policies before using their
+          services.
+        </p>
+
+        <h3 style={{ marginTop: "20px", fontSize: "20px", fontWeight: "bold" }}>
+          6. Policy Updates
+        </h3>
+        <p>
+          We may revise this policy. Any changes will be updated on this page.
+          Continued use after changes indicates acceptance of the updated terms.
+        </p>
+
+        <h3 style={{ marginTop: "20px", fontSize: "20px", fontWeight: "bold" }}>
+          7. Contact Us
+        </h3>
+        <p>
+          For privacy questions, please contact us at sofn2004@gmail.com or{" "}
+          <br />
+          093 370 45 67.
+        </p>
+        <br />
+        <p>
+          Thank you for trusting KoiF. We are committed to ensuring that your
+          privacy is respected and protected.
+        </p>
+      </Modal>
     </>
   );
 };
