@@ -236,7 +236,7 @@ const Statistics = () => {
 
   const updateWaterParametersData = (waterReport) => {
     const correctedWaterQualityReport = waterReport.map((item) => ({
-      pH: item.pH || 0, // Ensure pH field exists
+      pH: item.phVaule || 0, // Ensure pH field exists
       hardness: item.hardness || 0, // Ensure hardness field exists
       temperature: item.temperature || 0, // Ensure temperature field exists
       carbonDioxide: item.cabondioxide || 0, // Ensure CO2 field exists
@@ -503,8 +503,8 @@ const Statistics = () => {
       backgroundSize: "cover", // Cover the entire container
       backgroundPosition: "center", // Center the image
     }}>
-      <h1 className="text-3xl font-bold mb-4 text-black">Statistics</h1>
-      <p className="text-black mb-8">
+      <h1 className="text-3xl font-bold mb-4 text-white">Statistics</h1>
+      <p className="text-white mb-8">
         Statistics about your fish tank and Koi fish.
       </p>
       {/* Pond and Fish selection */}
