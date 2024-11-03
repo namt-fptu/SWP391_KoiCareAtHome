@@ -242,8 +242,9 @@ const Statistics = () => {
       carbonDioxide: item.carbonDioxide || 0, // Ensure CO2 field exists
       salt: item.salt || 0, // Ensure salt field exists
       nitrates: item.nitrates || 0, // Ensure nitrates field exists
-      nitrites: item.nitrites || 0, // Ensure nitrites field exists
-      ammonium: item.ammonium || 0, // Ensure ammonium field exists
+      nitrite: item.nitrite || 0, // Ensure nitrites field exists
+      ammonium: item.amonium || 0, // Ensure ammonium field exists
+      oxigen: item.oxigen || 0,
       maxTemp: item.maxTemp || 0, // Ensure maxTemp exists
       minTemp: item.minTemp || 0, // Ensure minTemp exists
       maxPh: item.maxPh || 0, // Ensure maxPh exists
