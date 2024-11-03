@@ -239,7 +239,7 @@ const Statistics = () => {
       pH: item.pH || 0, // Ensure pH field exists
       hardness: item.hardness || 0, // Ensure hardness field exists
       temperature: item.temperature || 0, // Ensure temperature field exists
-      carbonDioxide: item.carbonDioxide || 0, // Ensure CO2 field exists
+      carbonDioxide: item.cabondioxide || 0, // Ensure CO2 field exists
       salt: item.salt || 0, // Ensure salt field exists
       nitrates: item.nitrates || 0, // Ensure nitrates field exists
       nitrite: item.nitrite || 0, // Ensure nitrites field exists
