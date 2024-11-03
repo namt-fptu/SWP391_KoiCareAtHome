@@ -72,7 +72,7 @@ const MemberOverview = () => {
             <span className="mt-2">Blog</span>
           </button>
         </Link>
-        <Link to="/Recommendations">
+        <Link to="/Recomendations">
           <button className="bg-blue-600 rounded-lg text-white h-32 w-full hover:bg-blue-700 shadow-md flex flex-col items-center justify-center">
             <FaThumbsUp size={30} />
             <span className="mt-2">Recommendations</span>
