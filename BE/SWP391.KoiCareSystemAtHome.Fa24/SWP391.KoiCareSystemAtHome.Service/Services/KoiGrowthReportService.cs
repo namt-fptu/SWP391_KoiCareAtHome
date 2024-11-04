@@ -182,11 +182,13 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                     stageInMonths--;
                 }
 
+                int roundedStage = (int)Math.Round(stageInMonths / 3.0) * 3;
+
                 return new KoiGrowthReportModel
                 {
                     Id = r.Id,
                     KoiId = r.KoiId,
-                    Stage = stageInMonths,
+                    Stage = roundedStage,
                     Date = r.Date,
                     Length = r.Length,
                     Weight = r.Wetight

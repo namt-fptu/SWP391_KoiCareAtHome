@@ -291,17 +291,16 @@ const WaterParameter = () => {
                     { required: true, message: "Please input Nitrate!" },
                     {
                       validator: (_, value) => {
-                        // Convert value to a number and check if it is between 0 and 0.1
-                        if (
-                          value === "" ||
-                          (Number(value) >= 0 && Number(value) <= 0.1)
-                        ) {
-                          return Promise.resolve();
+                        if (!value) {
+                          return Promise.reject();
                         }
-                        // Reject if the value is outside the range
-                        return Promise.reject(
-                          new Error("Please input a value between 0 and 0.1!")
-                        );
+                        const numValue = Number(value); // Ensure we convert to a number
+                        if (isNaN(numValue) || numValue < 0 || numValue > 21) {
+                          return Promise.reject(
+                            new Error("Nitrate must be between 0 and 21!")
+                          );
+                        }
+                        return Promise.resolve();
                       },
                     },
                   ]}
