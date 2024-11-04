@@ -113,7 +113,7 @@ const KoiReport = () => {
     setSelectedReport(report);
     updateForm.setFieldsValue({
       length: report.length,
-      weight: report.weight,
+      wetight: report.weight,
       date: moment(report.date),
     });
 
@@ -265,7 +265,16 @@ const KoiReport = () => {
             <Form.Item
               name="length"
               label="Length (cm)"
-              rules={[{ required: true, message: "Please enter the length" }]}
+              rules={[{ required: true, message: "Please enter the length" },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (value > 0) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error("Length must be greater than 0"));
+                  },
+                }),
+              ]}
             >
               <Input placeholder="Length" />
             </Form.Item>
@@ -273,7 +282,16 @@ const KoiReport = () => {
             <Form.Item
               name="wetight"
               label="Weight (g)"
-              rules={[{ required: true, message: "Please enter the weight" }]}
+              rules={[{ required: true, message: "Please enter the weight" },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (value > 0) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error("Weight must be greater than 0"));
+                  },
+                }),
+              ]}
             >
               <Input placeholder="Weight" />
             </Form.Item>
@@ -313,17 +331,35 @@ const KoiReport = () => {
             <Form.Item
               name="length"
               label="Length (cm)"
-              rules={[{ required: true, message: "Please enter the length" }]}
+              rules={[{ required: true, message: "Please enter the length" },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (value > 0) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error("Length must be greater than 0"));
+                  },
+                }),
+              ]}
             >
               <Input placeholder="Length" />
             </Form.Item>
 
             <Form.Item
-              name="weight"
+              name="wetight"
               label="weight (g)"
-              rules={[{ required: true, message: "Please enter the weight" }]}
+              rules={[{ required: true, message: "Please enter the weight" },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (value > 0) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error("Weight must be greater than 0"));
+                  },
+                }),
+              ]}
             >
-              <Input placeholder="wetight" />
+              <Input placeholder="Weight" />
             </Form.Item>
 
             <Form.Item
