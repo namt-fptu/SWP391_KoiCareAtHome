@@ -97,8 +97,7 @@ const KoiGrowthStandard = () => {
     } catch (error) {
       console.error("Error submitting koi growth standard:", error);
       message.error(
-        `Failed to ${
-          editingStandard ? "update" : "create"
+        `Failed to ${editingStandard ? "update" : "create"
         } koi growth standard.`
       );
     } finally {
@@ -224,9 +223,22 @@ const KoiGrowthStandard = () => {
           <Form.Item
             label="Stage"
             name="stage"
-            rules={[{ required: true, message: "Please input the stage!" }]}
+            rules={[
+              { required: true, message: "Please input the stage!" },
+              () => ({
+                validator(_, value) {
+                  if (value === undefined || value === "" || isNaN(value)) {
+                    return Promise.reject(new Error("The input value must be a number only."));
+                  }
+                  if (value > 0) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error("Stage must be greater than 0!"));
+                },
+              }),
+            ]}
           >
-            <Input type="number" placeholder="Enter stage" />
+            <Input placeholder="Enter stage" />
           </Form.Item>
 
           <Row gutter={16}>
@@ -236,9 +248,20 @@ const KoiGrowthStandard = () => {
                 name="minLength"
                 rules={[
                   { required: true, message: "Please input min length!" },
+                  () => ({
+                    validator(_, value) {
+                      if (value === undefined || value === "" || isNaN(value)) {
+                        return Promise.reject(new Error("The input value must be a number only."));
+                      }
+                      if (value > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Min Length must be greater than 0!"));
+                    },
+                  }),
                 ]}
               >
-                <Input type="number" placeholder="Min Length" />
+                <Input placeholder="Min Length" />
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -247,9 +270,20 @@ const KoiGrowthStandard = () => {
                 name="maxLength"
                 rules={[
                   { required: true, message: "Please input max length!" },
+                  () => ({
+                    validator(_, value) {
+                      if (value === undefined || value === "" || isNaN(value)) {
+                        return Promise.reject(new Error("The input value must be a number only."));
+                      }
+                      if (value > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Max Length must be greater than 0!"));
+                    },
+                  }),
                 ]}
               >
-                <Input type="number" placeholder="Max Length" />
+                <Input placeholder="Max Length" />
               </Form.Item>
             </Col>
           </Row>
@@ -258,23 +292,45 @@ const KoiGrowthStandard = () => {
             <Col span={12}>
               <Form.Item
                 label="Min Weight (g)"
-                name="minWeigth"
+                name="minWeight"
                 rules={[
                   { required: true, message: "Please input min weight!" },
+                  () => ({
+                    validator(_, value) {
+                      if (value === undefined || value === "" || isNaN(value)) {
+                        return Promise.reject(new Error("The input value must be a number only."));
+                      }
+                      if (value > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Min Weight must be greater than 0!"));
+                    },
+                  }),
                 ]}
               >
-                <Input type="number" placeholder="Min Weight" />
+                <Input placeholder="Min Weight" />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
                 label="Max Weight (g)"
-                name="maxWeigth"
+                name="maxWeight"
                 rules={[
                   { required: true, message: "Please input max weight!" },
+                  () => ({
+                    validator(_, value) {
+                      if (value === undefined || value === "" || isNaN(value)) {
+                        return Promise.reject(new Error("The input value must be a number only."));
+                      }
+                      if (value > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Max Weight must be greater than 0!"));
+                    },
+                  }),
                 ]}
               >
-                <Input type="number" placeholder="Max Weight" />
+                <Input placeholder="Max Weight" />
               </Form.Item>
             </Col>
           </Row>
@@ -284,21 +340,50 @@ const KoiGrowthStandard = () => {
               <Form.Item
                 label="Min Feed (g)"
                 name="minFeed"
-                rules={[{ required: true, message: "Please input min feed!" }]}
+                rules={[
+                  { required: true, message: "Please input min feed!" },
+                  () => ({
+                    validator(_, value) {
+                      if (value === undefined || value === "" || isNaN(value)) {
+                        return Promise.reject(new Error("The input value must be a number only."));
+                      }
+                      if (value > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Min Feed must be greater than 0!"));
+                    },
+                  }),
+                ]}
               >
-                <Input type="number" placeholder="Min Feed" />
+                <Input placeholder="Min Feed" />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
                 label="Max Feed (g)"
                 name="maxFeed"
-                rules={[{ required: true, message: "Please input max feed!" }]}
+                rules={[
+                  { required: true, message: "Please input max feed!" },
+                  () => ({
+                    validator(_, value) {
+                      if (value === undefined || value === "" || isNaN(value)) {
+                        return Promise.reject(new Error("The input value must be a number only."));
+                      }
+                      if (value > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Max Feed must be greater than 0!"));
+                    },
+                  }),
+                ]}
               >
-                <Input type="number" placeholder="Max Feed" />
+                <Input placeholder="Max Feed" />
               </Form.Item>
             </Col>
           </Row>
+
+
+
 
           <Form.Item>
             <Button type="primary" htmlType="submit" loading={loading}>

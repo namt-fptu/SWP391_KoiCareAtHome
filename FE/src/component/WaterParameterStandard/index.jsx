@@ -224,7 +224,18 @@ const WaterParameterStandard = () => {
                 label="Min Temperature (℃)"
                 name="minTemp"
                 rules={[
-                  { required: true, message: "Please input min temperature!" },
+                  { required: true, message: "Please input the Min Temperature!" },
+                  () => ({
+                    validator(_, value) {
+                      if (isNaN(value) || value === "" || value === undefined) {
+                        return Promise.reject(new Error("The input value must be a number only."));
+                      }
+                      if (value > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Min Temperature must be greater than 0!"));
+                    },
+                  }),
                 ]}
               >
                 <Input type="number" placeholder="Min Temperature" />
@@ -235,7 +246,18 @@ const WaterParameterStandard = () => {
                 label="Max Temperature (℃)"
                 name="maxTemp"
                 rules={[
-                  { required: true, message: "Please input max temperature!" },
+                  { required: true, message: "Please input the Max Temperature!" },
+                  () => ({
+                    validator(_, value) {
+                      if (value === undefined || value === "" || isNaN(value)) {
+                        return Promise.reject(new Error("The input value must be a number only."));
+                      }
+                      if (value > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Max Temperature must be greater than 0!"));
+                    },
+                  }),
                 ]}
               >
                 <Input type="number" placeholder="Max Temperature" />
@@ -249,7 +271,20 @@ const WaterParameterStandard = () => {
               <Form.Item
                 label="Min pH"
                 name="minPh"
-                rules={[{ required: true, message: "Please input min pH!" }]}
+                rules={[
+                  { required: true, message: "Please input the Min pH!" },
+                  () => ({
+                    validator(_, value) {
+                      if (value === undefined || value === "" || isNaN(value)) {
+                        return Promise.reject(new Error("The input value must be a number only."));
+                      }
+                      if (value > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Min pH must be greater than 0!"));
+                    },
+                  }),
+                ]}
               >
                 <Input type="number" step="0.1" placeholder="Min pH" />
               </Form.Item>
@@ -258,7 +293,20 @@ const WaterParameterStandard = () => {
               <Form.Item
                 label="Max pH"
                 name="maxPh"
-                rules={[{ required: true, message: "Please input max pH!" }]}
+                rules={[
+                  { required: true, message: "Please input the Max pH!" },
+                  () => ({
+                    validator(_, value) {
+                      if (value === undefined || value === "" || isNaN(value)) {
+                        return Promise.reject(new Error("The input value must be a number only."));
+                      }
+                      if (value > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Max pH must be greater than 0!"));
+                    },
+                  }),
+                ]}
               >
                 <Input type="number" step="0.1" placeholder="Max pH" />
               </Form.Item>
@@ -272,7 +320,18 @@ const WaterParameterStandard = () => {
                 label="Min Hardness (GH)"
                 name="minHardness"
                 rules={[
-                  { required: true, message: "Please input min hardness!" },
+                  { required: true, message: "Please input the Min GH!" },
+                  () => ({
+                    validator(_, value) {
+                      if (value === undefined || value === "" || isNaN(value)) {
+                        return Promise.reject(new Error("The input value must be a number only."));
+                      }
+                      if (value > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Min GH must be greater than 0!"));
+                    },
+                  }),
                 ]}
               >
                 <Input type="number" placeholder="Min Hardness" />
@@ -283,7 +342,18 @@ const WaterParameterStandard = () => {
                 label="Max Hardness (GH)"
                 name="maxHardness"
                 rules={[
-                  { required: true, message: "Please input max hardness!" },
+                  { required: true, message: "Please input the Max GH!" },
+                  () => ({
+                    validator(_, value) {
+                      if (value === undefined || value === "" || isNaN(value)) {
+                        return Promise.reject(new Error("The input value must be a number only."));
+                      }
+                      if (value > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Max GH must be greater than 0!"));
+                    },
+                  }),
                 ]}
               >
                 <Input type="number" placeholder="Max Hardness" />
@@ -298,7 +368,18 @@ const WaterParameterStandard = () => {
                 label="Min Oxygen (O₂)"
                 name="minOxigen"
                 rules={[
-                  { required: true, message: "Please input min oxygen!" },
+                  { required: true, message: "Please input the Min O₂!" },
+                  () => ({
+                    validator(_, value) {
+                      if (value === undefined || value === "" || isNaN(value)) {
+                        return Promise.reject(new Error("The input value must be a number only."));
+                      }
+                      if (value > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Min O₂ must be greater than 0!"));
+                    },
+                  }),
                 ]}
               >
                 <Input type="number" step="0.1" placeholder="Min Oxygen" />
@@ -309,7 +390,18 @@ const WaterParameterStandard = () => {
                 label="Max Oxygen (O₂)"
                 name="maxOxigen"
                 rules={[
-                  { required: true, message: "Please input max oxygen!" },
+                  { required: true, message: "Please input the Max O₂!" },
+                  () => ({
+                    validator(_, value) {
+                      if (value === undefined || value === "" || isNaN(value)) {
+                        return Promise.reject(new Error("The input value must be a number only."));
+                      }
+                      if (value > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Max O₂ must be greater than 0!"));
+                    },
+                  }),
                 ]}
               >
                 <Input type="number" step="0.1" placeholder="Max Oxygen" />
@@ -324,10 +416,18 @@ const WaterParameterStandard = () => {
                 label="Min Carbon Dioxide (CO₂)"
                 name="minCabondioxide"
                 rules={[
-                  {
-                    required: true,
-                    message: "Please input min carbon dioxide!",
-                  },
+                  { required: true, message: "Please input the Min CO₂!" },
+                  () => ({
+                    validator(_, value) {
+                      if (value === undefined || value === "" || isNaN(value)) {
+                        return Promise.reject(new Error("The input value must be a number only."));
+                      }
+                      if (value > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Min CO₂ must be greater than 0!"));
+                    },
+                  }),
                 ]}
               >
                 <Input type="number" placeholder="Min CO₂" />
@@ -338,10 +438,18 @@ const WaterParameterStandard = () => {
                 label="Max Carbon Dioxide (CO₂)"
                 name="maxCabondioxide"
                 rules={[
-                  {
-                    required: true,
-                    message: "Please input max carbon dioxide!",
-                  },
+                  { required: true, message: "Please input the Max CO₂!" },
+                  () => ({
+                    validator(_, value) {
+                      if (value === undefined || value === "" || isNaN(value)) {
+                        return Promise.reject(new Error("The input value must be a number only."));
+                      }
+                      if (value > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Max CO₂ must be greater than 0!"));
+                    },
+                  }),
                 ]}
               >
                 <Input type="number" placeholder="Max CO₂" />
@@ -355,7 +463,20 @@ const WaterParameterStandard = () => {
               <Form.Item
                 label="Min Salt"
                 name="minSalt"
-                rules={[{ required: true, message: "Please input min salt!" }]}
+                rules={[
+                  { required: true, message: "Please input the Min Salt!" },
+                  () => ({
+                    validator(_, value) {
+                      if (value === undefined || value === "" || isNaN(value)) {
+                        return Promise.reject(new Error("The input value must be a number only."));
+                      }
+                      if (value > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Min Salt must be greater than 0!"));
+                    },
+                  }),
+                ]}
               >
                 <Input type="number" placeholder="Min Salt" />
               </Form.Item>
@@ -364,7 +485,20 @@ const WaterParameterStandard = () => {
               <Form.Item
                 label="Max Salt"
                 name="maxSalt"
-                rules={[{ required: true, message: "Please input max salt!" }]}
+                rules={[
+                  { required: true, message: "Please input the Max Salt!" },
+                  () => ({
+                    validator(_, value) {
+                      if (value === undefined || value === "" || isNaN(value)) {
+                        return Promise.reject(new Error("The input value must be a number only."));
+                      }
+                      if (value > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Max Salt must be greater than 0!"));
+                    },
+                  }),
+                ]}
               >
                 <Input type="number" placeholder="Max Salt" />
               </Form.Item>
@@ -378,7 +512,18 @@ const WaterParameterStandard = () => {
                 label="Min Nitrates"
                 name="minNitrates"
                 rules={[
-                  { required: true, message: "Please input min nitrates!" },
+                  { required: true, message: "Please input the Min Nitrates!" },
+                  () => ({
+                    validator(_, value) {
+                      if (value === undefined || value === "" || isNaN(value)) {
+                        return Promise.reject(new Error("The input value must be a number only."));
+                      }
+                      if (value > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Min Nitrates must be greater than 0!"));
+                    },
+                  }),
                 ]}
               >
                 <Input type="number" placeholder="Min Nitrates" />
@@ -389,7 +534,18 @@ const WaterParameterStandard = () => {
                 label="Max Nitrates"
                 name="maxNitrates"
                 rules={[
-                  { required: true, message: "Please input max nitrates!" },
+                  { required: true, message: "Please input the Max Nitrates!" },
+                  () => ({
+                    validator(_, value) {
+                      if (value === undefined || value === "" || isNaN(value)) {
+                        return Promise.reject(new Error("The input value must be a number only."));
+                      }
+                      if (value > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Max Nitrates must be greater than 0!"));
+                    },
+                  }),
                 ]}
               >
                 <Input type="number" placeholder="Max Nitrates" />
@@ -404,7 +560,18 @@ const WaterParameterStandard = () => {
                 label="Min Nitrite"
                 name="minNitrite"
                 rules={[
-                  { required: true, message: "Please input min nitrite!" },
+                  { required: true, message: "Please input the Min Nitrite!" },
+                  () => ({
+                    validator(_, value) {
+                      if (value === undefined || value === "" || isNaN(value)) {
+                        return Promise.reject(new Error("The input value must be a number only."));
+                      }
+                      if (value > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Min Nitrite must be greater than 0!"));
+                    },
+                  }),
                 ]}
               >
                 <Input type="number" placeholder="Min Nitrite" />
@@ -415,7 +582,18 @@ const WaterParameterStandard = () => {
                 label="Max Nitrite"
                 name="maxNitrite"
                 rules={[
-                  { required: true, message: "Please input max nitrite!" },
+                  { required: true, message: "Please input the Max Nitrite!" },
+                  () => ({
+                    validator(_, value) {
+                      if (value === undefined || value === "" || isNaN(value)) {
+                        return Promise.reject(new Error("The input value must be a number only."));
+                      }
+                      if (value > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Max Nitrite must be greater than 0!"));
+                    },
+                  }),
                 ]}
               >
                 <Input type="number" placeholder="Max Nitrite" />
@@ -430,7 +608,18 @@ const WaterParameterStandard = () => {
                 label="Min Ammonium"
                 name="minAmonium"
                 rules={[
-                  { required: true, message: "Please input min ammonium!" },
+                  { required: true, message: "Please input the Min Ammonium!" },
+                  () => ({
+                    validator(_, value) {
+                      if (value === undefined || value === "" || isNaN(value)) {
+                        return Promise.reject(new Error("The input value must be a number only."));
+                      }
+                      if (value > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Min Ammonium must be greater than 0!"));
+                    },
+                  }),
                 ]}
               >
                 <Input type="number" placeholder="Min Ammonium" />
@@ -441,7 +630,18 @@ const WaterParameterStandard = () => {
                 label="Max Ammonium"
                 name="maxAmonium"
                 rules={[
-                  { required: true, message: "Please input max ammonium!" },
+                  { required: true, message: "Please input the Max Ammonium!" },
+                  () => ({
+                    validator(_, value) {
+                      if (value === undefined || value === "" || isNaN(value)) {
+                        return Promise.reject(new Error("The input value must be a number only."));
+                      }
+                      if (value > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Max Ammonium must be greater than 0!"));
+                    },
+                  }),
                 ]}
               >
                 <Input type="number" placeholder="Max Ammonium" />
