@@ -159,8 +159,13 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             if (reportOfPond == null || !reportOfPond.Any())
                 return Enumerable.Empty<WaterStatisticModel>();
 
+            var koiFishs = await _unitOfWork.KoiFishs.GetAsync();
+            var fishOfPond = koiFishs.Where(f => f.PondId == pondId).ToList();
+
+            string variety = GetVariety(fishOfPond);
+
             var waterReportStandards = await _unitOfWork.WaterParameterStandards.GetAsync();
-            var fillteredWaterReportStandard = waterReportStandards.FirstOrDefault(r => r.KoiVariety == "General");
+            var fillteredWaterReportStandard = waterReportStandards.FirstOrDefault(r => r.KoiVariety == variety);
 
             if (fillteredWaterReportStandard == null)
                 return Enumerable.Empty<WaterStatisticModel>();
@@ -199,6 +204,19 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             }).OrderBy(w => w.Date).ToList();
 
             return waterSatisticModels;
+        }
+
+        private string GetVariety(List<KoiFish?> listOfFish)
+        {
+            if (listOfFish == null || !listOfFish.Any())
+                return "General";
+
+            var mostFrequentVariety = listOfFish
+                .GroupBy(k => k.KoiVariety)
+                .OrderByDescending(g => g.Count())
+                .FirstOrDefault();
+
+            return mostFrequentVariety?.Key ?? "General";
         }
 
     }
