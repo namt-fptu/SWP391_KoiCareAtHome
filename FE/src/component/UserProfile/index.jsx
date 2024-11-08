@@ -8,7 +8,7 @@ const AccountList = () => {
   // Function to fetch accounts from the API
   const fetchAccounts = async () => {
     try {
-      const response = await api.get("Account/getAccounts");
+      const response = await api.get("Account/getShopAndPondOwner");
       setAccounts(response.data);
     } catch (error) {
       console.error("Error fetching accounts:", error);
