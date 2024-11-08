@@ -217,7 +217,7 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
                 }
 
                 return model;
-            });
+            }).OrderBy(s => s.Stage);
 
             return koiStatisticModels;
         }
