@@ -183,14 +183,16 @@ const KoiReport = () => {
 
   return (
     <div className="flex-container">
-      <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen"
-       style={{
-        backgroundImage: `url(${backgroud})`, // Set the background image
-        backgroundSize: "cover", // Cover the entire container
-        backgroundPosition: "center", // Center the image
-      }}>
-      <h1 className="text-3xl font-bold mb-8 text-white">Koi Report</h1>
-      <p className="text-white"> Report about your Koi.</p>
+      <div
+        className="flex-1 h-full p-5 bg-gray-900 min-h-screen"
+        style={{
+          backgroundImage: `url(${backgroud})`, // Set the background image
+          backgroundSize: "cover", // Cover the entire container
+          backgroundPosition: "center", // Center the image
+        }}
+      >
+        <h1 className="text-3xl font-bold mb-8 text-white">Koi Report</h1>
+        <p className="text-white"> Report about your Koi.</p>
         {/* Pond Selection */}
         <Select
           placeholder="Select a pond to view koi fish"
@@ -265,13 +267,16 @@ const KoiReport = () => {
             <Form.Item
               name="length"
               label="Length (cm)"
-              rules={[{ required: true, message: "Please enter the length" },
+              rules={[
+                { required: true, message: "Please enter the length" },
                 ({ getFieldValue }) => ({
                   validator(_, value) {
                     if (value > 0) {
                       return Promise.resolve();
                     }
-                    return Promise.reject(new Error("Length must be greater than 0"));
+                    return Promise.reject(
+                      new Error("Length must be greater than 0")
+                    );
                   },
                 }),
               ]}
@@ -282,13 +287,16 @@ const KoiReport = () => {
             <Form.Item
               name="wetight"
               label="Weight (g)"
-              rules={[{ required: true, message: "Please enter the weight" },
+              rules={[
+                { required: true, message: "Please enter the weight" },
                 ({ getFieldValue }) => ({
                   validator(_, value) {
                     if (value > 0) {
                       return Promise.resolve();
                     }
-                    return Promise.reject(new Error("Weight must be greater than 0"));
+                    return Promise.reject(
+                      new Error("Weight must be greater than 0")
+                    );
                   },
                 }),
               ]}
@@ -301,7 +309,11 @@ const KoiReport = () => {
               label="Date"
               rules={[{ required: true, message: "Please select the date" }]}
             >
-              <DatePicker />
+              <DatePicker
+                disabledDate={(current) =>
+                  current && current > moment().endOf("day")
+                }
+              />
             </Form.Item>
 
             <Form.Item>
@@ -331,13 +343,16 @@ const KoiReport = () => {
             <Form.Item
               name="length"
               label="Length (cm)"
-              rules={[{ required: true, message: "Please enter the length" },
+              rules={[
+                { required: true, message: "Please enter the length" },
                 ({ getFieldValue }) => ({
                   validator(_, value) {
                     if (value > 0) {
                       return Promise.resolve();
                     }
-                    return Promise.reject(new Error("Length must be greater than 0"));
+                    return Promise.reject(
+                      new Error("Length must be greater than 0")
+                    );
                   },
                 }),
               ]}
@@ -348,13 +363,16 @@ const KoiReport = () => {
             <Form.Item
               name="wetight"
               label="weight (g)"
-              rules={[{ required: true, message: "Please enter the weight" },
+              rules={[
+                { required: true, message: "Please enter the weight" },
                 ({ getFieldValue }) => ({
                   validator(_, value) {
                     if (value > 0) {
                       return Promise.resolve();
                     }
-                    return Promise.reject(new Error("Weight must be greater than 0"));
+                    return Promise.reject(
+                      new Error("Weight must be greater than 0")
+                    );
                   },
                 }),
               ]}
@@ -367,7 +385,11 @@ const KoiReport = () => {
               label="Date"
               rules={[{ required: true, message: "Please select the date" }]}
             >
-              <DatePicker />
+              <DatePicker
+                disabledDate={(current) =>
+                  current && current > moment().endOf("day")
+                }
+              />
             </Form.Item>
 
             <Form.Item>
@@ -380,23 +402,27 @@ const KoiReport = () => {
 
         {/* Display Koi Growth Reports */}
         {koiGrowthReports.length > 0 ? (
-          <Row gutter={[16, 16]} style={{ marginTop: "20px" }}
-          >
+          <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
             {koiGrowthReports.map((report) => (
-              <Col span={8} key={report.id} xs={24} sm={12} md={8} lg={6}
-              style={{
-                width: "100%",
-                height: "100%",
-                marginBottom: "20px",
-              }}>
+              <Col
+                span={8}
+                key={report.id}
+                xs={24}
+                sm={12}
+                md={8}
+                lg={6}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  marginBottom: "20px",
+                }}
+              >
                 <Card
                   title={`Report - ${moment(report.date).format(
                     "MMMM Do, YYYY"
                   )}`}
-                 
                 >
                   <Row gutter={[16, 16]}>
-                    
                     <Col span={12}>
                       <p>
                         <strong>Length:</strong> {report.length}
@@ -407,8 +433,7 @@ const KoiReport = () => {
                         <strong>Weight (NO₂):</strong> {report.weight}
                       </p>
                     </Col>
-                                                        
-                  </Row>                
+                  </Row>
                   <div
                     style={{
                       display: "flex",

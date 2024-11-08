@@ -221,8 +221,10 @@ const WaterParameter = () => {
                   label="Date"
                   name="date"
                   rules={[{ required: true, message: "Please select a date!" }]}
-                >
-                  <DatePicker style={{ width: "100%" }} />
+                  >
+                  <DatePicker
+                    disabledDate={(current) => current && current > moment().endOf('day')}
+                  />
                 </Form.Item>
               </Col>
 

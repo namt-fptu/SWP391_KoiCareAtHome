@@ -168,14 +168,20 @@ const PostPackage = () => {
             <Input type="number" placeholder="Enter duration in days" />
           </Form.Item>
           <Form.Item
-            label="Price (vnđ)"
-            name="price"
-            rules={[
-              { required: true, message: "Please input the package price!" },
-            ]}
-          >
-            <Input type="number" placeholder="Enter price" />
-          </Form.Item>
+  label="Price (vnđ)"
+  name="price"
+  rules={[
+    { required: true, message: "Please input the package price!" },
+    {
+      validator: (_, value) =>
+        value && value >= 20000
+          ? Promise.resolve()
+          : Promise.reject(new Error("Price must be greater than 20,000 vnđ")),
+    },
+  ]}
+>
+  <Input type="number" placeholder="Enter price" />
+</Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" loading={loading}>
               {isUpdating ? "Update" : "Submit"}
