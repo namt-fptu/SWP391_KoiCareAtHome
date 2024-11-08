@@ -128,6 +128,8 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             if (payments == null || !payments.Any())
                 return Enumerable.Empty<RevenueModel>();
 
+            payments = payments.Where(p => p.Success == true);
+
             var monthlyRevenues = new Dictionary<int, decimal>();
 
             foreach (var payment in payments)
