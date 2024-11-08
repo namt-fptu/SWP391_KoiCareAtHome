@@ -38,6 +38,25 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             });
         }
 
+        public async Task<IEnumerable<AccountModel>> GetShopAndPondOwnerAcountAsync()
+        {
+            var accounts = await _unitOfWork.Accounts.GetAsync();
+
+            if (accounts == null || !accounts.Any())
+                return Enumerable.Empty<AccountModel>();
+
+            accounts = accounts.Where(a => (a.Role.Equals("PondOwner") || a.Role.Equals("Shop")));
+
+            return accounts.Select(account => new AccountModel
+            {
+                Id = account.Id,
+                Email = account.Email,
+                Password = account.Password,
+                Phone = account.Phone,
+                Role = account.Role,
+            });
+        }
+
         public async Task<int> CreateAccountAsync(AccountModel accountModel)
         {
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(accountModel.Password);

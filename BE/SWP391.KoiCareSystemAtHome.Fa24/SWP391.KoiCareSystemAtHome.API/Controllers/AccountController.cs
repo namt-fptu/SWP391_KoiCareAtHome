@@ -98,6 +98,25 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(respone);
         }
 
+        [HttpGet("getShopAndPondOwner")]
+        public async Task<ActionResult<IEnumerable<AccountResponseModel>>> GetShopAndPondOwner()
+        {
+            var accounts = await _accountService.GetShopAndPondOwnerAcountAsync();
+
+            if (accounts == null || !accounts.Any())
+                return NotFound();
+
+            var respone = accounts.Select(account => new AccountResponseModel
+            {
+                Id = account.Id,
+                Email = account.Email,
+                //Password = account.Password,
+                Phone = account.Phone,
+                Role = account.Role
+            });
+            return Ok(respone);
+        }
+
         [HttpGet("getAccountById/{id}")]
         public async Task<ActionResult<AccountResponseModel>> GetAccountById(int id)
         {
@@ -153,6 +172,9 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         {
             if (request == null)
                 return BadRequest("Account data required! ");
+
+            if (request.Phone != null && (request.Phone.Length < 8 || request.Phone.Length > 10 || request.Phone.Any(ch => !char.IsDigit(ch))))
+                return BadRequest("Phone number must be 8-10 character and is a number");
 
             if ((request.Role.Equals("PondOwner") || request.Role.Equals("Shop")) && string.IsNullOrEmpty(request.Name))
                 return BadRequest("Name is required!");
@@ -261,6 +283,9 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 accountModel.Email = model.Email;
             if (!model.Password.IsNullOrEmpty())
                 accountModel.Password = model.Password;
+
+            if (model.Phone != null && (model.Phone.Length < 8 || model.Phone.Length > 10 || model.Phone.Any(ch => !char.IsDigit(ch))))
+                return BadRequest("Phone number must be 8-10 character and is a number");
 
             if (accountModel.Role.Equals("PondOwner"))
             {
