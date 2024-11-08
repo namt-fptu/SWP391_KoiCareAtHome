@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FaRegNewspaper, FaBoxOpen, FaStar, FaRegUserCircle, FaHistory } from "react-icons/fa"; // import icons
 import api from "../../config/axios";
 import { useAuthStore } from "../../page/(auth)/store";
+import backgroud from "./../../assets/wallpaper.jpg";
 
 const ShopOverview = () => {
   const [totalProduct, setTotalProduct] = useState(0);
@@ -28,7 +29,12 @@ const ShopOverview = () => {
   }, [id]);
 
   return (
-    <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
+    <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen"
+      style={{
+        backgroundImage: `url(${backgroud})`, // Set the background image
+        backgroundSize: "cover", // Cover the entire container
+        backgroundPosition: "center", // Center the image
+      }}>
       <div className="flex flex-col justify-between mb-5">
         <h2 className="text-white text-4xl font-bold text-center mb-10">Overview Features</h2>
       </div>

@@ -17,6 +17,7 @@ import {
   EyeOutlined,
 } from "@ant-design/icons";
 import api from "../../config/axios";
+import backgroud from "./../../assets/wallpaper.jpg";
 
 const WaterParameterStandard = () => {
   const [waterStandards, setWaterStandards] = useState([]);
@@ -175,7 +176,12 @@ const WaterParameterStandard = () => {
   };
 
   return (
-    <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
+    <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen"
+      style={{
+        backgroundImage: `url(${backgroud})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}>
       <h1 className="text-3xl font-bold mb-8 text-white p-8">
         Water Parameter Standards
       </h1>
@@ -696,6 +702,8 @@ const WaterParameterStandard = () => {
                 <div
                   style={{
                     display: "flex",
+                    flexWrap: "wrap",  // Allows buttons to wrap to the next line if needed
+                    gap: "10px",       // Space between buttons
                     justifyContent: "space-between",
                     marginTop: "10px",
                   }}
@@ -703,6 +711,7 @@ const WaterParameterStandard = () => {
                   <Button
                     icon={<EyeOutlined />}
                     onClick={() => showDetailModal(standard)}
+                    style={{ flex: "1 1 100px" }}  // Responsive flex sizing
                   >
                     View More
                   </Button>
@@ -710,6 +719,7 @@ const WaterParameterStandard = () => {
                     type="primary"
                     icon={<EditOutlined />}
                     onClick={() => handleUpdate(standard)}
+                    style={{ flex: "1 1 100px" }}  // Responsive flex sizing
                   >
                     Update
                   </Button>
@@ -717,6 +727,7 @@ const WaterParameterStandard = () => {
                     type="danger"
                     icon={<DeleteOutlined />}
                     onClick={() => deleteWaterParameterStandard(standard.id)}
+                    style={{ flex: "1 1 100px" }}  // Responsive flex sizing
                   >
                     Delete
                   </Button>

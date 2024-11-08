@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button, notification } from "antd";
 import api from "../../config/axios";
+import backgroud from "./../../assets/wallpaper.jpg";
 
 const AccountList = () => {
   const [accounts, setAccounts] = useState([]);
@@ -42,7 +43,12 @@ const AccountList = () => {
   };
 
   return (
-    <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
+    <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen"
+      style={{
+        backgroundImage: `url(${backgroud})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}>
       <h1 className="text-3xl font-bold mb-8 text-white">Account List</h1>
       <Table
         dataSource={accounts}

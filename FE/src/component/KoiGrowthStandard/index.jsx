@@ -16,6 +16,7 @@ import {
   EditOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
+import backgroud from "./../../assets/wallpaper.jpg";
 
 const KoiGrowthStandard = () => {
   const [growthStandards, setGrowthStandards] = useState([]);
@@ -160,7 +161,12 @@ const KoiGrowthStandard = () => {
   };
 
   return (
-    <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
+    <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen"
+      style={{
+        backgroundImage: `url(${backgroud})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}>
       <h1 className="text-3xl font-bold mb-8 text-white">
         Koi Growth Standards
       </h1>

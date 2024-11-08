@@ -23,28 +23,28 @@ const VipPackage = () => {
         {packages.map((pkg) => (
           <div
             key={pkg.id}
-            className="divide-y divide-gray-200 rounded-2xl border border-gray-200 shadow-sm"
+            className="bg-black text-white divide-y divide-gray-800 rounded-2xl border border-gray-700 shadow-sm"
           >
             <div className="p-6 sm:px-8">
-              <h2 className="text-lg font-medium text-white-700">
+              <h2 className="text-lg font-medium text-white">
                 {pkg.name}
                 <span className="sr-only"> Plan</span>
               </h2>
-              <p className="mt-2 text-white-700">{pkg.name}</p>
+              <p className="mt-2 text-white">{pkg.name}</p>
               <p className="mt-2 sm:mt-4">
-                <strong className="text-3xl font-bold text-white-700 sm:text-4xl">
+                <strong className="text-3xl font-bold text-white sm:text-4xl">
                   {pkg.price.toLocaleString()} vnđ
                 </strong>
               </p>
               <a
-                className="mt-4 block rounded border border-indigo-600 bg-indigo-600 px-12 py-3 text-center text-sm font-medium text-white hover:bg-transparent hover:text-indigo-600 focus:outline-none focus:ring active:text-indigo-500 sm:mt-6"
+                className="mt-4 block rounded border border-blue-500 bg-blue-500 px-12 py-3 text-center text-sm font-medium text-black hover:bg-transparent hover:text-blue-500 focus:outline-none focus:ring active:text-blue-700 sm:mt-6"
                 href="/ShopPost"
               >
                 Get Started
               </a>
             </div>
             <div className="p-6 sm:px-8">
-              <p className="text-lg font-medium text-white-700 sm:text-xl">
+              <p className="text-lg font-medium text-white sm:text-xl">
                 {`What's`} included:
               </p>
               <ul className="mt-2 space-y-2 sm:mt-4">
@@ -55,7 +55,7 @@ const VipPackage = () => {
                     viewBox="0 0 24 24"
                     strokeWidth="1.5"
                     stroke="currentColor"
-                    className="size-5 text-indigo-700"
+                    className="size-5 text-blue-500"
                   >
                     <path
                       strokeLinecap="round"
@@ -63,9 +63,9 @@ const VipPackage = () => {
                       d="M4.5 12.75l6 6 9-13.5"
                     />
                   </svg>
-                  <span className="text-white-700">Duration: {pkg.duration} days</span>
-                </li>                
-              </ul> 
+                  <span className="text-white">Duration: {pkg.duration} days</span>
+                </li>
+              </ul>
             </div>
           </div>
         ))}

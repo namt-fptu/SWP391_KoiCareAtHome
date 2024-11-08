@@ -26,6 +26,7 @@ import {
 } from "firebase/storage";
 import api from "../../config/axios"; // Axios instance configuration
 import { useAuthStore } from "../../page/(auth)/store";
+import backgroud from "./../../assets/wallpaper.jpg";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -249,7 +250,12 @@ const ShopProduct = () => {
   };
   return (
     <div className="flex-container">
-      <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
+      <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen"
+        style={{
+          backgroundImage: `url(${backgroud})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}>
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-white text-3xl font-bold mb-5">My Product</h2>
         </div>

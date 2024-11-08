@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Table, message, Select } from "antd";
 import api from "../../config/axios";
 import { useAuthStore } from "../../page/(auth)/store";
+import backgroud from "./../../assets/wallpaper.jpg";
 
 const { Option } = Select;
 
@@ -47,14 +48,14 @@ const PaymentHistory = () => {
             }
           }
         });
-  
+
         const paymentData = (await Promise.all(paymentPromises)).filter(Boolean);
         setPaymentHistory(paymentData.flat());
       } catch (error) {
         console.error("Error fetching payment history:", error);
       }
     };
-  
+
     if (advertisements.length > 0) {
       fetchPaymentHistory();
     }
@@ -99,9 +100,14 @@ const PaymentHistory = () => {
   ];
 
   return (
-    <div className="p-5 bg-gray-900 min-h-screen">
+    <div className="p-5 bg-gray-900 min-h-screen"
+      style={{
+        backgroundImage: `url(${backgroud})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}>
       <h2 className="text-white text-3xl font-bold mb-5">Payment History</h2>
-      
+
       {/* Sort Filter */}
       <div className="mb-4">
         <Select

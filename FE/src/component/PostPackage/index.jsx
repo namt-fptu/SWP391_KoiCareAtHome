@@ -6,6 +6,7 @@ import {
   EditOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
+import backgroud from "./../../assets/wallpaper.jpg";
 
 const PostPackage = () => {
   const [packages, setPackages] = useState([]);
@@ -124,7 +125,12 @@ const PostPackage = () => {
   };
 
   return (
-    <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
+    <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen"
+      style={{
+        backgroundImage: `url(${backgroud})`, // Set the background image
+        backgroundSize: "cover", // Cover the entire container
+        backgroundPosition: "center", // Center the image
+      }}>
       <h2 className="text-2xl font-bold mb-8 text-white p-8">
         Available Packages
       </h2>

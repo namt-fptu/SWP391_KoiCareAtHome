@@ -33,6 +33,7 @@ import api from "../../config/axios";
 import moment from "moment";
 import dayjs from "dayjs";
 import { useAuthStore } from "../../page/(auth)/store";
+import backgroud from "./../../assets/wallpaper.jpg";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -409,7 +410,12 @@ const ShopPost = () => {
 
   return (
     <div className="flex-container">
-      <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
+      <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen"
+        style={{
+          backgroundImage: `url(${backgroud})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}>
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-white text-3xl font-bold mb-5">My Post</h2>
           <div className="flex flex-col items-center">
@@ -575,10 +581,10 @@ const ShopPost = () => {
                               post.status === "Drafted"
                                 ? "gray"
                                 : post.status === "Approved"
-                                ? "green"
-                                : post.status === "Rejected"
-                                ? "red"
-                                : "black",
+                                  ? "green"
+                                  : post.status === "Rejected"
+                                    ? "red"
+                                    : "black",
                             fontWeight: "bold",
                           }}
                         >

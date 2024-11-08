@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Bar } from 'react-chartjs-2';
 import 'chart.js/auto';
 import api from '../../config/axios';
+import backgroud from "./../../assets/wallpaper.jpg";
 
 const DashBoard = () => {
     const [totalUser, setTotalUser] = useState(0);
@@ -85,7 +86,12 @@ const DashBoard = () => {
 
 
     return (
-        <div className="dashboard-container flex-1 h-full p-8 bg-gradient-to-r from-gray-800 via-gray-900 to-black min-h-screen text-white">
+        <div className="dashboard-container flex-1 h-full p-8 bg-gradient-to-r from-gray-800 via-gray-900 to-black min-h-screen text-white"
+            style={{
+                backgroundImage: `url(${backgroud})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+            }}>
             {/* Overview Section */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 mb-10">
                 {/* Total User Card */}

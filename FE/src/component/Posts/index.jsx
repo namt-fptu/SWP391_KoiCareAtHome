@@ -16,6 +16,7 @@ import {
   InputNumber,
   notification,
 } from "antd";
+import backgroud from "./../../assets/wallpaper.jpg";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -154,7 +155,12 @@ const Posts = () => {
 
   return (
     <div className="flex-container">
-      <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen">
+      <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen"
+        style={{
+          backgroundImage: `url(${backgroud})`, // Set the background image
+          backgroundSize: "cover", // Cover the entire container
+          backgroundPosition: "center", // Center the image
+        }}>
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold mb-8 text-white p-8">
             Posts Management
@@ -244,10 +250,10 @@ const Posts = () => {
                               post.status === "Expired"
                                 ? "gray"
                                 : post.status === "Approved"
-                                ? "green"
-                                : post.status === "Rejected"
-                                ? "red"
-                                : "black",
+                                  ? "green"
+                                  : post.status === "Rejected"
+                                    ? "red"
+                                    : "black",
                             fontWeight: "bold",
                           }}
                         >
