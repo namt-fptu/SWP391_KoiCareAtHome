@@ -168,12 +168,14 @@ const MyPond = () => {
 
   return (
     <div className="flex-container">
-      <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen"
-       style={{
-        backgroundImage: `url(${backgroud})`, // Set the background image
-        backgroundSize: "cover", // Cover the entire container
-        backgroundPosition: "center", // Center the image
-      }}>
+      <div
+        className="flex-1 h-full p-5 bg-gray-900 min-h-screen"
+        style={{
+          backgroundImage: `url(${backgroud})`, // Set the background image
+          backgroundSize: "cover", // Cover the entire container
+          backgroundPosition: "center", // Center the image
+        }}
+      >
         <h1 className="text-3xl font-bold mb-8 text-white">My Pond</h1>
         <p className="text-white">Information about your Pond.</p>
         <div>
@@ -235,29 +237,59 @@ const MyPond = () => {
               </Form.Item>
 
               <Form.Item
-                label="Volume"
-                name="volume"
-                rules={[{ required: true, message: "Please input Volume!" }]}
-              >
-                <Input />
-              </Form.Item>
+  label="Volume"
+  name="volume"
+  rules={[
+    { required: true, message: "Please input Volume!" },
+    {
+      validator: (_, value) => {
+        if (!value || parseFloat(value) > 0) {
+          return Promise.resolve();
+        }
+        return Promise.reject(new Error("Volume must be greater than 0!"));
+      }
+    }
+  ]}
+>
+  <Input type="number" min={1} />
+</Form.Item>
 
               <Form.Item
-                label="Depth"
-                name="depth"
-                rules={[{ required: true, message: "Please input Depth!" }]}
-              >
-                <Input />
-              </Form.Item>
+  label="Depth"
+  name="depth"
+  rules={[
+    { required: true, message: "Please input Depth!" },
+    {
+      validator: (_, value) => {
+        if (!value || parseFloat(value) > 0) {
+          return Promise.resolve();
+        }
+        return Promise.reject(new Error("Depth must be greater than 0!"));
+      }
+    }
+  ]}
+>
+  <Input type="number" min={1} />
+</Form.Item>
 
               <Form.Item
                 label="Drain Count"
                 name="drainCount"
                 rules={[
                   { required: true, message: "Please input Drain Count!" },
+                  {
+                    validator: (_, value) => {
+                      if (!value || parseInt(value, 10) > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(
+                        new Error("Drain Count must be greater than 0!")
+                      );
+                    },
+                  },
                 ]}
               >
-                <Input />
+                <Input type="number" min={1} />
               </Form.Item>
 
               <Form.Item
@@ -265,11 +297,20 @@ const MyPond = () => {
                 name="skimmerCount"
                 rules={[
                   { required: true, message: "Please input Skimmer Count!" },
+                  {
+                    validator: (_, value) => {
+                      if (!value || parseInt(value, 10) > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(
+                        new Error("Skimmer Count must be greater than 0!")
+                      );
+                    },
+                  },
                 ]}
               >
-                <Input />
+                <Input type="number" min={1} />
               </Form.Item>
-
               <Form.Item
                 label="Pumping Capacity"
                 name="pumpingCapacity"
@@ -304,16 +345,34 @@ const MyPond = () => {
                     cover={<img alt={pond.name} src={pond.imageUrl} />}
                   >
                     <Card.Meta title={pond.name} />
-                    <p><strong>Volume: </strong>{pond.volume} liters</p>
-                    <p><strong>Depth: </strong>{pond.depth} meters</p>
-                    <p><strong>Drain Count: </strong>{pond.drainCount}</p>
-                    <p><strong>Skimmer Count: </strong>{pond.skimmerCount}</p>
-                    <p><strong>Pumping Capacity: </strong>{pond.pumpingCapacity} L/min</p>
-                    <div className="card-buttons" style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          marginTop: "10px",
-                        }}>
+                    <p>
+                      <strong>Volume: </strong>
+                      {pond.volume} liters
+                    </p>
+                    <p>
+                      <strong>Depth: </strong>
+                      {pond.depth} meters
+                    </p>
+                    <p>
+                      <strong>Drain Count: </strong>
+                      {pond.drainCount}
+                    </p>
+                    <p>
+                      <strong>Skimmer Count: </strong>
+                      {pond.skimmerCount}
+                    </p>
+                    <p>
+                      <strong>Pumping Capacity: </strong>
+                      {pond.pumpingCapacity} L/min
+                    </p>
+                    <div
+                      className="card-buttons"
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        marginTop: "10px",
+                      }}
+                    >
                       {/* Update button */}
                       <Button
                         type="primary"
@@ -341,7 +400,7 @@ const MyPond = () => {
                       {/* Modal for delete confirmation */}
                       <Modal
                         title="Confirm Deletion"
-                        visible={isDeleteModalVisible}
+                        open={isDeleteModalVisible}
                         onOk={() => {
                           deletePond(pondToDelete);
                           setIsDeleteModalVisible(false);

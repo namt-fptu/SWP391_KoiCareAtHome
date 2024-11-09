@@ -62,6 +62,7 @@ const ShopPost = () => {
   const [amount, setAmount] = useState(0); // Lưu số tiền thanh toán
   const [isExtendModalVisible, setIsExtendModalVisible] = useState(false); // State để điều khiển modal Extend
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false); // State for delete modal
+  const [isDetailModalVisible, setIsDetailModalVisible] = useState(false);
   const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false); // State for update modal
   const [currentPostId, setCurrentPostId] = useState(null);
   const [shortContents, setShortContents] = useState({});
@@ -244,6 +245,15 @@ const ShopPost = () => {
 
     setIsUpdateModalVisible(true); // Show update modal
   };
+
+  const handleUpdateClick = (post) => {
+    setSelectedPost(post);
+    setIsUpdateModalVisible(true);
+    // Đảm bảo các modal khác được đóng lại nếu cần
+    setIsExtendModalVisible(false);
+    setIsDeleteModalVisible(false);
+  };
+
   const handleUpdateCancel = () => {
     setIsModalVisible(false);
     setIsUpdateModalVisible(false); // Close update modal
@@ -390,7 +400,9 @@ const ShopPost = () => {
   };
 
   const handleShowDetail = (post) => {
-    setSelectedPost(post);
+    setSelectedPost(post);        // Lưu thông tin bài viết được chọn
+  setIsUpdateModalVisible(false);  // Đảm bảo modal Update bị đóng
+  setIsDetailModalVisible(true);
   };
 
   const handleDetailClose = () => {
@@ -634,8 +646,8 @@ const ShopPost = () => {
         {/* Chi tiết bài viết */}
         <Modal
           title="Post Detail"
-          visible={!!selectedPost}
-          onCancel={handleDetailClose}
+          visible={isDetailModalVisible} // Kiểm soát modal Detail
+          onCancel={() => setIsDetailModalVisible(false)}               
           footer={null}
         >
           {selectedPost && (
@@ -703,7 +715,7 @@ const ShopPost = () => {
         <Modal
           title="Update Post Information"
           open={isUpdateModalVisible}
-          onCancel={handleUpdateCancel}
+          onCancel={() => setIsUpdateModalVisible(false)}
           footer={null}
         >
           <Form
