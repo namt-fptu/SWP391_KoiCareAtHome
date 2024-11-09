@@ -14,6 +14,7 @@ import {
   FaInfoCircle,
   FaSignOutAlt,
 } from "react-icons/fa"; // Add icons
+import Avatar from "antd/es/avatar/avatar";
 import logoimg from "./../../assets/logo koi care.png";
 import controlButton from "./../../assets/control.png";
 import { useAuthStore } from "../../page/(auth)/store";
@@ -22,12 +23,31 @@ const MemberSideBar = () => {
   const [open, setOpen] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
-  const { logout } = useAuthStore();
+  const [username, setUsername] = useState("");
+  const { authUser, logout } = useAuthStore();
+  const id = authUser.id;
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/");
   };
+  useEffect(() => {
+    if (!id) {
+      message.error("User not logged in. Unable to fetch posts.");
+      return;
+    }
+    const fetchUserProfile = async () => {
+      try {
+        const response = await api.get(`/Account/getAccountById/${id}`);
+        setUsername(response.data.name); // Set username
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+        message.error("Failed to load profile information.");
+      }
+    };
+
+    fetchUserProfile();
+  }, [id]);
 
   const menuItems = [
     { to: "Overview", icon: <FaHome />, label: "Overview" },
@@ -47,13 +67,15 @@ const MemberSideBar = () => {
   return (
     <div className="flex h-auto">
       <div
-        className={`sidebar ${open ? "w-72" : "w-20"
-          } bg-black h-full p-5 pt-8 relative duration-300`}
+        className={`sidebar ${
+          open ? "w-72" : "w-20"
+        } bg-black h-full p-5 pt-8 relative duration-300`}
       >
         <img
           src={controlButton}
-          className={`absolute cursor-pointer -right-3 top-9 w-7 border-black border-2 rounded-full ${!open && "rotate-180"
-            }`}
+          className={`absolute cursor-pointer -right-3 top-9 w-7 border-black border-2 rounded-full ${
+            !open && "rotate-180"
+          }`}
           onClick={() => setOpen(!open)}
         />
         <div className="flex gap-x-4 items-center">
@@ -62,25 +84,35 @@ const MemberSideBar = () => {
               src={logoimg}
               alt=""
               width={60}
-              className={`cursor-pointer duration-500 ${open && "rotate-[360deg]"
-                }`}
+              className={`cursor-pointer duration-500 ${
+                open && "rotate-[360deg]"
+              }`}
             />
           </Link>
           <h1
-            className={`text-white origin-left font-medium text-xl duration-200 ${!open && "scale-0"
-              }`}
+            className={`text-white origin-left font-medium text-xl duration-200 ${
+              !open && "scale-0"
+            }`}
           >
             KoiF
           </h1>
+        </div>
+        <div className={`flex items-center gap-x-4 mt-8 ${!open && "hidden"}`}>
+          <Avatar
+            style={{ backgroundColor: "#808080" }}
+            icon={<FaRegUserCircle />}
+          />
+          <span className="text-white font-semibold">{username}</span>
         </div>
         <ul className="pt-6">
           {menuItems.map((item) => (
             <Link to={item.to} key={item.label}>
               <li
                 className={`flex rounded-md p-2 cursor-pointer text-gray-300 text-sm items-center gap-x-4 mt-2 
-                  ${location.pathname.includes(item.to)
-                    ? "bg-blue-500 text-white"
-                    : "hover:bg-gray-500"
+                  ${
+                    location.pathname.includes(item.to)
+                      ? "bg-blue-500 text-white"
+                      : "hover:bg-gray-500"
                   }`}
               >
                 {item.icon}
