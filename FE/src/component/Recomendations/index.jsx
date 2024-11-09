@@ -51,11 +51,11 @@ const Recomendations = () => {
 
   return (
     <div className="bg-gray-900 p-10 min-h-screen text-white"
-    style={{
-      backgroundImage: `url(${backgroud})`, // Set the background image
-      backgroundSize: "cover", // Cover the entire container
-      backgroundPosition: "center", // Center the image
-    }}>
+      style={{
+        backgroundImage: `url(${backgroud})`, // Set the background image
+        backgroundSize: "cover", // Cover the entire container
+        backgroundPosition: "center", // Center the image
+      }}>
       <h2 className="text-3xl font-bold mb-6">Product Recommendations</h2>
       <p className="text-lg mb-10">
         We offer effective solutions for targeted treatment of water problems.
@@ -66,7 +66,7 @@ const Recomendations = () => {
         {products.map((product) => (
           <Col key={product.id} xs={24} sm={12} md={8} lg={6}>
             <Card
-              className="bg-gray-800 text-white shadow-lg rounded-lg overflow-hidden"
+              className="bg-gray-800 text-white shadow-lg rounded-lg overflow-hidden h-full flex flex-col justify-between"
               bordered={false}
             >
               <div className="flex flex-col items-center">
@@ -76,27 +76,28 @@ const Recomendations = () => {
                   className="w-24 h-24 mb-4 object-cover"
                 />
                 <h3 className="text-lg font-semibold">{product.title}</h3>
-                <p className="text-sm text-gray-300 mt-2">
+                <p className="text-sm text-gray-300 mt-2 h-16 overflow-hidden text-ellipsis">
                   {product.description}
                 </p>
-                <div className="flex flex-col items-center mt-4 space-y-2">
-                  <a
-                    href={product.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Button type="primary" className="w-full">
-                      Show in store
-                    </Button>
-                  </a>
-                  <Button
-                    type="default"
-                    className="w-full text-gray-900"
-                    onClick={() => showProductDetails(product)}
-                  >
-                    More details
+              </div>
+              <div className="flex flex-col items-center mt-4 space-y-2 w-full">
+                <a
+                  href={product.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full"
+                >
+                  <Button type="primary" className="w-full">
+                    Show in store
                   </Button>
-                </div>
+                </a>
+                <Button
+                  type="default"
+                  className="w-full text-gray-900"
+                  onClick={() => showProductDetails(product)}
+                >
+                  More details
+                </Button>
               </div>
             </Card>
           </Col>
