@@ -9,7 +9,7 @@ import {
   Col,
   Upload,
   message,
-  notification, 
+  notification,
 } from "antd";
 import {
   UploadOutlined,
@@ -45,7 +45,7 @@ const MyPond = () => {
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [pondToDelete, setPondToDelete] = useState(null);
   const [form] = Form.useForm();
-  
+
   const { authUser } = useAuthStore();
   const id = authUser.id;
 
@@ -62,8 +62,8 @@ const MyPond = () => {
       } catch (error) {
         notification.error({
           message: "Pond Not Found",
-          description: "The pond you are looking for does not exist.",
-          duration: 2,  // Duration in seconds
+          description: "Maybe there are no ponds yet. Please add one.",
+          duration: 2, // Duration in seconds
         });
       }
     };
@@ -73,7 +73,7 @@ const MyPond = () => {
 
   const showModal = (pond = null) => {
     setEditingPond(pond);
-  
+
     if (pond) {
       // Set form fields with existing pond data if editing
       setImageUrl(pond.imageUrl);
@@ -85,7 +85,7 @@ const MyPond = () => {
       setFileList([]);
       setImageUrl(null);
     }
-  
+
     setIsModalVisible(true);
   };
 
@@ -96,7 +96,6 @@ const MyPond = () => {
     setEditingPond(null);
     form.resetFields(); // Reset form fields on cancel
   };
-
 
   const handleUpload = (file) => {
     setFileList([file]);
@@ -210,12 +209,7 @@ const MyPond = () => {
             onCancel={handleCancel}
             footer={null}
           >
-            <Form
-             form={form}
-              layout="vertical"
-              onFinish={onFinish}
-              
-            >
+            <Form form={form} layout="vertical" onFinish={onFinish}>
               <Form.Item
                 label="Upload Image"
                 name="image"
@@ -255,40 +249,44 @@ const MyPond = () => {
               </Form.Item>
 
               <Form.Item
-  label="Volume"
-  name="volume"
-  rules={[
-    { required: true, message: "Please input Volume!" },
-    {
-      validator: (_, value) => {
-        if (!value || parseFloat(value) > 0) {
-          return Promise.resolve();
-        }
-        return Promise.reject(new Error("Volume must be greater than 0!"));
-      }
-    }
-  ]}
->
-  <Input type="number" min={1} />
-</Form.Item>
+                label="Volume"
+                name="volume"
+                rules={[
+                  { required: true, message: "Please input Volume!" },
+                  {
+                    validator: (_, value) => {
+                      if (!value || parseFloat(value) > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(
+                        new Error("Volume must be greater than 0!")
+                      );
+                    },
+                  },
+                ]}
+              >
+                <Input type="number" min={1} />
+              </Form.Item>
 
               <Form.Item
-  label="Depth"
-  name="depth"
-  rules={[
-    { required: true, message: "Please input Depth!" },
-    {
-      validator: (_, value) => {
-        if (!value || parseFloat(value) > 0) {
-          return Promise.resolve();
-        }
-        return Promise.reject(new Error("Depth must be greater than 0!"));
-      }
-    }
-  ]}
->
-  <Input type="number" min={1} />
-</Form.Item>
+                label="Depth"
+                name="depth"
+                rules={[
+                  { required: true, message: "Please input Depth!" },
+                  {
+                    validator: (_, value) => {
+                      if (!value || parseFloat(value) > 0) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(
+                        new Error("Depth must be greater than 0!")
+                      );
+                    },
+                  },
+                ]}
+              >
+                <Input type="number" min={1} />
+              </Form.Item>
 
               <Form.Item
                 label="Drain Count"
@@ -406,11 +404,6 @@ const MyPond = () => {
                         onClick={() => {
                           setPondToDelete(pond.id);
                           setIsDeleteModalVisible(true);
-                        }}
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          marginTop: "10px",
                         }}
                       >
                         Delete

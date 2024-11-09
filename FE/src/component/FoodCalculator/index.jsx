@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { message, Select, Button, Card, Typography ,notification} from "antd";
+import { message, Select, Button, Card, Typography, notification } from "antd";
 import api from "../../config/axios";
 import { useAuthStore } from "../../page/(auth)/store";
 import backgroud from "./../../assets/wallpaper.jpg";
@@ -27,8 +27,8 @@ const FoodCalculator = () => {
       } catch (error) {
         notification.error({
           message: "Pond Not Found",
-          description: "The pond you are looking for does not exist.",
-          duration: 2,  // Duration in seconds
+          description: "Maybe there are no ponds yet. Please add one.",
+          duration: 2, // Duration in seconds
         });
       }
     };
@@ -82,12 +82,14 @@ const FoodCalculator = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-900 text-white p-8"
-    style={{
-      backgroundImage: `url(${backgroud})`, // Set the background image
-      backgroundSize: "cover", // Cover the entire container
-      backgroundPosition: "center", // Center the image
-    }}>
+    <div
+      className="flex h-screen bg-gray-900 text-white p-8"
+      style={{
+        backgroundImage: `url(${backgroud})`, // Set the background image
+        backgroundSize: "cover", // Cover the entire container
+        backgroundPosition: "center", // Center the image
+      }}
+    >
       <div className="w-1/2 pr-4">
         <Card>
           <h1 className="text-3xl font-bold mb-8">Food Calculator</h1>

@@ -88,8 +88,8 @@ const MyKoiFish = () => {
     } catch (error) {
       notification.error({
         message: "Pond Not Found",
-        description: "The pond you are looking for does not exist.",
-        duration: 2,  // Duration in seconds
+        description: "Maybe there are no ponds yet. Please add one.",
+        duration: 2, // Duration in seconds
       });
     }
   };
@@ -289,9 +289,6 @@ const MyKoiFish = () => {
         <h1 className="text-3xl font-bold mb-8 text-white">My Koi Fish</h1>
         <p className="text-white">Information about your Fish.</p>
         <div className="flex flex-col items-center">
-          <Button type="primary" onClick={() => showModal()}>
-            Create New Pond
-          </Button>
           {ponds.length === 0 && (
             <div className="mt-4">
               <Button
@@ -299,6 +296,14 @@ const MyKoiFish = () => {
                 onClick={() => (window.location.href = "/MyPond")}
               >
                 Go to My Pond to create one
+              </Button>
+            </div>
+          )}
+
+          {ponds.length > 0 && kois.length === 0 && (
+            <div className="mt-4">
+              <Button type="primary" onClick={() => showModal()}>
+                Add a new koi fish
               </Button>
             </div>
           )}
@@ -377,11 +382,6 @@ const MyKoiFish = () => {
                             type="danger"
                             icon={<DeleteOutlined />}
                             onClick={() => showDeleteModal(koi)}
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              marginTop: "10px",
-                            }}
                           >
                             Delete
                           </Button>

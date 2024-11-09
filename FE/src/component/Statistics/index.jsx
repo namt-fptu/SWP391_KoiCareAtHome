@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import LineChart from "../Chart";
 import api from "../../config/axios";
-import { message, Row, Col ,notification} from "antd";
+import { message, Row, Col, notification, Button } from "antd";
 import { useAuthStore } from "../../page/(auth)/store";
 import backgroud from "./../../assets/wallpaper.jpg";
 const Statistics = () => {
+  const [kois, setKois] = useState([]);
   const [lengthData, setLengthData] = useState({ labels: [], datasets: [] });
   const [weightData, setWeightData] = useState({ labels: [], datasets: [] });
   const [pHValue, setPHValue] = useState({ labels: [], datasets: [] });
@@ -42,8 +43,8 @@ const Statistics = () => {
       console.error("Error fetching ponds:", error);
       notification.error({
         message: "Pond Not Found",
-        description: "The pond you are looking for does not exist.",
-        duration: 2,  // Duration in seconds
+        description: "Maybe there are no ponds yet. Please add one.",
+        duration: 2, // Duration in seconds
       });
     }
   };
@@ -71,7 +72,11 @@ const Statistics = () => {
         message.warning("No koi fish found for this pond.");
       } else {
         console.error("Error fetching koi fish:", error);
-        message.error("Failed to fetch koi fish for the selected pond.");
+        notification.error({
+          message: "Koi Fish Not Found",
+          description: "Maybe there are no koi fish yet. Please add one.",
+          duration: 2, // Duration in seconds
+        });
       }
     }
   };
@@ -501,12 +506,14 @@ const Statistics = () => {
     setSelectedDataType(type);
   };
   return (
-    <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen flex flex-col"
-    style={{
-      backgroundImage: `url(${backgroud})`, // Set the background image
-      backgroundSize: "cover", // Cover the entire container
-      backgroundPosition: "center", // Center the image
-    }}>
+    <div
+      className="flex-1 h-full p-5 bg-gray-900 min-h-screen flex flex-col"
+      style={{
+        backgroundImage: `url(${backgroud})`, // Set the background image
+        backgroundSize: "cover", // Cover the entire container
+        backgroundPosition: "center", // Center the image
+      }}
+    >
       <h1 className="text-3xl font-bold mb-4 text-white">Statistics</h1>
       <p className="text-white mb-8">
         Statistics about your fish tank and Koi fish.
@@ -534,7 +541,29 @@ const Statistics = () => {
             ))}
           </select>
         </Col>
+        <div className="flex flex-col items-center">
+          {ponds.length === 0 && (
+            <div className="mt-4">
+              <Button
+                type="primary"
+                onClick={() => (window.location.href = "/MyPond")}
+              >
+                Go to My Pond to create one
+              </Button>
+            </div>
+          )}
 
+          {ponds.length > 0 && kois.length === 0 && (
+            <div className="mt-4">
+              <Button
+                type="primary"
+                onClick={() => (window.location.href = "/MyKoiFish")}
+              >
+                Go to My Koi Fish to add one
+              </Button>
+            </div>
+          )}
+        </div>
         {/* Fish Selection */}
         {selectedPond && allFishData.length > 0 && (
           <Col span={12}>

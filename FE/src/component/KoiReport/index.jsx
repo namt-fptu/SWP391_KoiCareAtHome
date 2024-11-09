@@ -50,11 +50,11 @@ const KoiReport = () => {
     try {
       const response = await api.get(`Pond/ponds/${id}`);
       setPonds(response.data);
-    } catch (error) {     
+    } catch (error) {
       notification.error({
         message: "Pond Not Found",
-        description: "The pond you are looking for does not exist.",
-        duration: 2,  // Duration in seconds
+        description: "Maybe there are no ponds yet. Please add one.",
+        duration: 2, // Duration in seconds
       });
     }
   };
@@ -239,6 +239,27 @@ const KoiReport = () => {
               </p>
             )}
           </>
+        )}
+        {ponds.length === 0 && (
+          <div className="mt-4">
+            <Button
+              type="primary"
+              onClick={() => (window.location.href = "/MyPond")}
+            >
+              Go to My Pond to create one
+            </Button>
+          </div>
+        )}
+
+        {ponds.length > 0 && kois.length === 0 && (
+          <div className="mt-4">
+            <Button
+              type="primary"
+              onClick={() => (window.location.href = "/MyKoiFish")}
+            >
+              Go to My Koi Fish to add one
+            </Button>
+          </div>
         )}
 
         {/* Button to Show Create Form */}

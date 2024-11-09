@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { message, Select, Button, Typography, Card,notification } from "antd";
+import { message, Select, Button, Typography, Card, notification } from "antd";
 import api from "../../config/axios";
 import { useAuthStore } from "../../page/(auth)/store";
 import backgroud from "./../../assets/wallpaper.jpg";
@@ -22,8 +22,8 @@ const SaltCalculator = () => {
     } catch (error) {
       notification.error({
         message: "Pond Not Found",
-        description: "The pond you are looking for does not exist.",
-        duration: 2,  // Duration in seconds
+        description: "Maybe there are no ponds yet. Please add one.",
+        duration: 2, // Duration in seconds
       });
     }
   };
@@ -43,8 +43,8 @@ const SaltCalculator = () => {
     } catch (error) {
       notification.error({
         message: "Pond Not Found",
-        description: "The pond you are looking for does not exist.",
-        duration: 2,  // Duration in seconds
+        description: "Maybe there are no ponds yet. Please add one.",
+        duration: 2, // Duration in seconds
       });
     }
   };
@@ -77,12 +77,14 @@ const SaltCalculator = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-900 text-white p-8"
-    style={{
-      backgroundImage: `url(${backgroud})`, // Set the background image
-      backgroundSize: "cover", // Cover the entire container
-      backgroundPosition: "center", // Center the image
-    }}>
+    <div
+      className="flex h-screen bg-gray-900 text-white p-8"
+      style={{
+        backgroundImage: `url(${backgroud})`, // Set the background image
+        backgroundSize: "cover", // Cover the entire container
+        backgroundPosition: "center", // Center the image
+      }}
+    >
       {/* Salt Calculator Section */}
       <div className="w-1/2 pr-4">
         <Card>
@@ -112,7 +114,9 @@ const SaltCalculator = () => {
               className="bg-white text-black p-2 rounded mt-2 inline-block"
               style={{ minWidth: "100px", textAlign: "center" }}
             >
-              {typeof pondVolume === "number" ? `${pondVolume} liters` : "Select a pond"}
+              {typeof pondVolume === "number"
+                ? `${pondVolume} liters`
+                : "Select a pond"}
             </div>
           </div>
 
@@ -131,7 +135,7 @@ const SaltCalculator = () => {
               ))}
             </div>
           </div>
-        
+
           {/* Display Calculated Salt Amount */}
           <div className="mb-8">
             <Text strong>Calculated Salt Amount:</Text>
@@ -139,15 +143,14 @@ const SaltCalculator = () => {
               className="bg-white text-black p-2 rounded mt-2 inline-block"
               style={{ minWidth: "100px", textAlign: "center" }}
             >
-              {saltAmount > 0 ? `${saltAmount.toFixed(2)} kg` : "Select salt level"}
+              {saltAmount > 0
+                ? `${saltAmount.toFixed(2)} kg`
+                : "Select salt level"}
             </div>
           </div>
-          <Button
-              type="primary"
-              onClick={calculateSaltAmount}
-            >
-              Calculate
-            </Button>
+          <Button type="primary" onClick={calculateSaltAmount}>
+            Calculate
+          </Button>
         </Card>
       </div>
 
@@ -156,7 +159,8 @@ const SaltCalculator = () => {
         <Card>
           <h2 className="text-lg font-bold">Salt Information</h2>
           <p>
-            The recommended amount of salt should be between 3-7% per liter. This ensures the best environment for koi.
+            The recommended amount of salt should be between 3-7% per liter.
+            This ensures the best environment for koi.
           </p>
           <h2 className="text-lg font-bold mt-6">Instructions</h2>
           <p>1. Select a pond to get the volume of water.</p>

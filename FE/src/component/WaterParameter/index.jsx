@@ -11,7 +11,6 @@ import {
   DatePicker,
   message,
   notification,
-  
 } from "antd";
 import api from "../../config/axios";
 import {
@@ -54,8 +53,8 @@ const WaterParameter = () => {
     } catch (error) {
       notification.error({
         message: "Pond Not Found",
-        description: "The pond you are looking for does not exist.",
-        duration: 2,  // Duration in seconds
+        description: "Maybe there are no ponds yet. Please add one.",
+        duration: 2, // Duration in seconds
       });
     }
   };
@@ -175,18 +174,23 @@ const WaterParameter = () => {
 
   return (
     <div className="flex-container">
-      <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen"
-       style={{
-        backgroundImage: `url(${backgroud})`, // Set the background image
-        backgroundSize: "cover", // Cover the entire container
-        backgroundPosition: "center", // Center the image
-      }}>
+      <div
+        className="flex-1 h-full p-5 bg-gray-900 min-h-screen"
+        style={{
+          backgroundImage: `url(${backgroud})`, // Set the background image
+          backgroundSize: "cover", // Cover the entire container
+          backgroundPosition: "center", // Center the image
+        }}
+      >
         <h1 className="text-3xl font-bold mb-8 text-white">Water Parameter</h1>
         <p className="text-white">Information about your Water.</p>
         <div className="flex flex-col items-center">
-          <Button type="primary" onClick={() => showModal()}>
-            Input Water Parameters
-          </Button>
+          {ponds.length > 0 && (
+            <Button type="primary" onClick={() => showModal()}>
+              Input Water Parameters
+            </Button>
+          )}
+
           {ponds.length === 0 && (
             <div className="mt-4">
               <Button
@@ -218,7 +222,6 @@ const WaterParameter = () => {
         </Form.Item>
 
         {/* Button to Input Water Parameters */}
-        
 
         {/* Modal for Adding or Updating Water Parameters */}
         <Modal
@@ -237,9 +240,11 @@ const WaterParameter = () => {
                   label="Date"
                   name="date"
                   rules={[{ required: true, message: "Please select a date!" }]}
-                  >
+                >
                   <DatePicker
-                    disabledDate={(current) => current && current > moment().endOf('day')}
+                    disabledDate={(current) =>
+                      current && current > moment().endOf("day")
+                    }
                   />
                 </Form.Item>
               </Col>
@@ -546,7 +551,6 @@ const WaterParameter = () => {
                         <strong>Nitrate (NO₃):</strong> {report.nitrates}
                       </p>
                     </Col>
-                                      
                   </Row>
                   <div
                     style={{
