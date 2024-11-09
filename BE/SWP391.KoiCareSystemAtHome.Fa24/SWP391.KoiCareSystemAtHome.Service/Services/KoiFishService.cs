@@ -166,5 +166,29 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return totalWeigh;
         }
 
+        public async Task<IEnumerable<KoiFishModel>> SearchKoiFishByNameAsync(int pondId, string name)
+        {
+            var koiFishs = await _unitOfWork.KoiFishs.GetAsync();
+            var fishOfPond = koiFishs.Where(f => f.PondId == pondId);
+            fishOfPond = fishOfPond.Where(f => f.KoiName.Contains(name, StringComparison.OrdinalIgnoreCase));
+
+            if (fishOfPond == null || !fishOfPond.Any())
+                return Enumerable.Empty<KoiFishModel>();
+
+            var koiFishModels = fishOfPond.Select(fish => new KoiFishModel
+            {
+                Id = fish.Id,
+                PondId = fish.PondId,
+                KoiVariety = fish.KoiVariety,
+                KoiName = fish.KoiName,
+                Dob = fish.Dob,
+                Sex = fish.Sex,
+                Price = fish.Price,
+                ImageUrl = fish.ImageUrl
+            });
+
+            return koiFishModels;
+        }
+
     }
 }

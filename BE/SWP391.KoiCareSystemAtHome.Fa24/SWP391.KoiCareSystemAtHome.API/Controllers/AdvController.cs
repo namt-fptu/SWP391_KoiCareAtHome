@@ -222,5 +222,30 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(await _advService.CountAdvByStatusAsync(status));
         }
 
+        [HttpGet("searchAdvByTitle/{shopId}")]
+        public async Task<ActionResult<IEnumerable<AdvResponseModel>>> SearchAdvByTitle(int shopId, string title)
+        {
+
+            var advs = await _advService.SearchAdvByShopTitleAsync(shopId, title);
+
+            if (advs == null || !advs.Any())
+                return NotFound();
+
+            var response = advs.Select(a => new AdvResponseModel
+            {
+                Id = a.Id,
+                ShopId = a.ShopId,
+                Title = a.Title,
+                Url = a.Url,
+                ImageUrl = a.ImageUrl,
+                AdvDate = a.AdvDate,
+                Status = a.Status,
+                EditedDate = a.EditedDate,
+                ExpiredDate = a.ExpiredDate,
+                Duration = a.Duration,
+            });
+            return Ok(response);
+        }
+
     }
 }

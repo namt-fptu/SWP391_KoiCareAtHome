@@ -175,5 +175,27 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(sum);
         }
 
+        [HttpPost("searchKoiFish/{pondId}")]
+        public async Task<ActionResult<IEnumerable<KoiFishResponseModel>>> SearchKoiFishByName(int pondId, string name)
+        {
+            var koiFishs = await _koiFishService.SearchKoiFishByNameAsync(pondId, name);
+
+            if (koiFishs == null || !koiFishs.Any())
+                return NotFound();
+
+            var response = koiFishs.Select(k => new KoiFishResponseModel
+            {
+                Id = k.Id,
+                PondId = k.PondId,
+                KoiVariety = k.KoiVariety,
+                KoiName = k.KoiName,
+                Dob = k.Dob,
+                Sex = k.Sex,
+                Price = k.Price,
+                ImageUrl = k.ImageUrl,
+            });
+            return Ok(response);
+        }
+
     }
 }

@@ -245,5 +245,30 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return count;
         }
 
+        public async Task<IEnumerable<AdvModel>> SearchAdvByShopTitleAsync(int shopId, string title)
+        {
+            var advs = await _unitOfWork.Advs.GetAsync();
+            var advOfShop = advs.Where(a => a.ShopId == shopId);
+            advOfShop = advOfShop.Where(a => a.Title.Contains(title, StringComparison.OrdinalIgnoreCase));
+
+            if (!advOfShop.Any() || advOfShop == null)
+                return Enumerable.Empty<AdvModel>();
+
+            var advModels = advOfShop.Select(a => new AdvModel
+            {
+                Id = a.Id,
+                Title = a.Title,
+                Url = a.Url,
+                ImageUrl = a.ImageUrl,
+                AdvDate = a.AdvDate,
+                Status = a.Status,
+                EditedDate = a.EditedDate,
+                ExpiredDate = a.ExpiredDate,
+                Duration = a.Duration,
+
+            });
+            return advModels;
+        }
+
     }
 }

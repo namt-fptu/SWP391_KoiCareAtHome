@@ -12,10 +12,12 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
     public class KoiGrowthReportController : ControllerBase
     {
         private readonly KoiGrowthReportService _koiGrowthReportService;
+        private readonly KoiFishService _koiFishService;
 
-        public KoiGrowthReportController(KoiGrowthReportService koiGrowthReportService)
+        public KoiGrowthReportController(KoiGrowthReportService koiGrowthReportService, KoiFishService koiFishService)
         {
             _koiGrowthReportService = koiGrowthReportService;
+            _koiFishService = koiFishService;
         }
 
         [HttpGet("koiGrowthReport/{koiId}")]
@@ -64,8 +66,16 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         {
             if (request == null)
                 return BadRequest("Koi growth report data is required.");
+
+            var koiFish = await _koiFishService.GetKoiFishByIdAsync(request.KoiId);
+            if (koiFish == null)
+                return NotFound("Koi Fish not found");
+
             try
             {
+                if(request.Date < koiFish.Dob)
+                    return BadRequest("Report date must be after Koi Fish date of birth");
+
                 KoiGrowthReportModel model = new()
                 {
                     KoiId = request.KoiId,
@@ -105,8 +115,15 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             if (koiGrowthReport == null)
                 return NotFound();
 
+            var koiFish = await _koiFishService.GetKoiFishByIdAsync(koiGrowthReport.KoiId);
+            if (koiFish == null)
+                return NotFound("Koi Fish not found");
+
             try
             {
+                if (request.Date < koiFish.Dob)
+                    return BadRequest("Report date must be after Koi Fish date of birth");
+
                 koiGrowthReport.Date = request.Date;
                 koiGrowthReport.Weight = request.Wetight;
                 koiGrowthReport.Length = request.Length;

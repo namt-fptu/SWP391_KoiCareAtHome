@@ -197,5 +197,26 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
+        [HttpGet("searchProductBytitle/{advId}")]
+        public async Task<ActionResult<IEnumerable<ProductResponseModel>>> SearchProductByTitle(int advId, string title)
+        {
+            var products = await _productService.SearchProductByTitleAsync(advId, title);
+
+            if (products == null || !products.Any())
+                return NotFound();
+
+            var response = products.Select(product => new ProductResponseModel
+            {
+                Id = product.Id,
+                PostId = product.PostId,
+                Title = product.Title,
+                Url = product.Url,
+                ImageUrl = product.ImageUrl,
+                Description = product.Description,
+            });
+
+            return Ok(response);
+        }
+
     }
 }

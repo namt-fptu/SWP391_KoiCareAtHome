@@ -187,5 +187,28 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             return productModels;
         }
 
+        public async Task<IEnumerable<ProductModel>> SearchProductByTitleAsync(int id, string title)
+        {
+            var product = await _unitOfWork.Products.GetAsync();
+            var productOfPost = product.Where(p => p.PostId == id);
+            productOfPost = productOfPost.Where(p => p.Title.Contains(title, StringComparison.OrdinalIgnoreCase));
+
+            if (!productOfPost.Any())
+                return Enumerable.Empty<ProductModel>();
+
+            var productModels = productOfPost.Select(p => new ProductModel
+            {
+                Id = p.Id,
+                PostId = p.PostId,
+                Title = p.Title,
+                Url = p.Url,
+                ImageUrl = p.ImageUrl,
+                Description = p.Description,
+
+            });
+
+            return productModels;
+        }
+
     }
 }

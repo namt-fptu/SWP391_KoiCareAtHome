@@ -185,5 +185,33 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return NoContent();
         }
 
+        [HttpPost("searchPondByName/{ownerID}")]
+        public async Task<ActionResult<IEnumerable<PondResponseModel>>> GetPondByName(int ownerID, string pondName)
+        {
+            //var ponds = await _pondService.GetPondByOwnerIdAsync(ownerId);
+            if (pondName.IsNullOrEmpty())
+                return BadRequest("Pond Name can not empty");
+
+            var ponds = await _pondService.SearchPondOfOwnerByPondNameAsync(ownerID, pondName);
+
+            if (ponds == null || !ponds.Any())
+                return NotFound();
+
+            var response = ponds.Select(pond => new PondResponseModel
+            {
+                Id = pond.Id,
+                PondOwnerId = pond.PondOwnerId,
+                Name = pond.Name,
+                Depth = pond.Depth,
+                Volume = pond.Volume,
+                DrainCount = pond.DraimCount,
+                PumpingCapacity = pond.PumpingCapacity,
+                ImageUrl = pond.ImageUrl,
+                SkimmerCount = pond.SkimmerCount
+            });
+
+            return Ok(response);
+        }
+
     }
 }
