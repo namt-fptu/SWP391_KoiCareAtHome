@@ -27,6 +27,7 @@ const ShopSideBar = () => {
     localStorage.removeItem("token");
     navigate("/");
   };
+  
   useEffect(() => {
     if (!id) {
       message.error("User not logged in. Unable to fetch posts.");

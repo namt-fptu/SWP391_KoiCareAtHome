@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   FaHome,
@@ -13,12 +13,13 @@ import {
   FaUser,
   FaInfoCircle,
   FaSignOutAlt,
+  FaRegUserCircle ,
 } from "react-icons/fa"; // Add icons
 import Avatar from "antd/es/avatar/avatar";
 import logoimg from "./../../assets/logo koi care.png";
 import controlButton from "./../../assets/control.png";
 import { useAuthStore } from "../../page/(auth)/store";
-
+import api from "../../config/axios";
 const MemberSideBar = () => {
   const [open, setOpen] = useState(true);
   const navigate = useNavigate();

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   FaSignOutAlt,
@@ -7,11 +7,14 @@ import {
   FaTable,
   FaThLarge,
   FaNewspaper,
+  FaRegUserCircle ,
 } from "react-icons/fa";
 import Avatar from "antd/es/avatar/avatar";
 import logoimg from "./../../assets/logo koi care.png";
 import controlButton from "./../../assets/control.png";
 import { useAuthStore } from "../../page/(auth)/store";
+import api from "../../config/axios";
+
 
 const AdminSideBar = () => {
   const [open, setOpen] = useState(true);
@@ -99,7 +102,7 @@ const AdminSideBar = () => {
             style={{ backgroundColor: "#808080" }}
             icon={<FaRegUserCircle />}
           />
-          <span className="text-white font-semibold">{username}</span>
+          <span className="text-white font-semibold">Admin</span>
         </div>
         <ul className="pt-6">
           {menuItems.map((item) => (
