@@ -428,17 +428,18 @@ const ShopPost = () => {
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}>
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-white text-3xl font-bold mb-5">My Post</h2>
+       
+         <h2 className="text-3xl font-bold mb-8 text-white">My Post</h2>
+         <p className="text-white">Create your Post here.</p>
           <div className="flex flex-col items-center">
             <Button type="primary" onClick={showModal}>
               Create Post
             </Button>
           </div>
-        </div>
+        
         <Modal
           title="Input Post"
-          visible={isModalVisible}
+          open={isModalVisible}
           onCancel={handleCancel}
           footer={null}
         >
@@ -631,7 +632,7 @@ const ShopPost = () => {
                       View Detail
                     </Button>
 
-                    <Dropdown overlay={menu(post)} trigger={["click"]}>
+                    <Dropdown menu={menu(post)} trigger={["click"]}>
                       <Button>
                         Actions <DownOutlined />
                       </Button>
@@ -646,7 +647,7 @@ const ShopPost = () => {
         {/* Chi tiết bài viết */}
         <Modal
           title="Post Detail"
-          visible={isDetailModalVisible} // Kiểm soát modal Detail
+          open={isDetailModalVisible} // Kiểm soát modal Detail
           onCancel={() => setIsDetailModalVisible(false)}               
           footer={null}
         >
@@ -668,7 +669,7 @@ const ShopPost = () => {
         {/* Modal Extend */}
         <Modal
           title="Extend Post"
-          visible={isExtendModalVisible}
+          open={isExtendModalVisible}
           onOk={handleExtendOk}
           onCancel={handleExtendCancel}
           okText="Pay"
@@ -701,7 +702,7 @@ const ShopPost = () => {
         {/* Modal for delete confirmation */}
         <Modal
           title="Confirm Deletion"
-          visible={isDeleteModalVisible}
+          open={isDeleteModalVisible}
           onOk={handleDeletePost}
           onCancel={handleDeleteCancel}
           okText="Delete"

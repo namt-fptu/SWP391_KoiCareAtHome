@@ -104,7 +104,7 @@ const Recomendations = () => {
       </Row>
       <Modal
         title={selectedProduct?.title}
-        visible={isModalVisible}
+        open={isModalVisible}
         onCancel={handleModalClose}
         footer={null}
       >

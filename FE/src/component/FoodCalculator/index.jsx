@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { message, Select, Button, Card, Typography } from "antd";
+import { message, Select, Button, Card, Typography ,notification} from "antd";
 import api from "../../config/axios";
 import { useAuthStore } from "../../page/(auth)/store";
 import backgroud from "./../../assets/wallpaper.jpg";
@@ -25,7 +25,11 @@ const FoodCalculator = () => {
         const response = await api.get(`Pond/ponds/${id}`);
         setPonds(response.data);
       } catch (error) {
-        message.error("Failed to fetch pond data.");
+        notification.error({
+          message: "Pond Not Found",
+          description: "The pond you are looking for does not exist.",
+          duration: 2,  // Duration in seconds
+        });
       }
     };
 

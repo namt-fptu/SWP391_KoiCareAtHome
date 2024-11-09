@@ -307,7 +307,7 @@ const Posts = () => {
         {/* Chi tiết bài viết */}
         <Modal
           title="Post Detail"
-          visible={!!selectedPost}
+          open={!!selectedPost}
           onCancel={handleDetailClose}
           footer={null}
         >

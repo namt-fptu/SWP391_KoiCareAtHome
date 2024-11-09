@@ -194,7 +194,7 @@ const Signup = () => {
       </div>
       <Modal
         title="Privacy Policy for KoiF"
-        visible={isModalVisible}
+        open={isModalVisible}
         onCancel={handleCancel}
         footer={[
           <Button key="close" onClick={handleCancel}>

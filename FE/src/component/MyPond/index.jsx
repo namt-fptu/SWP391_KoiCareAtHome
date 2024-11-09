@@ -9,6 +9,7 @@ import {
   Col,
   Upload,
   message,
+  notification, 
 } from "antd";
 import {
   UploadOutlined,
@@ -43,8 +44,8 @@ const MyPond = () => {
   const [editingPond, setEditingPond] = useState(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [pondToDelete, setPondToDelete] = useState(null);
-
-  // const id = sessionStorage.getItem("id");
+  const [form] = Form.useForm();
+  
   const { authUser } = useAuthStore();
   const id = authUser.id;
 
@@ -59,7 +60,11 @@ const MyPond = () => {
         const response = await api.get(`Pond/ponds/${id}`);
         setPonds(response.data);
       } catch (error) {
-        message.error("Failed to fetch pond data.");
+        notification.error({
+          message: "Pond Not Found",
+          description: "The pond you are looking for does not exist.",
+          duration: 2,  // Duration in seconds
+        });
       }
     };
 
@@ -68,10 +73,19 @@ const MyPond = () => {
 
   const showModal = (pond = null) => {
     setEditingPond(pond);
+  
     if (pond) {
+      // Set form fields with existing pond data if editing
       setImageUrl(pond.imageUrl);
       setFileList([]);
+      form.setFieldsValue(pond);
+    } else {
+      // Reset form fields if creating a new pond
+      form.resetFields();
+      setFileList([]);
+      setImageUrl(null);
     }
+  
     setIsModalVisible(true);
   };
 
@@ -80,7 +94,9 @@ const MyPond = () => {
     setFileList([]);
     setImageUrl(null);
     setEditingPond(null);
+    form.resetFields(); // Reset form fields on cancel
   };
+
 
   const handleUpload = (file) => {
     setFileList([file]);
@@ -138,6 +154,7 @@ const MyPond = () => {
         }
 
         setIsModalVisible(false);
+        form.resetFields();
       } catch (error) {
         message.error(
           editingPond
@@ -194,9 +211,10 @@ const MyPond = () => {
             footer={null}
           >
             <Form
+             form={form}
               layout="vertical"
               onFinish={onFinish}
-              initialValues={editingPond}
+              
             >
               <Form.Item
                 label="Upload Image"

@@ -255,10 +255,20 @@ const ShopProduct = () => {
           backgroundImage: `url(${backgroud})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
-        }}>
-        <div className="flex justify-between items-center mb-8">
+        }}>       
           <h2 className="text-white text-3xl font-bold mb-5">My Product</h2>
-        </div>
+          <p className="text-white">Add your product here.</p>
+          <div className="flex flex-col items-center">
+          <Button
+              type="primary"
+              onClick={showModal}
+              style={{ marginTop: "20px" }}
+            >
+              Add Product
+            </Button>
+
+          </div>
+          
         <Select
           placeholder="Select a post"
           onChange={setPostId}
@@ -273,13 +283,7 @@ const ShopProduct = () => {
 
         {postId && (
           <>
-            <Button
-              type="primary"
-              onClick={showModal}
-              style={{ marginTop: "20px" }}
-            >
-              Add Product
-            </Button>
+            
 
             <Row gutter={[16, 16]}>
               {products.length > 0 ? (
@@ -443,7 +447,7 @@ const ShopProduct = () => {
         {/* Modal for delete confirmation */}
         <Modal
           title="Confirm Deletion"
-          visible={isDeleteModalVisible}
+          open={isDeleteModalVisible}
           onOk={handleDeleteProduct}
           onCancel={handleDeleteCancel}
           okText="Delete"

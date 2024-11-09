@@ -10,6 +10,7 @@ import {
   DatePicker,
   message,
   Modal,
+  notification,
 } from "antd";
 import {
   UploadOutlined,
@@ -49,9 +50,12 @@ const KoiReport = () => {
     try {
       const response = await api.get(`Pond/ponds/${id}`);
       setPonds(response.data);
-    } catch (error) {
-      console.error("Error fetching ponds:", error);
-      message.error("Failed to fetch ponds. Please try again.");
+    } catch (error) {     
+      notification.error({
+        message: "Pond Not Found",
+        description: "The pond you are looking for does not exist.",
+        duration: 2,  // Duration in seconds
+      });
     }
   };
 

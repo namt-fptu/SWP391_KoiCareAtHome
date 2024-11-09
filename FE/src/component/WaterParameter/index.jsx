@@ -10,7 +10,8 @@ import {
   Select,
   DatePicker,
   message,
-  InputNumber,
+  notification,
+  
 } from "antd";
 import api from "../../config/axios";
 import {
@@ -21,6 +22,8 @@ import {
 import moment from "moment"; // For date formatting
 import { useAuthStore } from "../../page/(auth)/store";
 import backgroud from "./../../assets/wallpaper.jpg";
+import { useNavigate } from "react-router-dom";
+
 const WaterParameter = () => {
   const [waterReports, setWaterReports] = useState([]);
   const [ponds, setPonds] = useState([]);
@@ -28,7 +31,7 @@ const WaterParameter = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
   const [editReport, setEditReport] = useState(null); // New state for editing a report
-
+  const navigate = useNavigate();
   const { Option } = Select;
 
   useEffect(() => {
@@ -49,8 +52,11 @@ const WaterParameter = () => {
       const response = await api.get(`Pond/ponds/${id}`);
       setPonds(response.data);
     } catch (error) {
-      console.error("Error fetching ponds:", error);
-      message.error("Failed to fetch ponds.");
+      notification.error({
+        message: "Pond Not Found",
+        description: "The pond you are looking for does not exist.",
+        duration: 2,  // Duration in seconds
+      });
     }
   };
 
@@ -177,7 +183,21 @@ const WaterParameter = () => {
       }}>
         <h1 className="text-3xl font-bold mb-8 text-white">Water Parameter</h1>
         <p className="text-white">Information about your Water.</p>
-
+        <div className="flex flex-col items-center">
+          <Button type="primary" onClick={() => showModal()}>
+            Input Water Parameters
+          </Button>
+          {ponds.length === 0 && (
+            <div className="mt-4">
+              <Button
+                type="primary"
+                onClick={() => (window.location.href = "/MyPond")}
+              >
+                Go to My Pond to create one
+              </Button>
+            </div>
+          )}
+        </div>
         {/* Pond Selection */}
         <Form.Item
           name="pond"
@@ -198,11 +218,7 @@ const WaterParameter = () => {
         </Form.Item>
 
         {/* Button to Input Water Parameters */}
-        <div className="flex flex-col items-center">
-          <Button type="primary" onClick={() => showModal()}>
-            Input Water Parameters
-          </Button>
-        </div>
+        
 
         {/* Modal for Adding or Updating Water Parameters */}
         <Modal

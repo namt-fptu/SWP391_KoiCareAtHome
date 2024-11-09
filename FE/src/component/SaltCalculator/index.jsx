@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { message, Select, Button, Typography, Card } from "antd";
+import { message, Select, Button, Typography, Card,notification } from "antd";
 import api from "../../config/axios";
 import { useAuthStore } from "../../page/(auth)/store";
 import backgroud from "./../../assets/wallpaper.jpg";
@@ -20,8 +20,11 @@ const SaltCalculator = () => {
       const response = await api.get(`Pond/pond/${pondId}`);
       setPondVolume(response.data.volume);
     } catch (error) {
-      console.error("Error fetching pond details:", error);
-      message.error("Failed to fetch pond details.");
+      notification.error({
+        message: "Pond Not Found",
+        description: "The pond you are looking for does not exist.",
+        duration: 2,  // Duration in seconds
+      });
     }
   };
 
@@ -38,8 +41,11 @@ const SaltCalculator = () => {
       const response = await api.get(`Pond/ponds/${id}`);
       setPonds(response.data);
     } catch (error) {
-      console.error("Error fetching ponds:", error);
-      message.error("Failed to fetch ponds.");
+      notification.error({
+        message: "Pond Not Found",
+        description: "The pond you are looking for does not exist.",
+        duration: 2,  // Duration in seconds
+      });
     }
   };
 

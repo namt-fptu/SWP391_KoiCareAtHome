@@ -238,7 +238,7 @@ const YourProfile = () => {
       {/* Change Password Modal */}
       <Modal
         title="Change Password"
-        visible={isChangingPassword}
+        open={isChangingPassword}
         onCancel={() => setIsChangingPassword(false)}
         footer={null}
       >

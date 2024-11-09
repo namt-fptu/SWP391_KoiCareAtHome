@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import LineChart from "../Chart";
 import api from "../../config/axios";
-import { message, Row, Col } from "antd";
+import { message, Row, Col ,notification} from "antd";
 import { useAuthStore } from "../../page/(auth)/store";
 import backgroud from "./../../assets/wallpaper.jpg";
 const Statistics = () => {
@@ -40,7 +40,11 @@ const Statistics = () => {
       setPonds(response.data);
     } catch (error) {
       console.error("Error fetching ponds:", error);
-      message.error("Failed to fetch ponds.");
+      notification.error({
+        message: "Pond Not Found",
+        description: "The pond you are looking for does not exist.",
+        duration: 2,  // Duration in seconds
+      });
     }
   };
 
