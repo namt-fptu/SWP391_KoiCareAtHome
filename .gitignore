@@ -29,3 +29,4 @@ Migrations
 # Ignore build and other temporary files
 bin/
 obj/Crawler
+.env
