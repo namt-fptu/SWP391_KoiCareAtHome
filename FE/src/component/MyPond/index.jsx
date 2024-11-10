@@ -358,7 +358,18 @@ const MyPond = () => {
                 <Col key={pond.id} xs={24} sm={12} md={8} lg={6}>
                   <Card
                     hoverable
-                    cover={<img alt={pond.name} src={pond.imageUrl} />}
+                    cover={
+                      <img
+                        alt={pond.name}
+                        src={pond.imageUrl}
+                        style={{
+                          width: "100%", // Ensure image takes full width of the card
+                          height: "200px", // Fixed height for uniformity
+                          objectFit: "cover", // Cover the area while maintaining aspect ratio
+                          borderRadius: "8px 8px 0 0",
+                        }}
+                      />
+                    }
                   >
                     <Card.Meta title={pond.name} />
                     <p>
@@ -371,7 +382,7 @@ const MyPond = () => {
                     </p>
                     <p>
                       <strong>Drain Count: </strong>
-                      {pond.drainCount} 
+                      {pond.drainCount}
                     </p>
                     <p>
                       <strong>Skimmer Count: </strong>

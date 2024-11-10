@@ -24,7 +24,7 @@ import { Select, InputNumber } from "antd";
 import {
   getStorage,
   ref,
-  uploadBytes,
+  uploadBytesResumable,
   getDownloadURL,
   deleteObject,
 } from "firebase/storage";
@@ -255,12 +255,18 @@ const ShopPost = () => {
       let newImageUrl = selectedPost.imageUrl;
 
       if (values.image && values.image.file) {
+        console.log("Image file selected:", values.image.file);
+
+        // Xóa ảnh cũ từ Firebase
         const oldImageRef = ref(storageImg, selectedPost.imageUrl);
         await deleteObject(oldImageRef);
-        newImageUrl = await uploadImgToFirebase(values.image.file);
-        setImageUrl(newImageUrl);
-      }
 
+        // Sử dụng handleUpload để upload ảnh mới
+        await handleUpload(values.image.file).then((downloadURL) => {
+          newImageUrl = downloadURL; // Cập nhật URL ảnh mới
+          setImageUrl(downloadURL); // Cập nhật URL ảnh cho state
+        });
+      }
       // Cập nhật nội dung mới lên Firebase
       const uploadedTxtUrl = await uploadContentToFirebase(values.content); // Gửi nội dung đã chỉnh sửa
 
@@ -268,7 +274,7 @@ const ShopPost = () => {
       const updatedData = {
         title: values.title,
         url: uploadedTxtUrl, // Ensure this is set to the right URL after upload
-        imageUrl: newImageUrl, // Ensure this is updated correctly
+        imageUrl,
       };
 
       await api.put(`Adv/updateAdv/${selectedPost.id}`, updatedData);
@@ -314,20 +320,20 @@ const ShopPost = () => {
     </Menu>
   );
 
-  const uploadImgToFirebase = async (file) => {
-    if (!file) return null;
-    const storageRef = ref(storageImg, `post-images/${file.name}`);
+  // const uploadImgToFirebase = async (file) => {
+  //   if (!file) return null;
+  //   const storageRef = ref(storageImg, `post-images/${file.name}`);
 
-    try {
-      const snapshot = await uploadBytes(storageRef, file);
-      const downloadImgURL = await getDownloadURL(snapshot.ref);
-      return downloadImgURL;
-    } catch (error) {
-      console.error("Error uploading image to Firebase: ", error);
-      message.error("Image upload failed!");
-      return null;
-    }
-  };
+  //   try {
+  //     const snapshot = await uploadBytes(storageRef, file);
+  //     const downloadImgURL = await getDownloadURL(snapshot.ref);
+  //     return downloadImgURL;
+  //   } catch (error) {
+  //     console.error("Error uploading image to Firebase: ", error);
+  //     message.error("Image upload failed!");
+  //     return null;
+  //   }
+  // };
 
   const uploadContentToFirebase = async (content) => {
     if (!content) return null;
@@ -338,7 +344,7 @@ const ShopPost = () => {
     const storageRef = ref(storageTxt, `post-content/${id}_${postIndex}.txt`);
 
     try {
-      const snapshot = await uploadBytes(storageRef, blob);
+      const snapshot = await uploadBytesResumable(storageRef, blob);
       const downloadTxtURL = await getDownloadURL(snapshot.ref);
       return downloadTxtURL;
     } catch (error) {
@@ -349,31 +355,43 @@ const ShopPost = () => {
   };
 
   const handleUpload = (file) => {
-    setFileList([file]);
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setImageUrl(e.target.result);
-    };
-    reader.readAsDataURL(file);
-    return false;
+    return new Promise((resolve, reject) => {
+      const storageRef = ref(storageImg, `product-images/${file.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {},
+        (error) => {
+          message.error(`Upload failed: ${error.message}`);
+          reject(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setImageUrl(downloadURL);
+            message.success(`${file.name} uploaded successfully`);
+            resolve();
+          });
+        }
+      );
+    });
   };
 
   const onFinish = async (values) => {
-    // Kiểm tra nếu fileList không có file
-    if (fileList.length === 0) {
-      message.error("No file selected for upload.");
-      return; // Kết thúc hàm nếu không có file
+    if (!imageUrl) {
+      message.error("Please upload an image.");
+      return;
     }
-    const file = fileList[0]; // Lấy file đầu tiên trong danh sách
-    const uploadedImageUrl = await uploadImgToFirebase(file);
+
+    const uploadedImageUrl = await handleUpload(values.image.file);
     const uploadedTxtUrl = await uploadContentToFirebase(values.content);
 
     if (uploadedImageUrl && uploadedTxtUrl) {
       const postData = {
-        shopId: Number(id), // Use ShopId from sessionStorage
+        shopId: Number(id),
         title: values.title,
         url: uploadedTxtUrl,
-        imageUrl: uploadedImageUrl,
+        imageUrl,
       };
 
       try {
@@ -410,12 +428,14 @@ const ShopPost = () => {
 
   return (
     <div className="flex-container">
-      <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen"
+      <div
+        className="flex-1 h-full p-5 bg-gray-900 min-h-screen"
         style={{
           backgroundImage: `url(${backgroud})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
-        }}>
+        }}
+      >
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-white text-3xl font-bold mb-5">My Post</h2>
           <div className="flex flex-col items-center">
@@ -581,10 +601,10 @@ const ShopPost = () => {
                               post.status === "Drafted"
                                 ? "gray"
                                 : post.status === "Approved"
-                                  ? "green"
-                                  : post.status === "Rejected"
-                                    ? "red"
-                                    : "black",
+                                ? "green"
+                                : post.status === "Rejected"
+                                ? "red"
+                                : "black",
                             fontWeight: "bold",
                           }}
                         >
@@ -721,7 +741,8 @@ const ShopPost = () => {
                 maxCount={1}
                 showUploadList={false}
                 customRequest={({ file, onSuccess }) => {
-                  handleUpload(file).then(onSuccess);
+                  handleUpload(file);
+                  onSuccess("ok");
                 }}
               >
                 <Button icon={<UploadOutlined />}>Select Image</Button>

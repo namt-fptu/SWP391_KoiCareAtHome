@@ -20,7 +20,7 @@ import { initializeApp } from "firebase/app";
 import {
   getStorage,
   ref,
-  uploadBytes,
+  uploadBytesResumable,
   getDownloadURL,
   deleteObject,
 } from "firebase/storage";
@@ -126,7 +126,7 @@ const ShopProduct = () => {
       await api.delete(`Product/deleteProductById/${selectedProduct.id}`);
 
       message.success("Product deleted successfully.");
-      fetchProduct(id); // Refresh product list after deletion
+      fetchProduct(postId); // Refresh product list after deletion
 
       setIsDeleteModalVisible(false); // Close modal
       setSelectedProduct(null); // Reset selected product
@@ -164,12 +164,10 @@ const ShopProduct = () => {
   };
 
   const onFinish = async (values) => {
-    if (fileList.length === 0) {
+    if (!imageUrl) {
       message.error("Please upload an image.");
       return;
     }
-    const file = fileList[0];
-    const uploadedImageUrl = await uploadImgToFirebase(file);
 
     try {
       const formattedValues = {
@@ -178,13 +176,13 @@ const ShopProduct = () => {
         koiName: values.name,
         url: values.url,
         description: values.description,
-        imageUrl: uploadedImageUrl,
+        imageUrl,
       };
 
       await api.post("Product/createProduct", formattedValues);
       message.success("Product added successfully!");
       handleCancel(); // Close modal after submission
-      fetchProduct(id); // Refresh product list
+      fetchProduct(postId); // Refresh product list
     } catch (error) {
       console.error("Error adding product :", error);
       message.error("Failed to add product .");
@@ -192,25 +190,32 @@ const ShopProduct = () => {
   };
   const onUpdateFinish = async (values) => {
     try {
-      let newImageUrl = selectedProduct.imageUrl;
+      let newImageUrl = selectedProduct.imageUrl; // Sử dụng URL hình ảnh hiện tại làm mặc định
 
+      // Kiểm tra nếu người dùng đã chọn hình ảnh mới để tải lên
       if (values.image && values.image.file) {
-        const oldImageRef = ref(storageImg, selectedProduct.imageUrl);
+        console.log("Image file selected:", values.image.file);
+
+        // Xóa ảnh cũ từ Firebase
+        const oldImageRef = ref(storage, selectedProduct.imageUrl);
         await deleteObject(oldImageRef);
-        newImageUrl = await uploadImgToFirebase(values.image.file);
-        setImageUrl(newImageUrl);
+
+        // Sử dụng handleUpload để upload ảnh mới
+        await handleUpload(values.image.file).then((downloadURL) => {
+          newImageUrl = downloadURL; // Cập nhật URL ảnh mới
+          setImageUrl(downloadURL); // Cập nhật URL ảnh cho state
+        });
       }
-      // Prepare updated data
+
       const updatedData = {
-        id: selectedProduct.id, // product  id
+        id: selectedProduct.id,
         postId,
         title: values.title,
-        koiName: values.name,
         url: values.url,
         description: values.description,
-        imageUrl: newImageUrl,
+        imageUrl,
       };
-
+      console.log("Updated data to send:", updatedData);
       // Send the update request to the server
       await api.put(
         `Product/updateProductById/${selectedProduct.id}`,
@@ -219,56 +224,70 @@ const ShopProduct = () => {
 
       message.success("Product updated successfully!");
       handleUpdateCancel(); // Close modal after submission
-      fetchProduct(id); // Refresh product list
+      fetchProduct(postId); // Refresh product list
     } catch (error) {
       console.error("Error updating product :", error);
       message.error("Failed to update product .");
     }
   };
-  const uploadImgToFirebase = async (file) => {
-    if (!file) return null;
-    const storageRef = ref(storageImg, `product-images/${file.name}`);
+  // const uploadImgToFirebase = async (file) => {
+  //   if (!file) return imageUrl;
+  //   const storageRef = ref(storageImg, `product-images/${file.name}`);
 
-    try {
-      const snapshot = await uploadBytes(storageRef, file);
-      const downloadImgURL = await getDownloadURL(snapshot.ref);
-      return downloadImgURL;
-    } catch (error) {
-      console.error("Error uploading image to Firebase: ", error);
-      message.error("Image upload failed!");
-      return null;
-    }
-  };
+  //   try {
+  //     const snapshot = await uploadBytes(storageRef, file);
+  //     const downloadImgURL = await getDownloadURL(snapshot.ref);
+  //     return downloadImgURL;
+  //   } catch (error) {
+  //     console.error("Error uploading image to Firebase: ", error);
+  //     message.error("Image upload failed!");
+  //     return null;
+  //   }
+  // };
   const handleUpload = (file) => {
-    setFileList([file]);
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setImageUrl(e.target.result);
-    };
-    reader.readAsDataURL(file);
-    return false;
+    return new Promise((resolve, reject) => {
+      const storageRef = ref(storageImg, `product-images/${file.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {},
+        (error) => {
+          message.error(`Upload failed: ${error.message}`);
+          reject(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setImageUrl(downloadURL);
+            message.success(`${file.name} uploaded successfully`);
+            resolve();
+          });
+        }
+      );
+    });
   };
   return (
     <div className="flex-container">
-      <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen"
+      <div
+        className="flex-1 h-full p-5 bg-gray-900 min-h-screen"
         style={{
           backgroundImage: `url(${backgroud})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
-        }}>       
-          <h2 className="text-white text-3xl font-bold mb-5">My Product</h2>
-          <p className="text-white">Add your product here.</p>
-          <div className="flex flex-col items-center">
+        }}
+      >
+        <h2 className="text-white text-3xl font-bold mb-5">My Product</h2>
+        <p className="text-white">Add your product here.</p>
+        <div className="flex flex-col items-center">
           <Button
-              type="primary"
-              onClick={showModal}
-              style={{ marginTop: "20px" }}
-            >
-              Add Product
-            </Button>
+            type="primary"
+            onClick={showModal}
+            style={{ marginTop: "20px" }}
+          >
+            Add Product
+          </Button>
+        </div>
 
-          </div>
-          
         <Select
           placeholder="Select a post"
           onChange={setPostId}
@@ -283,8 +302,6 @@ const ShopProduct = () => {
 
         {postId && (
           <>
-            
-
             <Row gutter={[16, 16]}>
               {products.length > 0 ? (
                 products.map((product, index) => {
@@ -300,7 +317,7 @@ const ShopProduct = () => {
                             height: "350px", // Chiều cao cố định
                             overflow: "hidden", // Ẩn các nội dung vượt quá chiều cao
                           }}
-                          bodyStyle={{
+                          bodystyle={{
                             height: "200px", // Cố định chiều cao phần thân để đồng đều
                             overflow: "auto", // Bật cuộn cho nội dung nếu cần
                           }}
@@ -395,13 +412,15 @@ const ShopProduct = () => {
               >
                 <Input />
               </Form.Item>
-              <Form.Item label="Upload Image" name="image">
+              <Form.Item label="Upload Image" name="imageUrl">
                 <Upload
                   listType="picture"
                   maxCount={1}
                   showUploadList={false}
                   customRequest={({ file, onSuccess }) => {
-                    handleUpload(file).then(onSuccess);
+                    handleUpload(file); // Cập nhật xem trước hình ảnh
+                    onSuccess("ok"); // Kích hoạt onSuccess để không bị lỗi
+                    console.log("File uploaded successfully:", file); // Log thông tin file
                   }}
                 >
                   <Button icon={<UploadOutlined />}>Select Image</Button>

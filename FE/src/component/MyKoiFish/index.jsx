@@ -260,12 +260,14 @@ const MyKoiFish = () => {
 
   return (
     <div className="flex-container">
-      <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen"
-       style={{
-        backgroundImage: `url(${backgroud})`, // Set the background image
-        backgroundSize: "cover", // Cover the entire container
-        backgroundPosition: "center", // Center the image
-      }}>
+      <div
+        className="flex-1 h-full p-5 bg-gray-900 min-h-screen"
+        style={{
+          backgroundImage: `url(${backgroud})`, // Set the background image
+          backgroundSize: "cover", // Cover the entire container
+          backgroundPosition: "center", // Center the image
+        }}
+      >
         <h1 className="text-3xl font-bold mb-8 text-white">My Koi Fish</h1>
         <p className="text-white">Information about your Fish.</p>
 
@@ -303,7 +305,6 @@ const MyKoiFish = () => {
                           boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                           borderRadius: "8px",
                         }}
-                       
                       >
                         <img
                           src={koi.imageUrl || "default-koi-image-url"} // Default koi image
@@ -343,16 +344,10 @@ const MyKoiFish = () => {
                             type="danger"
                             icon={<DeleteOutlined />}
                             onClick={() => showDeleteModal(koi)}
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              marginTop: "10px",
-                            }}
                           >
                             Delete
                           </Button>
                         </div>
-                        
                       </Card>
                     </Col>
                   );
@@ -432,14 +427,16 @@ const MyKoiFish = () => {
             </Form.Item>
 
             <Form.Item
-  label="In pond since"
-  name="dob"
-  rules={[{ required: true, message: "Please input Date!" }]}
->
-  <DatePicker
-    disabledDate={(current) => current && current > moment().endOf('day')}
-  />
-</Form.Item>
+              label="In pond since"
+              name="dob"
+              rules={[{ required: true, message: "Please input Date!" }]}
+            >
+              <DatePicker
+                disabledDate={(current) =>
+                  current && current > moment().endOf("day")
+                }
+              />
+            </Form.Item>
 
             <Form.Item
               label="Sex"
@@ -490,8 +487,6 @@ const MyKoiFish = () => {
           footer={null}
         >
           <Form layout="vertical" onFinish={onFinish}>
-            
-
             <Form.Item
               label="Upload Image"
               name="image"
@@ -539,15 +534,17 @@ const MyKoiFish = () => {
             </Form.Item>
 
             <Form.Item
-  label="In pond since"
-  name="dob"
-  rules={[{ required: true, message: "Please input Date!" }]}
->
-  <DatePicker
-    disabledDate={(current) => current && current > moment().endOf('day')}
-    onChange={handleDateChange}
-  />
-</Form.Item>
+              label="In pond since"
+              name="dob"
+              rules={[{ required: true, message: "Please input Date!" }]}
+            >
+              <DatePicker
+                disabledDate={(current) =>
+                  current && current > moment().endOf("day")
+                }
+                onChange={handleDateChange}
+              />
+            </Form.Item>
 
             <Form.Item
               label="Sex"
