@@ -168,7 +168,11 @@ namespace SWP391.KoiCareSystemAtHome.Service.Services
             var fillteredWaterReportStandard = waterReportStandards.FirstOrDefault(r => r.KoiVariety == variety);
 
             if (fillteredWaterReportStandard == null)
-                return Enumerable.Empty<WaterStatisticModel>();
+            {
+                //return Enumerable.Empty<WaterStatisticModel>();
+                fillteredWaterReportStandard = waterReportStandards.FirstOrDefault(r => r.KoiVariety.Equals("General"));
+            }
+
 
             var waterSatisticModels = reportOfPond.Select(r => new WaterStatisticModel
             {
