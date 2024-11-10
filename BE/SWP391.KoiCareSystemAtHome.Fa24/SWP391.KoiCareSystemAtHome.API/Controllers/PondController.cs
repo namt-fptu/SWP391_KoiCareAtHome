@@ -84,7 +84,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                     Name = request.Name,
                     Depth = request.Depth,
                     Volume = request.Volume,
-                    DraimCount = request.DraimCount,
+                    DraimCount = request.DrainCount,
                     SkimmerCount = request.SkimmerCount,
                     ImageUrl = request.ImageUrl,
                     PumpingCapacity = request.PumpingCapacity
@@ -138,7 +138,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 pondModel.Name = pondRequestModel.Name;
                 pondModel.Depth = pondRequestModel.Depth;
                 pondModel.Volume = pondRequestModel.Volume;
-                pondModel.DraimCount = pondRequestModel.DraimCount;
+                pondModel.DraimCount = pondRequestModel.DrainCount;
                 pondModel.SkimmerCount = pondRequestModel.SkimmerCount;
                 pondModel.ImageUrl = pondRequestModel.ImageUrl;
                 pondModel.PumpingCapacity = pondRequestModel.PumpingCapacity;

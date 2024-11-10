@@ -10,7 +10,7 @@
 
         public double Volume { get; set; }
 
-        public int? DraimCount { get; set; }
+        public int? DrainCount { get; set; }
 
         public int? SkimmerCount { get; set; }
 
