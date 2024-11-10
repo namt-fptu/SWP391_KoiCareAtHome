@@ -12,7 +12,6 @@ import {
   DatePicker,
   Upload,
   message,
-  notification,
 } from "antd";
 import {
   UploadOutlined,
@@ -30,7 +29,7 @@ import { initializeApp } from "firebase/app";
 import api from "../../config/axios"; // Axios instance configuration
 import { useAuthStore } from "../../page/(auth)/store";
 import backgroud from "./../../assets/wallpaper.jpg";
-import { useNavigate } from "react-router-dom";
+
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -54,8 +53,6 @@ const MyKoiFish = () => {
   const [pondId, setPondId] = useState(null);
   const [varieties, setVarieties] = useState([]);
   const [ponds, setPonds] = useState([]);
-  const [form] = Form.useForm();
-  const navigate = useNavigate();
 
   const { Option } = Select;
   // const id = sessionStorage.getItem("id");
@@ -86,11 +83,8 @@ const MyKoiFish = () => {
       const response = await api.get(`Pond/ponds/${id}`);
       setPonds(response.data);
     } catch (error) {
-      notification.error({
-        message: "Pond Not Found",
-        description: "Maybe there are no ponds yet. Please add one.",
-        duration: 2, // Duration in seconds
-      });
+      console.error("Error fetching ponds:", error);
+      message.error("Failed to fetch ponds.");
     }
   };
 
@@ -149,15 +143,7 @@ const MyKoiFish = () => {
   const showUpdateModal = (koi) => {
     setSelectedKoi(koi); // Set the selected koi fish for update
     setImageUrl(koi.imageUrl); // Set the image URL of the selected koi fish
-    setIsUpdateModalVisible(true); // Show the update modal
-    form.setFieldsValue({
-      // Set form fields with the selected koi data
-      name: koi.koiName,
-      variety: koi.koiVariety,
-      dob: koi.dob ? moment(koi.dob) : null,
-      sex: koi.sex,
-      price: koi.price,
-    });
+    setIsUpdateModalVisible(true); // Show update modal
   };
 
   const showModal = () => {
@@ -166,16 +152,14 @@ const MyKoiFish = () => {
 
   const handleCancel = () => {
     setIsModalVisible(false);
-    setImageUrl(null);
-    setSelectedDate(null);
-    form.resetFields(); // Reset form fields on cancel
+    setImageUrl(null); // Reset imageUrl when closing modal
+    setSelectedDate(null); // Reset selected date when closing modal
   };
-
   const handleUpdateCancel = () => {
-    setIsUpdateModalVisible(false);
-    setImageUrl(null);
-    setSelectedKoi(null);
-    form.resetFields(); // Reset form fields on update cancel
+    setIsModalVisible(false);
+    setIsUpdateModalVisible(false); // Close update modal
+    setImageUrl(null); // Reset imageUrl when closing modal
+    setSelectedKoi(null); // Reset selected koi
   };
 
   const handleDateChange = (value) => {
@@ -226,7 +210,6 @@ const MyKoiFish = () => {
       message.success("Koi fish added successfully!");
       handleCancel(); // Close modal after submission
       fetchKoiForPond(pondId); // Refresh koi list
-      form.resetFields();
     } catch (error) {
       console.error("Error adding koi fish:", error);
       message.error("Failed to add koi fish.");
@@ -268,8 +251,7 @@ const MyKoiFish = () => {
 
       message.success("Koi fish updated successfully!");
       handleUpdateCancel(); // Close modal after submission
-      fetchKoiForPond(pondId);
-      form.resetFields(); // Refresh koi list
+      fetchKoiForPond(pondId); // Refresh koi list
     } catch (error) {
       console.error("Error updating koi fish:", error);
       message.error("Failed to update koi fish.");
@@ -278,36 +260,14 @@ const MyKoiFish = () => {
 
   return (
     <div className="flex-container">
-      <div
-        className="flex-1 h-full p-5 bg-gray-900 min-h-screen"
-        style={{
-          backgroundImage: `url(${backgroud})`, // Set the background image
-          backgroundSize: "cover", // Cover the entire container
-          backgroundPosition: "center", // Center the image
-        }}
-      >
+      <div className="flex-1 h-full p-5 bg-gray-900 min-h-screen"
+       style={{
+        backgroundImage: `url(${backgroud})`, // Set the background image
+        backgroundSize: "cover", // Cover the entire container
+        backgroundPosition: "center", // Center the image
+      }}>
         <h1 className="text-3xl font-bold mb-8 text-white">My Koi Fish</h1>
         <p className="text-white">Information about your Fish.</p>
-        <div className="flex flex-col items-center">
-          {ponds.length === 0 && (
-            <div className="mt-4">
-              <Button
-                type="primary"
-                onClick={() => (window.location.href = "/MyPond")}
-              >
-                Go to My Pond to create one
-              </Button>
-            </div>
-          )}
-
-          {ponds.length > 0 && kois.length === 0 && (
-            <div className="mt-4">
-              <Button type="primary" onClick={() => showModal()}>
-                Add a new koi fish
-              </Button>
-            </div>
-          )}
-        </div>
 
         <Select
           placeholder="Select a pond "
@@ -343,6 +303,7 @@ const MyKoiFish = () => {
                           boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                           borderRadius: "8px",
                         }}
+                       
                       >
                         <img
                           src={koi.imageUrl || "default-koi-image-url"} // Default koi image
@@ -382,10 +343,16 @@ const MyKoiFish = () => {
                             type="danger"
                             icon={<DeleteOutlined />}
                             onClick={() => showDeleteModal(koi)}
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              marginTop: "10px",
+                            }}
                           >
                             Delete
                           </Button>
                         </div>
+                        
                       </Card>
                     </Col>
                   );
@@ -394,9 +361,16 @@ const MyKoiFish = () => {
                 <p style={{ color: "white" }}>No koi fish in this pond</p>
               )}
             </Row>
+
+            <Button
+              type="primary"
+              onClick={showModal}
+              style={{ marginTop: "20px" }}
+            >
+              Add Koi Fish
+            </Button>
           </>
         )}
-
         {/* Modal for update koi fish */}
         <Modal
           title="Update Koi Fish Information"
@@ -404,7 +378,17 @@ const MyKoiFish = () => {
           onCancel={handleUpdateCancel}
           footer={null}
         >
-          <Form form={form} layout="vertical" onFinish={onUpdateFinish}>
+          <Form
+            layout="vertical"
+            onFinish={onUpdateFinish}
+            initialValues={{
+              name: selectedKoi?.koiName,
+              variety: selectedKoi?.koiVariety,
+              dob: selectedKoi?.dob ? moment(selectedKoi.dob) : null,
+              sex: selectedKoi?.sex,
+              price: selectedKoi?.price,
+            }}
+          >
             <Form.Item label="Upload Image" name="image">
               <Upload
                 listType="picture"
@@ -448,16 +432,14 @@ const MyKoiFish = () => {
             </Form.Item>
 
             <Form.Item
-              label="In pond since"
-              name="dob"
-              rules={[{ required: true, message: "Please input Date!" }]}
-            >
-              <DatePicker
-                disabledDate={(current) =>
-                  current && current > moment().endOf("day")
-                }
-              />
-            </Form.Item>
+  label="In pond since"
+  name="dob"
+  rules={[{ required: true, message: "Please input Date!" }]}
+>
+  <DatePicker
+    disabledDate={(current) => current && current > moment().endOf('day')}
+  />
+</Form.Item>
 
             <Form.Item
               label="Sex"
@@ -490,7 +472,7 @@ const MyKoiFish = () => {
         {/* Modal for delete confirmation */}
         <Modal
           title="Confirm Deletion"
-          open={isDeleteModalVisible}
+          visible={isDeleteModalVisible}
           onOk={handleDeleteKoi}
           onCancel={handleDeleteCancel}
           okText="Delete"
@@ -507,7 +489,9 @@ const MyKoiFish = () => {
           onCancel={handleCancel}
           footer={null}
         >
-          <Form form={form} layout="vertical" onFinish={onFinish}>
+          <Form layout="vertical" onFinish={onFinish}>
+            
+
             <Form.Item
               label="Upload Image"
               name="image"
@@ -555,17 +539,15 @@ const MyKoiFish = () => {
             </Form.Item>
 
             <Form.Item
-              label="In pond since"
-              name="dob"
-              rules={[{ required: true, message: "Please input Date!" }]}
-            >
-              <DatePicker
-                disabledDate={(current) =>
-                  current && current > moment().endOf("day")
-                }
-                onChange={handleDateChange}
-              />
-            </Form.Item>
+  label="In pond since"
+  name="dob"
+  rules={[{ required: true, message: "Please input Date!" }]}
+>
+  <DatePicker
+    disabledDate={(current) => current && current > moment().endOf('day')}
+    onChange={handleDateChange}
+  />
+</Form.Item>
 
             <Form.Item
               label="Sex"
