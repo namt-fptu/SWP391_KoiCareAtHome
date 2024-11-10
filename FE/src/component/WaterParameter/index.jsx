@@ -84,7 +84,7 @@ const WaterParameter = () => {
       // Update the list of reports after deletion
       fetchWaterReports(selectedPond);
     } catch (error) {
-      console.error("Error deleting water report:", error);
+      
       message.error("Failed to delete water report.");
     }
   };
@@ -97,7 +97,11 @@ const WaterParameter = () => {
   // Show modal to input water parameters
   const showModal = (report = null) => {
     if (!selectedPond && !report) {
-      message.error("Please select a pond first!");
+      notification.error({
+        message: "Please selecet pond",
+        description: "Please selecet pond first.",
+        duration: 2, // Duration in seconds
+      });
       return;
     }
 

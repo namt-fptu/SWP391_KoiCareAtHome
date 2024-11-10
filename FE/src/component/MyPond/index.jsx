@@ -130,7 +130,7 @@ const MyPond = () => {
         name: values.name,
         depth: Number(values.depth),
         volume: Number(values.volume),
-        draimCount: Number(values.draimCount),
+        drainCount: Number(values.drainCount),
         skimmerCount: Number(values.skimmerCount),
         pumpingCapacity: Number(values.pumpingCapacity),
         imageUrl: uploadedImageUrl,
@@ -255,17 +255,17 @@ const MyPond = () => {
                   { required: true, message: "Please input Volume!" },
                   {
                     validator: (_, value) => {
-                      if (!value || parseFloat(value) > 0) {
+                      if (value && parseFloat(value) > 0) {
                         return Promise.resolve();
                       }
                       return Promise.reject(
-                        new Error("Volume must be greater than 0!")
+                        new Error("Volume must be a number greater than 0!")
                       );
                     },
                   },
                 ]}
               >
-                <Input type="number" min={1} />
+                <Input type="number" />
               </Form.Item>
 
               <Form.Item
@@ -275,17 +275,17 @@ const MyPond = () => {
                   { required: true, message: "Please input Depth!" },
                   {
                     validator: (_, value) => {
-                      if (!value || parseFloat(value) > 0) {
+                      if (value && parseFloat(value) > 0) {
                         return Promise.resolve();
                       }
                       return Promise.reject(
-                        new Error("Depth must be greater than 0!")
+                        new Error("Depth must be a number greater than 0!")
                       );
                     },
                   },
                 ]}
               >
-                <Input type="number" min={1} />
+                <Input type="number" />
               </Form.Item>
 
               <Form.Item
@@ -371,7 +371,7 @@ const MyPond = () => {
                     </p>
                     <p>
                       <strong>Drain Count: </strong>
-                      {pond.drainCount}
+                      {pond.drainCount} 
                     </p>
                     <p>
                       <strong>Skimmer Count: </strong>

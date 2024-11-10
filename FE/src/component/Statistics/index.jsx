@@ -119,7 +119,7 @@ const Statistics = () => {
     } catch (error) {
       console.error("Full error response:", error.response); // Log full error
       if (error.response && error.response.status === 404) {
-        message.warning("No water data found for the selected pond.");
+        
       } else if (error.response) {
         message.error(`Failed to fetch water data: ${error.response.data}`);
       } else {
@@ -553,16 +553,7 @@ const Statistics = () => {
             </div>
           )}
 
-          {ponds.length > 0 && kois.length === 0 && (
-            <div className="mt-4">
-              <Button
-                type="primary"
-                onClick={() => (window.location.href = "/MyKoiFish")}
-              >
-                Go to My Koi Fish to add one
-              </Button>
-            </div>
-          )}
+          
         </div>
         {/* Fish Selection */}
         {selectedPond && allFishData.length > 0 && (
