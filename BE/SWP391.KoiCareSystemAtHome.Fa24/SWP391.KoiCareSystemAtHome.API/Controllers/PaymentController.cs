@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SWP391.KoiCareSystemAtHome.API.RequestModel;
 using SWP391.KoiCareSystemAtHome.API.ResponseModel;
@@ -26,7 +27,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             _packageService = packageService;
         }
 
-        [HttpGet("getPaymentByAdvId/{advId}")]
+        [HttpGet("getPaymentByAdvId/{advId}"), Authorize(Roles = "Shop, Admin")]
         public async Task<ActionResult<IEnumerable<PaymentResponseModel>>> GetPaymentByAdvId(int advId)
         {
             var payments = await _paymentService.GetPaymentByAdvIdAsync(advId);
@@ -49,7 +50,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("getPaymentByPacKageId/{packageId}")]
+        [HttpGet("getPaymentByPacKageId/{packageId}"), Authorize(Roles = "Shop, Admin")]
         public async Task<ActionResult<IEnumerable<PaymentResponseModel>>> GetPaymentByPackageId(int packageId)
         {
             var payments = await _paymentService.GetPaymentByPackageIdAsync(packageId);
@@ -72,7 +73,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("getPaymentByPaymentId/{paymentId}")]
+        [HttpGet("getPaymentByPaymentId/{paymentId}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<PaymentResponseModel>>> GetPaymentByPaymentId(int paymentId)
         {
             var payment = await _paymentService.GetPaymentByIdAsync(paymentId);
@@ -95,7 +96,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpPost("createPaymentURL")]
+        [HttpPost("createPaymentURL"), Authorize(Roles = "Shop")]
         public async Task<ActionResult> CreatePaymentURL(PaymentRequestModel request)
         {
             var package = await _packageService.GetPostPackageByIdAsync(request.PackageId);
@@ -131,7 +132,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
         {
             if (!Request.Query.Any())
             {
-                return BadRequest("Missing query parameters");
+                return NotFound();
             }
 
             try

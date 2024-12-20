@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SWP391.KoiCareSystemAtHome.API.RequestModel;
 using SWP391.KoiCareSystemAtHome.API.ResponseModel;
 using SWP391.KoiCareSystemAtHome.Service.BusinessModels;
@@ -17,7 +18,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             _productService = productService;
         }
 
-        [HttpGet("getProductByAdvId/{advId}")]
+        [HttpGet("getProductByAdvId/{advId}"), Authorize(Roles = "Shop")]
         public async Task<ActionResult<IEnumerable<ProductResponseModel>>> GetProductByPostId(int advId)
         {
             var products = await _productService.GetProductByPostIdAsync(advId);
@@ -38,7 +39,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("getProductById/{productId}")]
+        [HttpGet("getProductById/{productId}"), Authorize(Roles = "Shop")]
         public async Task<ActionResult<ProductResponseModel>> GetProductById(int productId)
         {
             var product = await _productService.GetProductByIdAsync(productId);
@@ -59,7 +60,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpPost("createProduct")]
+        [HttpPost("createProduct"), Authorize(Roles = "Shop")]
         public async Task<ActionResult> CreateProduct(ProductRequestModel request)
         {
             if (request == null)
@@ -101,7 +102,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
         }
 
-        [HttpPut("updateProductById/{productId}")]
+        [HttpPut("updateProductById/{productId}"), Authorize(Roles = "Shop")]
         public async Task<ActionResult> UpdateProduct(int productId, ProductRequestModel request)
         {
             var product = await _productService.GetProductByIdAsync(productId);
@@ -146,7 +147,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
         }
 
-        [HttpDelete("deleteProductById/{productId}")]
+        [HttpDelete("deleteProductById/{productId}"), Authorize(Roles = "Shop")]
         public async Task<ActionResult> DeleteProduct(int productId)
         {
             bool success = await _productService.DeleteProductByIdAsync(productId);
@@ -157,7 +158,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return NoContent();
         }
 
-        [HttpDelete("deleteProductByAdvId/{advId}")]
+        [HttpDelete("deleteProductByAdvId/{advId}"), Authorize(Roles = "Shop")]
         public async Task<ActionResult> DeleteProductByAdvId(int advId)
         {
             bool success = await _productService.DeleteProductByAdvAsync(advId);
@@ -168,7 +169,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return NoContent();
         }
 
-        [HttpGet("countProductByShopId/{shopId}")]
+        [HttpGet("countProductByShopId/{shopId}"), Authorize(Roles = "Shop")]
         public async Task<ActionResult> CountProductByShopId(int shopId)
         {
             int count = await _productService.CountProductAsync(shopId);
@@ -176,7 +177,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(count);
         }
 
-        [HttpGet("getRecommendationsProduct")]
+        [HttpGet("getRecommendationsProduct"), Authorize(Roles = "PondOwner")]
         public async Task<ActionResult<IEnumerable<ProductResponseModel>>> GetRecommendationsProduct()
         {
             var products = await _productService.RecommendationsProductAsync();
@@ -197,7 +198,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("searchProductBytitle/{advId}")]
+        [HttpGet("searchProductBytitle/{advId}"), Authorize(Roles = "Shop")]
         public async Task<ActionResult<IEnumerable<ProductResponseModel>>> SearchProductByTitle(int advId, string title)
         {
             var products = await _productService.SearchProductByTitleAsync(advId, title);

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SWP391.KoiCareSystemAtHome.API.RequestModel;
 using SWP391.KoiCareSystemAtHome.API.ResponseModel;
 using SWP391.KoiCareSystemAtHome.Service.BusinessModels;
@@ -17,7 +18,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             _advService = advService;
         }
 
-        [HttpGet("getAdvByShopId/{shopId}")]
+        [HttpGet("getAdvByShopId/{shopId}"), Authorize(Roles = "Admin, Shop")]
         public async Task<ActionResult<IEnumerable<AdvResponseModel>>> GetAdvByShopId(int shopId)
         {
 
@@ -42,7 +43,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("GetAdvById/{advId}")]
+        [HttpGet("GetAdvById/{advId}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<AdvResponseModel>> GetAdvById(int advId)
         {
 
@@ -68,7 +69,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("getApprovedAdv")]
+        [HttpGet("getApprovedAdv"), Authorize(Roles = "Admin, PondOwner, Shop")]
         public async Task<ActionResult<IEnumerable<AdvResponseModel>>> GetApprovedAdv()
         {
 
@@ -106,7 +107,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpPost("createAdv")]
+        [HttpPost("createAdv"), Authorize(Roles = "Shop")]
         public async Task<ActionResult> CreateAdv(AdvRequestModel request)
         {
             if (request == null)
@@ -154,7 +155,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
         }
 
-        [HttpPut("updateAdv/{advId}")]
+        [HttpPut("updateAdv/{advId}"), Authorize(Roles = "Shop")]
         public async Task<ActionResult> UpdateAdv(int advId, AdvUpdateRequestModel advRequestModel)
         {
 
@@ -206,7 +207,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
         }
 
-        [HttpDelete("deleteAdvById/{advId}")]
+        [HttpDelete("deleteAdvById/{advId}"), Authorize(Roles = "Admin, Shop")]
         public async Task<ActionResult> DeleteAdvById(int advId)
         {
             bool success = await _advService.DeleteAdsByIdAsync(advId);
@@ -216,13 +217,13 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return NoContent();
         }
 
-        [HttpGet("countAdsByStatus/{status}")]
+        [HttpGet("countAdsByStatus/{status}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult> CountAdsByStatus(string status)
         {
             return Ok(await _advService.CountAdvByStatusAsync(status));
         }
 
-        [HttpGet("searchAdvByTitle/{shopId}")]
+        [HttpGet("searchAdvByTitle/{shopId}"), Authorize(Roles = "Admin, Shop")]
         public async Task<ActionResult<IEnumerable<AdvResponseModel>>> SearchAdvByTitle(int shopId, string title)
         {
 

@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SWP391.KoiCareSystemAtHome.API.Controllers
 {
@@ -79,7 +80,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return jwt;
         }
 
-        [HttpGet("getAccounts")]
+        [HttpGet("getAccounts"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<AccountResponseModel>>> GetAccounts()
         {
             var accounts = await _accountService.GetAcountAsync();
@@ -98,7 +99,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(respone);
         }
 
-        [HttpGet("getShopAndPondOwner")]
+        [HttpGet("getShopAndPondOwner"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<AccountResponseModel>>> GetShopAndPondOwner()
         {
             var accounts = await _accountService.GetShopAndPondOwnerAcountAsync();
@@ -117,7 +118,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(respone);
         }
 
-        [HttpGet("getAccountById/{id}")]
+        [HttpGet("getAccountById/{id}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<AccountResponseModel>> GetAccountById(int id)
         {
             var account = await _accountService.GetAccountByIdAsync(id);
@@ -268,7 +269,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
         }
 
-        [HttpPut("updateAccount/{id}")]   
+        [HttpPut("updateAccount/{id}"), Authorize(Roles = "Admin, PondOwner, Shop")]   
         public async Task<IActionResult> UpdateAccount(int id, AccountUpdateRequestModel model)
         {
             AccountModel accountModel = await _accountService.GetAccountByIdAsync(id);
@@ -277,8 +278,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                 return NotFound();
 
             if (model.Phone.IsNullOrEmpty())
-                accountModel.Phone = null;
-                accountModel.Phone = model.Phone;
+                model.Phone = accountModel.Phone;
             if (!model.Email.IsNullOrEmpty())
                 accountModel.Email = model.Email;
             if (!model.Password.IsNullOrEmpty())
@@ -332,7 +332,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return NoContent();
         }
 
-        [HttpDelete("deleteAccount/{id}")]
+        [HttpDelete("deleteAccount/{id}"), Authorize(Roles = "Admin, PondOwner, Shop")]
         public async Task<IActionResult> DeleteAccount(int id)
         {
             var tempAccount = await _accountService.GetAccountByIdAsync(id);
@@ -354,14 +354,14 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
                     return NotFound();
             }
 
-            bool deteleSuccess = await _accountService.DeleteAccountAync(id);
-            if (!deteleSuccess)
+            bool deleteSuccess = await _accountService.DeleteAccountAync(id);
+            if (!deleteSuccess)
                 return NotFound();
 
             return NoContent();
         }
 
-        [HttpGet("countAccount")]
+        [HttpGet("countAccount"), Authorize(Roles = "Admin")]
         public async Task<ActionResult> CountAccount()
         {
             int count = await _accountService.CountUserAsync();
@@ -369,7 +369,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(count);
         }
 
-        [HttpPost("changePassword/{accountId}")]
+        [HttpPost("changePassword/{accountId}"), Authorize(Roles = "Shop, PondOwner")]
         public async Task<ActionResult> ChangePassword(int accountId, ChangePasswordRequestModel request)
         {
             if (request == null)

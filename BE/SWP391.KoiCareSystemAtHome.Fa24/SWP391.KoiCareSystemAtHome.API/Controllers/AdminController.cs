@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SWP391.KoiCareSystemAtHome.API.RequestModel;
 using SWP391.KoiCareSystemAtHome.API.ResponseModel;
@@ -21,7 +22,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             _paymentService = paymentService;
         }
 
-        [HttpGet("getAdvByStatus/{status}")]
+        [HttpGet("getAdvByStatus/{status}"), Authorize( Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<AdvResponseModel>>> GetAdvByStatus(string status)
         {
 
@@ -47,7 +48,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpPut("approveAdv/{advId}")]
+        [HttpPut("approveAdv/{advId}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult> ApproveAdv(int advId, string status)
         {
 
@@ -135,7 +136,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
         }
 
-        [HttpGet("getRevenueStatistic")]
+        [HttpGet("getRevenueStatistic"), Authorize(Roles = "Admin")]
         public async Task<ActionResult> GetRevenueStatistic()
         {
             var revenues = await _paymentService.RevenueStatisticAsync();

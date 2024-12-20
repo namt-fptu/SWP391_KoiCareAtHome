@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SWP391.KoiCareSystemAtHome.API.RequestModel;
 using SWP391.KoiCareSystemAtHome.API.ResponseModel;
 using SWP391.KoiCareSystemAtHome.Repository.Models;
@@ -18,7 +19,7 @@ namespace SWP391_KoiManagement.API.Controllers
             _postPackageService = postPackageService;
         }
 
-        [HttpGet("getPackage")]
+        [HttpGet("getPackage"), Authorize(Roles = "Shop, Admin")]
         public async Task<ActionResult<IEnumerable<PostPackageResponseModel>>> GetPostPackage()
         {
             var postPakages = await _postPackageService.GetPostPackageAsync();
@@ -37,7 +38,7 @@ namespace SWP391_KoiManagement.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("getPackage/{packageId}")]
+        [HttpGet("getPackage/{packageId}"), Authorize(Roles = "Shop, Admin")]
         public async Task<ActionResult<PostPackageResponseModel>> GetPostPakageById(int packageId)
         {
             var postPackage = await _postPackageService.GetPostPackageByIdAsync(packageId);
@@ -56,7 +57,7 @@ namespace SWP391_KoiManagement.API.Controllers
             return Ok(response);
         }
 
-        [HttpPost("createPackage")]
+        [HttpPost("createPackage"), Authorize(Roles = "Admin")]
         public async Task<ActionResult> CreatePostPackage(PostPackageRequestModel request)
         {
             if (request == null)
@@ -94,7 +95,7 @@ namespace SWP391_KoiManagement.API.Controllers
             }
         }
 
-        [HttpPut("updatePackage/{packageId}")]
+        [HttpPut("updatePackage/{packageId}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult> UpdatePostPageke(int packageId, PostPackageRequestModel request)
         {
             var package = await _postPackageService.GetPostPackageByIdAsync(packageId);
@@ -135,7 +136,7 @@ namespace SWP391_KoiManagement.API.Controllers
             }
         }
 
-        [HttpDelete("deletePakage/{packageId}")]
+        [HttpDelete("deletePakage/{packageId}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeletePackage(int packageId)
         {
             bool success = await _postPackageService.DeletePostPakageAsync(packageId);

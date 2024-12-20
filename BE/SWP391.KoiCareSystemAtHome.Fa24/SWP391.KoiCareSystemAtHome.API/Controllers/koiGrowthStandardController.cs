@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SWP391.KoiCareSystemAtHome.API.RequestModel;
 using SWP391.KoiCareSystemAtHome.API.ResponseModel;
@@ -19,7 +20,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             _koiGrowthStandardService = koiGrowthStandardService;
         }
 
-        [HttpGet("koiStandard")]
+        [HttpGet("koiStandard"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<KoiGrowthStandardModel>>> GetkoiGrowthStandard()
         {
             var koiGrowthStandards = await _koiGrowthStandardService.GetAllKoiGrowthStandardsAsync();
@@ -43,7 +44,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("koiStandard/{koiStandardId}")]
+        [HttpGet("koiStandard/{koiStandardId}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<KoiGrowthStandardModel>> GetKoiGrowthStandardByVariety(int koiStandardId)
         {
             var koiGrowthStandard = await _koiGrowthStandardService.GetKoiGrowthStandardModelAsync(koiStandardId);
@@ -67,7 +68,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpPost("createKoiGrowthStandard")]
+        [HttpPost("createKoiGrowthStandard"), Authorize(Roles = "Admin")]
         public async Task<ActionResult> CreateKoiGrowthStandard(KoiGrowthStandardRequestModel request)
         {
             if (request == null)
@@ -115,7 +116,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
         }
 
-        [HttpPut("updateKoiStandard/{koiStandardId}")]
+        [HttpPut("updateKoiStandard/{koiStandardId}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult> UpdateKoiGrowthStandars(int koiStandardId, KoiGrowthStandardRequestModel koiGrowthStandardRequestModel)
         {
             KoiGrowthStandardModel koiGrowthStandardModel = await _koiGrowthStandardService.GetKoiGrowthStandardModelAsync(koiStandardId);
@@ -164,7 +165,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
         }
 
-        [HttpDelete("deleteKoiGrowthStandard/{id}")]
+        [HttpDelete("deleteKoiGrowthStandard/{id}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteKoiGrowthStandard(int id)
         {
             bool success = await _koiGrowthStandardService.DeleteKoiGrowthStandardAsync(id);

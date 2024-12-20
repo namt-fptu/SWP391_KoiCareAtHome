@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SWP391.KoiCareSystemAtHome.API.RequestModel;
 using SWP391.KoiCareSystemAtHome.API.ResponseModel;
@@ -19,7 +20,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             _waterParameterStandardService = waterParameterStandardService;
         }
 
-        [HttpGet("waterStandard")]
+        [HttpGet("waterStandard"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<WaterParameterStandardResoponseModel>>> GetAllWaterParameterStandard()
         {
             var waterParameterStandards = await _waterParameterStandardService.GetAllWaterParameterStandardsAsync();
@@ -53,7 +54,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("waterStandard/{id}")]
+        [HttpGet("waterStandard/{id}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<WaterParameterStandardResoponseModel>> GetWaterParameterStandardByVariety(int id)
         {
             var waterParameterStandard = await _waterParameterStandardService.GetWaterParameterStandardByVarietyAsync(id);
@@ -87,7 +88,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpPost("createWaterPameterStandard")]
+        [HttpPost("createWaterPameterStandard"), Authorize(Roles = "Admin")]
         public async Task<ActionResult> CreateWaterPameterStandard(WaterParameterStandardRequestModel request)
         {
             if (request == null)
@@ -157,7 +158,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
         }
 
-        [HttpPut("updateWaterStandard/{waterParameterStandardId}")]
+        [HttpPut("updateWaterStandard/{waterParameterStandardId}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult> UpdateWaterParameterStandard(int  waterParameterStandardId, WaterParameterStandardRequestModel waterParameterStandardRequestModel)
         {
             var waterParameterStandard = await _waterParameterStandardService.GetWaterParameterStandardByVarietyAsync(waterParameterStandardId);
@@ -225,7 +226,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
         }
 
-        [HttpDelete("deleteWaterParameterStandard/{id}")]
+        [HttpDelete("deleteWaterParameterStandard/{id}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteWaterParameterStandard(int id)
         {
             bool success = await _waterParameterStandardService.DeleteWaterParameterStandardAsync(id);

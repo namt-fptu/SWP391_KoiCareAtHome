@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
@@ -21,7 +22,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             _pondService = pondService;
         }
 
-        [HttpGet("ponds/{ownerId}")]
+        [HttpGet("ponds/{ownerId}"), Authorize(Roles = "PondOwner")]
         public async Task<ActionResult<IEnumerable<PondResponseModel>>> GetPondByOwnerId(int ownerId)
         {
             var ponds = await _pondService.GetPondByOwnerIdAsync(ownerId);
@@ -45,7 +46,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("pond/{pondId}")]
+        [HttpGet("pond/{pondId}"), Authorize(Roles = "PondOwner")]
         public async Task<ActionResult<PondResponseModel>> GetPondById(int pondId)
         {
 
@@ -70,7 +71,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(Response);
         }
 
-        [HttpPost("createPond")]
+        [HttpPost("createPond"), Authorize(Roles = "PondOwner")]
         public async Task<ActionResult> CreatePond(PondRequestModel request)
         {
             if (request == null)
@@ -125,7 +126,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
         }
 
-        [HttpPut("updatePond/{pondId}")]
+        [HttpPut("updatePond/{pondId}"), Authorize(Roles = "PondOwner")]
         public async Task<ActionResult> UpdatePond(int pondId, PondRequestModel pondRequestModel)
         {
             PondModel pondModel = await _pondService.GetPondByIdAsync(pondId);
@@ -175,7 +176,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
 
         }
 
-        [HttpDelete("deletePond/{pondId}")]
+        [HttpDelete("deletePond/{pondId}"), Authorize(Roles = "PondOwner")]
         public async Task<ActionResult> DeletePond(int pondId)
         {
             bool succsess = await _pondService.DeletePondAsync(pondId);
@@ -185,7 +186,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return NoContent();
         }
 
-        [HttpPost("searchPondByName/{ownerID}")]
+        [HttpPost("searchPondByName/{ownerID}"), Authorize(Roles = "PondOwner")]
         public async Task<ActionResult<IEnumerable<PondResponseModel>>> GetPondByName(int ownerID, string pondName)
         {
             //var ponds = await _pondService.GetPondByOwnerIdAsync(ownerId);

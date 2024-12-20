@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SWP391.KoiCareSystemAtHome.API.RequestModel;
 using SWP391.KoiCareSystemAtHome.API.ResponseModel;
@@ -18,16 +19,16 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             _koiVarietyService = koiVarietyService;
         }
 
-        [HttpGet("variety")]
+        [HttpGet("variety"), Authorize(Roles = "Admin, PondOwner")]
         public async Task<ActionResult<IEnumerable<KoiVarietyResponseModel>>> GetKoiVariety()
         {
-            var koiVarietys = await _koiVarietyService.GetAllKoiVarietyAsync();
+            var koiVarieties = await _koiVarietyService.GetAllKoiVarietyAsync();
 
-            if (koiVarietys == null || !koiVarietys.Any())
+            if (koiVarieties == null || !koiVarieties.Any())
                 return NotFound();
 
-            var response = koiVarietys.Select(k => new KoiVarietyResponseModel
-            {
+            var response = koiVarieties.Select(k => new KoiVarietyResponseModel
+            {   
                 Variety = k.Variety,
                 Color = k.Color,
                 Rarity = k.Rarity,
@@ -36,7 +37,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("variety/{variety}")]
+        [HttpGet("variety/{variety}"), Authorize(Roles = "Admin, PondOwner")]
         public async Task<ActionResult<KoiVarietyResponseModel>> GetKoiVariety(string variety)
         {
             var koiVariety = await _koiVarietyService.GetKoiVarietyAsync(variety);
@@ -54,7 +55,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpPost("createKoiVariety")]
+        [HttpPost("createKoiVariety"), Authorize(Roles = "Admin")]
         public async Task<ActionResult> CreateKoiVariety(KoiVarietyRequestModel request)
         {
             if (request == null)
@@ -91,7 +92,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
         }
 
-        [HttpPut("updateKoiVariety/{variety}")]
+        [HttpPut("updateKoiVariety/{variety}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult> UpdateKoiVariety(string variety, KoiVarietyRequestModel request)
         {
             var koiVariety = await _koiVarietyService.GetKoiVarietyAsync(variety);

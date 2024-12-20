@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SWP391.KoiCareSystemAtHome.API.RequestModel;
 using SWP391.KoiCareSystemAtHome.API.ResponseModel;
@@ -20,7 +21,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             _koiFishService = koiFishService;
         }
 
-        [HttpGet("koiGrowthReport/{koiId}")]
+        [HttpGet("koiGrowthReport/{koiId}"), Authorize(Roles = "PondOwner")]
         public async Task<ActionResult<IEnumerable<KoiFishResponseModel>>> GetKoiGrowthReportByKoiId(int koiId)
         {
             var reports = await _koiGrowthReportService.GetKoiGrowthReportByKoiIdAsync(koiId);
@@ -41,7 +42,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("koiGrowthReportId/{reportId}")]
+        [HttpGet("koiGrowthReportId/{reportId}"), Authorize(Roles = "PondOwner")]
         public async Task<ActionResult<KoiGrowthReportResponseModel>> GetKoiGrowthReportById(int reportId)
         {
             var report = await _koiGrowthReportService.GetKoiGrowthReportByIdAsync(reportId);
@@ -61,7 +62,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpPost("createKoiReport")]
+        [HttpPost("createKoiReport"), Authorize(Roles = "PondOwner")]
         public async Task<ActionResult> CreateKoiGrowthReport(KoiGrowthReportRequestModel request)
         {
             if (request == null)
@@ -107,7 +108,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
         }
 
-        [HttpPut("updateKoiGrowthreport/{id}")]
+        [HttpPut("updateKoiGrowthreport/{id}"), Authorize(Roles = "PondOwner")]
         public async Task<ActionResult> UpdateKoiGrowthReport(int id, KoiGrowthReportUpdateModel request)
         {
             var koiGrowthReport = await _koiGrowthReportService.GetKoiGrowthReportByIdAsync(id);
@@ -155,7 +156,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
         }
 
-        [HttpDelete("deleteGrowthreport/{koiId}")]
+        [HttpDelete("deleteGrowthreport/{koiId}"), Authorize(Roles = "PondOwner")]
         public async Task<ActionResult> DeleteKoiGrowthreport(int koiId)
         {
             bool success = await _koiGrowthReportService.DeleteKoiGrowthReportAsync(koiId);
@@ -165,7 +166,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return NoContent();
         }
 
-        [HttpDelete("deleteGrowthreportById/{id}")]
+        [HttpDelete("deleteGrowthreportById/{id}"), Authorize(Roles = "PondOwner")]
         public async Task<ActionResult> DeleteKoiGrowthreportById(int id)
         {
             bool success = await _koiGrowthReportService.DeleteKoiGrowthReportByIdAsync(id);
@@ -175,7 +176,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return NoContent();
         }
 
-        [HttpGet("getKoiStatistic/{koiId}")]
+        [HttpGet("getKoiStatistic/{koiId}"), Authorize(Roles = "PondOwner")]
         public async Task<ActionResult> GetKoiGrowthStatistics(int koiId)
         {
             var koiStatistic = await _koiGrowthReportService.GetKoiGrowthSatisticByKoiIdAsync(koiId);

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using SWP391.KoiCareSystemAtHome.API.RequestModel;
@@ -20,7 +21,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             _koiFishService = koiFishService;
         }
 
-        [HttpGet("koiFish/{pondId}")]
+        [HttpGet("koiFish/{pondId}"), Authorize(Roles = "PondOwner")]
         public async Task<ActionResult<IEnumerable<KoiFishResponseModel>>> GetKoiFishByPondId(int pondId)
         {
             var koiFishs = await _koiFishService.GetKoiFishByPondIdAsync(pondId);
@@ -42,7 +43,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("koiFishId/{koiFishId}")]
+        [HttpGet("koiFishId/{koiFishId}"), Authorize(Roles = "PondOwner")]
         public async Task<ActionResult<KoiFishResponseModel>> GetKoiFishById(int koiFishId)
         {
 
@@ -66,7 +67,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpPost("createKoiFish")]
+        [HttpPost("createKoiFish"), Authorize(Roles = "PondOwner")]
         public async Task<ActionResult> CreateKoiFish(KoiFishRequestModel request)
         {
             if (request == null)
@@ -111,7 +112,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
         }
 
-        [HttpPut("updateFish/{fishId}")]
+        [HttpPut("updateFish/{fishId}"), Authorize(Roles = "PondOwner")]
         public async Task<ActionResult> UpdateKoiFish(int fishId, KoiFishRequestModel koiFishRequestModel)
         {
             KoiFishModel koiFishModel = await _koiFishService.GetKoiFishByIdAsync(fishId);
@@ -157,7 +158,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
         }
 
-        [HttpDelete("deleteKoiFish/{koiId}")]
+        [HttpDelete("deleteKoiFish/{koiId}"), Authorize(Roles = "PondOwner")]
         public async Task<ActionResult> DeleteKoiFish(int koiId)
         {
             bool success = await _koiFishService.DeleteKoiFishAsync(koiId);
@@ -167,7 +168,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return NoContent();
         }
 
-        [HttpGet("getSumOfKoiWeight/{pondId}")]
+        [HttpGet("getSumOfKoiWeight/{pondId}"), Authorize(Roles = "PondOwner")]
         public async Task<ActionResult> GetSumOfKoiWeight(int pondId)
         {
             decimal sum = await _koiFishService.GetTotalWeighOfKoisInPondAsync(pondId);
@@ -175,7 +176,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(sum);
         }
 
-        [HttpPost("searchKoiFish/{pondId}")]
+        [HttpPost("searchKoiFish/{pondId}"), Authorize(Roles = "PondOwner")]
         public async Task<ActionResult<IEnumerable<KoiFishResponseModel>>> SearchKoiFishByName(int pondId, string name)
         {
             var koiFishs = await _koiFishService.SearchKoiFishByNameAsync(pondId, name);

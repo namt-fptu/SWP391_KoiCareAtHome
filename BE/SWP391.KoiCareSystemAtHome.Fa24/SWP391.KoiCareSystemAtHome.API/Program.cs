@@ -1,5 +1,7 @@
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using SWP391.KoiCareSystemAtHome.Repository;
@@ -52,7 +54,20 @@ namespace SWP391.KoiCareSystemAtHome.API
                 });
                 option.OperationFilter<SecurityRequirementsOperationFilter>();
             });
-            
+
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8
+                            .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
+
 
             //add Scope
             builder.Services.AddScoped<UnitOfWork>();

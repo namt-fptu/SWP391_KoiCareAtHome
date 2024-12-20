@@ -6,6 +6,7 @@ using SWP391.KoiCareSystemAtHome.Service.Services;
 using SWP391.KoiCareSystemAtHome.Service.BusinessModels;
 using SWP391.KoiCareSystemAtHome.Repository.Models;
 using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SWP391.KoiCareSystemAtHome.API.Controllers
 {
@@ -20,7 +21,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             _waterReportService = waterReportService;
         }
 
-        [HttpGet("waterReport/{pondId}")]
+        [HttpGet("waterReport/{pondId}"), Authorize(Roles = "PondOwner")]
         public async Task<ActionResult<IEnumerable<WaterReportResponseModel>>> GetWaterReportByPondId(int pondId)
         {
             var waterReports = await _waterReportService.GetWarterReportByPondIdAsync(pondId);
@@ -47,7 +48,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("waterReportId/{reportId}")]
+        [HttpGet("waterReportId/{reportId}"), Authorize(Roles = "PondOwner")]
         public async Task<ActionResult<WaterReportResponseModel>> GetWaterReportById(int reportId)
         {
 
@@ -75,7 +76,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return Ok(response);
         }
 
-        [HttpPost("createWaterReport")]
+        [HttpPost("createWaterReport"), Authorize(Roles = "PondOwner")]
         public async Task<ActionResult> CreateWaterReport(WaterReportRequestModel request)
         {
             if (request == null)
@@ -129,7 +130,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
         }
 
-        [HttpPut("updateWaterReport/{id}")]
+        [HttpPut("updateWaterReport/{id}"), Authorize(Roles = "PondOwner")]
         public async Task<ActionResult> UpdateWaterReport(int id, WaterreportUpdateRequestModel reqest)
         {
             var waterreport = await _waterReportService.GetWarterReportByIdAsync(id);
@@ -184,7 +185,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             }
         }
 
-        [HttpDelete("deleteWaterReports/{pondId}")]
+        [HttpDelete("deleteWaterReports/{pondId}"), Authorize(Roles = "PondOwner")]
         public async Task<ActionResult> DeleteWaterReport(int pondId)
         {
             bool success = await _waterReportService.DeleteWaterReportAsync(pondId);
@@ -194,7 +195,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return NoContent();
         }
 
-        [HttpDelete("deleteWaterReportById/{id}")]
+        [HttpDelete("deleteWaterReportById/{id}"), Authorize(Roles = "PondOwner")]
         public async Task<ActionResult> DeleteWaterReportReportById(int id)
         {
             bool success = await _waterReportService.DeleteWaterReportByIdAsync(id);
@@ -204,7 +205,7 @@ namespace SWP391.KoiCareSystemAtHome.API.Controllers
             return NoContent();
         }
 
-        [HttpGet("getWaterStatistic/{pondId}")]
+        [HttpGet("getWaterStatistic/{pondId}"), Authorize(Roles = "PondOwner")]
         public async Task<ActionResult> GetWaterStatisticByPondId(int pondId)
         {
             var waterStatisticModels = await _waterReportService.GetWaterStatisticsByPondIdAsync(pondId);
